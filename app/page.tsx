@@ -10,15 +10,16 @@ export default function Home() {
             <div className="text-[32px] sm:text-[48px] lg:text-[64px] text-white leading-tight lg:leading-none mb-6 lg:mb-10 font-bold">
               Give your pet a dream vacation!
             </div>
-            <div className="text-[16px] sm:text-[18px] lg:text-[22px] text-white mb-6 lg:mb-10">
+            <div className="text-[16px] sm:text-[18px] lg:text-[22px] text-white mb-2 lg:mb-10">
               Our pet hotel is the ideal place to stay for your furry friend!
               We&apos;ll make sure their vacation will be just as great as
               yours!
             </div>
             <Image
-              width={40}
+              className="hidden lg:block"
+              width={400}
               height={40}
-              src="/svg/logo-light.svg"
+              src="/svg/landing-hero.svg"
               alt="logo-img"
             />
           </div>
