@@ -99,9 +99,9 @@ function Header() {
                 />
               </div>
               {dropdownOpen && (
-                <div className="absolute right-0 mt-2 w-40 bg-white border border-gray-300 rounded-lg shadow-lg z-50">
+                <div className="absolute right-0 mt-2 w-[150px] bg-white border border-gray-300 rounded-lg shadow-lg z-50">
                   <div
-                    className="flex gap-1 justify-center px-4 py-2 text-primary-dark cursor-pointer hover:bg-gray-100 rounded-t-lg"
+                    className="flex gap-1 justify-end px-4 py-2 text-primary-dark cursor-pointer hover:bg-gray-100 rounded-t-lg"
                     onClick={() => {
                       router.replace(routes.dashboard);
                     }}
@@ -109,7 +109,15 @@ function Header() {
                     Dashboard
                   </div>
                   <div
-                    className="flex gap-1 justify-center px-4 py-2 text-primary-dark cursor-pointer hover:bg-gray-100 rounded-t-lg"
+                    className="flex gap-1 justify-end px-4 py-2 text-primary-dark cursor-pointer hover:bg-gray-100 rounded-t-lg"
+                    onClick={() => {
+                      router.replace(routes.dashboard);
+                    }}
+                  >
+                    My Bookings
+                  </div>
+                  <div
+                    className="flex gap-1 justify-end px-4 py-2 text-primary cursor-pointer hover:bg-gray-100 border-t border-gray border-opacity-25"
                     onClick={() => setModalOpen(true)}
                   >
                     Sign Out
