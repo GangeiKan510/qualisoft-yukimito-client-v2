@@ -5,7 +5,28 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
 function InstantBookingForm() {
+  const [service, setService] = useState("Home Care");
   const [checkInDate, setCheckInDate] = useState<Date | null>(null);
+  const [numberOfPets, setNumberOfPets] = useState("1");
+
+  const handleSubmit = () => {
+    // Gather all form data
+    const formData = {
+      service,
+      checkInDate,
+      numberOfPets,
+    };
+
+    console.log("Form Data:", formData);
+  };
+
+  // The earliest and latest times allowed for check in
+  const today = new Date();
+  const minTime =
+    checkInDate && checkInDate.toDateString() === today.toDateString()
+      ? new Date(today.setHours(7, 30))
+      : new Date(0, 0, 0, 7, 30); // 7:30 AM
+  const maxTime = new Date(0, 0, 0, 19, 0); // 7:00 PM
 
   return (
     <div className="w-full lg:w-[500px] h-auto lg:h-[500px] shadow-lg rounded-[16px] bg-white">
@@ -24,6 +45,8 @@ function InstantBookingForm() {
             <select
               name="service"
               id="service"
+              value={service}
+              onChange={(e) => setService(e.target.value)}
               className="w-full lg:w-[436px] text-secondary-dark h-[40px] border border-primary-dark text-primary-dark ps-2 rounded-[8px]"
             >
               <option value="Home Care">Home Care</option>
@@ -40,8 +63,8 @@ function InstantBookingForm() {
               onChange={(date) => setCheckInDate(date)}
               showTimeSelect
               minDate={new Date()} // Disable past dates
-              minTime={new Date()} // Disable past times today
-              maxTime={new Date(new Date().setHours(23, 59))} // Limit time to end of the day
+              minTime={minTime} // Earliest time selectable
+              maxTime={maxTime} // Latest time selectable
               dateFormat="Pp"
               placeholderText="Select a Check-in Time"
               className="w-full lg:w-[436px] text-primary-dark h-[40px] border border-primary-dark ps-2 rounded-[8px]"
@@ -52,8 +75,10 @@ function InstantBookingForm() {
               Number of Pets
             </div>
             <select
-              name="service"
-              id="service"
+              name="numberOfPets"
+              id="numberOfPets"
+              value={numberOfPets}
+              onChange={(e) => setNumberOfPets(e.target.value)}
               className="w-full lg:w-[436px] text-primary-dark h-[40px] border border-primary-dark ps-2 rounded-[8px]"
             >
               <option value="1">1</option>
@@ -64,7 +89,10 @@ function InstantBookingForm() {
             </select>
           </div>
           <div className="flex items-center justify-center my-5">
-            <div className="flex items-center justify-center h-[40px] px-5 border border-primary-dark bg-primary-dark text-white rounded-full cursor-pointer font-semibold">
+            <div
+              onClick={handleSubmit}
+              className="flex items-center justify-center h-[40px] px-5 border border-primary-dark bg-primary-dark text-white rounded-full cursor-pointer font-semibold"
+            >
               See Availability
             </div>
           </div>
