@@ -39,13 +39,26 @@ function Header() {
           >
             Our Services
           </div>
-          <div
-            className="h-[40px] flex items-center px-4 py-2 border-2 border-primary-dark text-primary-dark rounded-full cursor-pointer bg-white"
-            onClick={() => {
-              router.replace(routes.login);
-            }}
-          >
-            <div>Sign Up | Sign In</div>
+          <div className="h-[40px] flex items-center px-4 py-2 border-2 border-primary-dark text-primary-dark rounded-full bg-white">
+            <div>
+              <span
+                className="cursor-pointer"
+                onClick={() => {
+                  router.replace(routes.register);
+                }}
+              >
+                Sign Up{" "}
+              </span>
+              |{" "}
+              <span
+                className="cursor-pointer"
+                onClick={() => {
+                  router.replace(routes.login);
+                }}
+              >
+                Sign In
+              </span>
+            </div>
           </div>
         </div>
       )}

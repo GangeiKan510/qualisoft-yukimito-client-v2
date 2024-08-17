@@ -15,6 +15,7 @@ export default function RootLayout({
   const pathname = usePathname();
 
   const routesWithFooter = [routes.home];
+  const routesWithHeader = [routes.home];
 
   return (
     <html lang="en">
@@ -36,7 +37,7 @@ export default function RootLayout({
       </head>
       <body className="font-sans">
         <AppProvider>
-          <Header />
+          {routesWithHeader.includes(pathname) && <Header />}
           <div>{children}</div>
           {/* Conditionally render the footer */}
           {routesWithFooter.includes(pathname) && <Footer />}

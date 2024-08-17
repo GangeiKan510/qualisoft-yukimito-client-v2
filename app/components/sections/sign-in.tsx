@@ -69,20 +69,6 @@ function SignIn() {
     if (isFeatureEnabled(FEATURE_OAUTH_EMAIL)) {
       signInOptions.push(EmailAuthProvider.PROVIDER_ID);
     }
-    if (isFeatureEnabled(FEATURE_OAUTH_GOOGLE)) {
-      signInOptions.push(GoogleAuthProvider.PROVIDER_ID);
-    }
-    if (isFeatureEnabled(FEATURE_OAUTH_PHONE)) {
-      signInOptions.push({
-        provider: PhoneAuthProvider.PROVIDER_ID,
-        recaptchaParameters: {
-          type: "image",
-          size: "normal",
-          badge: "bottomleft",
-        },
-        defaultCountry: "HK",
-      });
-    }
 
     return {
       signInOptions,
