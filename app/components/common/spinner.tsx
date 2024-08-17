@@ -9,7 +9,7 @@ export default function Spinner({
         className={`animate-spin h-5 w-5 ${
           type === "primary" || type === "secondary"
             ? "text-primary"
-            : "text-secondary"
+            : "text-white"
         }`}
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
