@@ -13,7 +13,7 @@ function InstantBookingForm() {
         <div className="text-[20px] sm:text-[24px] text-center text-primary-dark font-bold">
           Book your pet&apos;s stay!
         </div>
-        <div className="text-[12px] text-primary-dark pb-5 border-b border-gray border-opacity-25">
+        <div className="text-[12px] text-primary-dark pb-5 border-b border-gray border-opacity-25 text-center">
           We&apos;ll prepare an all-in dream vacation for your best friend.
         </div>
         <div className="my-5 flex flex-col gap-5">

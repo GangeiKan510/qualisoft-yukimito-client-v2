@@ -71,7 +71,7 @@ function Header() {
         </span>
       </div>
       {routesWithHeaderNav.includes(pathname) && (
-        <div className="flex items-center gap-2 sm:gap-3 lg:gap-5 text-sm sm:text-base lg:text-lg font-semibold">
+        <div className="flex items-center gap-2 sm:gap-3 lg:gap-3 text-sm sm:text-base lg:text-lg font-semibold">
           <div
             className="cursor-pointer text-primary-dark"
             onClick={() => {
@@ -88,7 +88,9 @@ function Header() {
                 className="flex gap-1 text-primary-dark underline underline-offset-4 font-semibold cursor-pointer"
                 onClick={() => setDropdownOpen(!dropdownOpen)}
               >
-                {auth.currentUser?.email}
+                <div className="flex items-center justify-center text-white w-[30px] h-[30px] bg-primary-dark rounded-full leading-none">
+                  {auth.currentUser?.email?.charAt(0).toUpperCase()}
+                </div>
                 <Image
                   width={16}
                   height={16}
@@ -97,7 +99,15 @@ function Header() {
                 />
               </div>
               {dropdownOpen && (
-                <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-300 rounded-lg shadow-lg z-50">
+                <div className="absolute right-0 mt-2 w-40 bg-white border border-gray-300 rounded-lg shadow-lg z-50">
+                  <div
+                    className="flex gap-1 justify-center px-4 py-2 text-primary-dark cursor-pointer hover:bg-gray-100 rounded-t-lg"
+                    onClick={() => {
+                      router.replace(routes.dashboard);
+                    }}
+                  >
+                    Dashboard
+                  </div>
                   <div
                     className="flex gap-1 justify-center px-4 py-2 text-primary-dark cursor-pointer hover:bg-gray-100 rounded-t-lg"
                     onClick={() => setModalOpen(true)}
