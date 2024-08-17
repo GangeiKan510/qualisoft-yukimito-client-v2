@@ -1,5 +1,11 @@
+import SignInForm from "../components/forms/sign-in-form";
+
 function Page() {
-  return <div>Page</div>;
+  return (
+    <>
+      <SignInForm />
+    </>
+  );
 }
 
 export default Page;
