@@ -15,7 +15,8 @@ function SignInForm() {
   const [password, setPassword] = useState("");
   const [signInButton, setSignInButton] = useState<any>("Sign In");
 
-  const handleSignIn = async () => {
+  const handleSignIn = async (event: React.FormEvent) => {
+    event.preventDefault();
     try {
       setSignInButton(<Spinner />);
       await signInWithEmailAndPassword(auth, email, password);
@@ -32,7 +33,10 @@ function SignInForm() {
       <Toaster />
       <div className="w-full lg:w-[80%] lg:h-[80%] m-auto flex flex-col lg:flex-row justify-between items-center lg:items-stretch">
         <div className="h-full w-full lg:w-1/2">
-          <div className="flex flex-col gap-6 lg:gap-5 text-[18px]">
+          <form
+            onSubmit={handleSignIn}
+            className="flex flex-col gap-6 lg:gap-5 text-[18px]"
+          >
             <div className="flex gap-2 justify-center lg:justify-start">
               <div className="text-gray">Don't have an account?</div>
               <div
@@ -60,6 +64,7 @@ function SignInForm() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="w-full max-w-[400px] h-[50px] border border-gray rounded-[8px] px-5"
+                  required
                 />
               </div>
             </div>
@@ -71,16 +76,17 @@ function SignInForm() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className="w-full max-w-[400px] h-[50px] border border-gray rounded-[8px] px-5"
+                  required
                 />
               </div>
             </div>
-            <div
-              onClick={handleSignIn}
+            <button
+              type="submit"
               className="w-full max-w-[150px] h-[40px] bg-primary-dark flex items-center justify-center rounded-full cursor-pointer mt-6 lg:mt-10 mx-auto lg:mx-0"
             >
               <div className="text-white">{signInButton}</div>
-            </div>
-          </div>
+            </button>
+          </form>
         </div>
         <div className="hidden lg:flex items-center justify-center lg:w-1/2">
           <Image
