@@ -7,6 +7,7 @@ import { routes } from "../utils/routes/routes";
 import { auth } from "../helpers/config";
 import { signOut } from "firebase/auth";
 import Spinner from "./spinner";
+import ConfirmationModal from "./confirmation-modal";
 
 function Header() {
   const pathname = usePathname();
@@ -15,6 +16,7 @@ function Header() {
   const [jwtToken, setJwtToken] = useState<string | null>(null);
   const [loadingUser, setLoadingUser] = useState(true);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
 
   useEffect(() => {
     const getToken = async () => {
@@ -44,6 +46,7 @@ function Header() {
       await signOut(auth);
       setJwtToken(null);
       router.replace(routes.home);
+      setModalOpen(false);
     } catch (error) {
       console.error("Error signing out:", error);
     }
@@ -97,7 +100,7 @@ function Header() {
                 <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-300 rounded-lg shadow-lg z-50">
                   <div
                     className="flex gap-1 justify-center px-4 py-2 text-primary-dark cursor-pointer hover:bg-gray-100 rounded-t-lg"
-                    onClick={handleSignOut}
+                    onClick={() => setModalOpen(true)}
                   >
                     Sign Out
                     <Image
@@ -135,6 +138,14 @@ function Header() {
           )}
         </div>
       )}
+      <ConfirmationModal
+        type="danger"
+        isOpen={modalOpen}
+        title="Confirm Sign Out"
+        message="Are you sure you want to sign out?"
+        onConfirm={handleSignOut}
+        onCancel={() => setModalOpen(false)}
+      />
     </div>
   );
 }
