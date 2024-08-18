@@ -16,7 +16,7 @@ export default function RootLayout({
   const pathname = usePathname();
 
   const routesWithFooter = [routes.home];
-  const routesWithHeader = [routes.home];
+  const routesWithHeader = [routes.home, routes.createBooking];
 
   return (
     <html lang="en">

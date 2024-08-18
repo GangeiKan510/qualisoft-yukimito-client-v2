@@ -3,6 +3,7 @@ const routes = {
   login: "/login",
   register: "/register",
   services: "/services",
+  createBooking: "/create-booking",
 
   about: "/about",
   gallery: "/gallery",
