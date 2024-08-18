@@ -1,23 +1,37 @@
 "use client";
 
 import React, { useState } from "react";
+import { getBookingAvailability } from "@/app/api/network/booking";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import Spinner from "../common/spinner";
+import Image from "next/image";
+import toast, { Toaster } from "react-hot-toast";
 
 function InstantBookingForm() {
   const [service, setService] = useState("Home Care");
   const [checkInDate, setCheckInDate] = useState<Date | null>(null);
   const [numberOfPets, setNumberOfPets] = useState("1");
+  const [buttonLabel, setButtonLabel] = useState<any>("See Availability");
+  const [availability, setAvailability] = useState(false);
 
-  const handleSubmit = () => {
-    // Gather all form data
-    const formData = {
-      service,
-      checkInDate,
-      numberOfPets,
-    };
+  const checkAvailability = async () => {
+    // Validation: Check if all required fields are filled
+    if (!service || !checkInDate || !numberOfPets) {
+      toast.error("Please fill in all fields before checking availability.");
+      return;
+    }
 
-    console.log("Form Data:", formData);
+    setButtonLabel(<Spinner />);
+    const availability = await getBookingAvailability();
+    console.log(availability.available);
+    if (availability.available === true) {
+      setAvailability(true);
+      setButtonLabel("Book Now!");
+    } else {
+      setButtonLabel("See Availability");
+      setAvailability(false);
+    }
   };
 
   // The earliest and latest times allowed for check in
@@ -30,6 +44,7 @@ function InstantBookingForm() {
 
   return (
     <div className="w-full lg:w-[500px] h-auto lg:h-[500px] shadow-lg rounded-[16px] bg-white">
+      <Toaster />
       <div className="p-6 lg:p-8">
         <div className="text-[20px] sm:text-[24px] text-center text-primary-dark font-bold">
           Book your pet&apos;s stay!
@@ -88,13 +103,25 @@ function InstantBookingForm() {
               <option value="5">5</option>
             </select>
           </div>
-          <div className="flex items-center justify-center my-5">
+          <div className="flex items-center justify-center my-5 gap-4">
             <div
-              onClick={handleSubmit}
+              onClick={checkAvailability}
               className="flex items-center justify-center h-[40px] px-5 border border-primary-dark bg-primary-dark text-white rounded-full cursor-pointer font-semibold"
             >
-              See Availability
+              {buttonLabel}
             </div>
+            {availability && (
+              <div className="flex gap-1 text-primary-dark">
+                Available
+                <Image
+                  width={16}
+                  height={16}
+                  src="/svg/available-true.svg"
+                  alt="available-icon"
+                />
+              </div>
+            )}
+            <div></div>
           </div>
         </div>
       </div>
