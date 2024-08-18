@@ -17,6 +17,7 @@ function Header() {
   const [loadingUser, setLoadingUser] = useState(true);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
+  const [signOutMessage, setSignOutMessage] = useState<any>("Confirm");
 
   useEffect(() => {
     const getToken = async () => {
@@ -43,10 +44,12 @@ function Header() {
 
   const handleSignOut = async () => {
     try {
+      setSignOutMessage(<Spinner />);
       await signOut(auth);
       setJwtToken(null);
       router.replace(routes.home);
       setModalOpen(false);
+      setSignOutMessage("Confirm");
     } catch (error) {
       console.error("Error signing out:", error);
     }
@@ -161,6 +164,7 @@ function Header() {
         isOpen={modalOpen}
         title="Confirm Sign Out"
         message="Are you sure you want to sign out?"
+        confirmMessage={signOutMessage}
         onConfirm={handleSignOut}
         onCancel={() => setModalOpen(false)}
       />

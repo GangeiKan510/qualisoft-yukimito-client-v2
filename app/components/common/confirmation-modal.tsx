@@ -3,6 +3,7 @@ interface ConfirmationModalProps {
   title: string;
   message: string;
   type: "success" | "danger";
+  confirmMessage: any;
   onConfirm: () => void;
   onCancel: () => void;
 }
@@ -14,6 +15,7 @@ function ConfirmationModal({
   onConfirm,
   onCancel,
   type,
+  confirmMessage,
 }: ConfirmationModalProps) {
   if (!isOpen) return null;
 
@@ -37,7 +39,7 @@ function ConfirmationModal({
             } text-white py-2 px-4 rounded-[8px]`}
             onClick={onConfirm}
           >
-            Confirm
+            {confirmMessage}
           </button>
         </div>
       </div>
