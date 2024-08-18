@@ -6,8 +6,6 @@ import React from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../helpers/config";
 import { routes } from "../utils/routes/routes";
-import { useConfig } from "../config/app-context";
-import { useUser } from "../config/user-context";
 import Spinner from "../common/spinner";
 
 const ProtectedRoutes = ({
@@ -19,7 +17,6 @@ const ProtectedRoutes = ({
 
   const [isLoading, setIsLoading] = useState(true);
   const [isPending, startTransition] = useTransition();
-  const [guestRoutes, setGuestRoutes] = useState<string[]>([]);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {

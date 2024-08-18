@@ -1,5 +1,26 @@
 import { CreateUserData } from "@/app/components/utils/types/create-user-type";
-import { postWithFirebaseJwt } from "../firebase/requests-with-firebase";
+import {
+  getWithFirebaseJwt,
+  postWithFirebaseJwt,
+} from "../firebase/requests-with-firebase";
+
+export const getMe = async (email: string) => {
+  try {
+
+    const response = await postWithFirebaseJwt("/web/users/get-me", {
+      body: { email: email },
+    });
+
+    if (!response) {
+      throw new Error("Failed to get user details");
+    }
+
+    return response;
+  } catch (error) {
+    console.error("Failed to get user details:", error);
+    throw error;
+  }
+};
 
 export const createUser = async (userData: CreateUserData) => {
   try {

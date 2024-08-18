@@ -6,6 +6,7 @@ import Header from "./components/common/header";
 import { AppProvider } from "./components/config/app-context";
 import "./globals.css";
 import { routes } from "./components/utils/routes/routes";
+import { UserProvider } from "./components/config/user-context";
 
 export default function RootLayout({
   children,
@@ -37,10 +38,12 @@ export default function RootLayout({
       </head>
       <body className="font-sans">
         <AppProvider>
-          {routesWithHeader.includes(pathname) && <Header />}
-          <div>{children}</div>
-          {/* Conditionally render the footer */}
-          {routesWithFooter.includes(pathname) && <Footer />}
+          <UserProvider>
+            {routesWithHeader.includes(pathname) && <Header />}
+            <div>{children}</div>
+            {/* Conditionally render the footer */}
+            {routesWithFooter.includes(pathname) && <Footer />}
+          </UserProvider>
         </AppProvider>
       </body>
     </html>

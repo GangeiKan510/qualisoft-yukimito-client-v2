@@ -9,7 +9,7 @@ import React, {
 } from "react";
 import { auth } from "../helpers/config";
 import { UserDetails } from "../utils/types/user";
-import { getMe } from "@/app/api/user";
+import { getMe } from "@/app/api/network/user";
 import { useConfig } from "./app-context";
 
 const UserContext = createContext<{
@@ -31,17 +31,24 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
   }, []);
 
   const refetchMe = async () => {
-    const userInfo = await getMe();
-    updateUser({
-      ...user,
-      userInfo: userInfo,
-    } as any);
+    if (auth.currentUser?.email) {
+
+      const userInfo = await getMe(auth.currentUser.email);
+
+      updateUser({
+        ...user,
+        userInfo: userInfo,
+      } as UserDetails);
+    } else {
+    }
   };
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(async (firebaseUser: any) => {
       if (firebaseUser) {
-        const userInfo = await getMe();
+
+        const userInfo = await getMe(firebaseUser.email);
+
         updateUser({
           displayName: firebaseUser.displayName,
           uid: firebaseUser.uid,
