@@ -8,6 +8,7 @@ import { auth } from "../helpers/config";
 import toast, { Toaster } from "react-hot-toast";
 import { routes } from "../utils/routes/routes";
 import Spinner from "../common/spinner";
+import { createUser } from "@/app/api/network/user";
 
 function SignUpForm() {
   const router = useRouter();
@@ -25,11 +26,22 @@ function SignUpForm() {
 
     try {
       setSignUpButton(<Spinner />);
-      await createUserWithEmailAndPassword(auth, email, password);
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password,
+      );
+      const userData = {
+        email: userCredential.user.email as string,
+      };
+
+      const newUser = await createUser(userData);
+
       toast.success("Account created successfully!");
       router.replace(routes.home);
     } catch (error: any) {
       toast.error("Please check your credentials and try again!");
+      console.log(error);
       setSignUpButton("Sign Up");
     }
   };
