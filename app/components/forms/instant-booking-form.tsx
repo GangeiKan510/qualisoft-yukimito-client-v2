@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { useRouter } from "next/navigation"; // Import useRouter
 import { getBookingAvailability } from "@/app/api/network/booking";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -9,6 +10,7 @@ import Image from "next/image";
 import toast, { Toaster } from "react-hot-toast";
 
 function InstantBookingForm() {
+  const router = useRouter(); // Initialize useRouter
   const [service, setService] = useState("Home Care");
   const [checkInDate, setCheckInDate] = useState<Date | null>(null);
   const [numberOfPets, setNumberOfPets] = useState("1");
@@ -16,6 +18,12 @@ function InstantBookingForm() {
   const [availability, setAvailability] = useState(false);
 
   const checkAvailability = async () => {
+    if (buttonLabel === "Book Now!") {
+      // If availability is confirmed, redirect to /create-booking
+      router.push("/create-booking");
+      return;
+    }
+
     // Validation: Check if all required fields are filled
     if (!service || !checkInDate || !numberOfPets) {
       toast.error("Please fill in all fields before checking availability.");
