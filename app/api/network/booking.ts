@@ -1,4 +1,4 @@
-import { getWithFirebaseJwt } from "../firebase/requests-with-firebase";
+import { getWithFirebaseJwt, postWithFirebaseJwt } from "../firebase/requests-with-firebase";
 
 export const getBookingAvailability = async () => {
   try {

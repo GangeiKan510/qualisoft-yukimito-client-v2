@@ -109,7 +109,7 @@ function Header() {
                       router.replace(routes.dashboard);
                     }}
                   >
-                    Dashboard
+                    My Profile
                   </div>
                   <div
                     className="flex gap-1 justify-end px-4 py-2 text-primary-dark cursor-pointer hover:bg-gray-100 rounded-t-lg"
