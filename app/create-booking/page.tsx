@@ -4,6 +4,8 @@ import React, { useState, useEffect } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import toast, { Toaster } from "react-hot-toast";
+import "react-phone-number-input/style.css";
+import PhoneInput from "react-phone-number-input";
 
 function Page() {
   const [service, setService] = useState("Home Care");
@@ -20,9 +22,17 @@ function Page() {
     }),
   );
   const [isFormValid, setIsFormValid] = useState<boolean | null | "">(false);
+  const [value, setValue] = useState<any>();
+  const [ownerName, setOwnerName] = useState("");
+  const [email, setEmail] = useState("");
+  const [address, setAddress] = useState("");
 
   useEffect(() => {
     const isFormValid =
+      ownerName &&
+      email &&
+      address &&
+      value &&
       service &&
       checkInDate &&
       petsDetails.every(
@@ -34,7 +44,7 @@ function Page() {
           pet.vaccine_photo !== null,
       );
     setIsFormValid(isFormValid);
-  }, [service, checkInDate, petsDetails]);
+  }, [ownerName, email, address, value, service, checkInDate, petsDetails]);
 
   const today = new Date();
   const minTime =
@@ -58,6 +68,54 @@ function Page() {
   };
 
   const handleSubmit = () => {
+    if (!ownerName) {
+      toast.error("Please enter your name.");
+      return;
+    }
+    if (!email) {
+      toast.error("Please enter your email address.");
+      return;
+    }
+    if (!address) {
+      toast.error("Please enter your home address.");
+      return;
+    }
+    if (!value) {
+      toast.error("Please enter your phone number.");
+      return;
+    }
+    if (!service) {
+      toast.error("Please select a service.");
+      return;
+    }
+    if (!checkInDate) {
+      toast.error("Please select a check-in date and time.");
+      return;
+    }
+    for (let i = 0; i < petsDetails.length; i++) {
+      const pet = petsDetails[i];
+      if (!pet.name) {
+        toast.error(`Please enter the name for pet ${i + 1}.`);
+        return;
+      }
+      if (!pet.breed) {
+        toast.error(`Please enter the breed for pet ${i + 1}.`);
+        return;
+      }
+      if (!pet.size) {
+        toast.error(`Please enter the size for pet ${i + 1}.`);
+        return;
+      }
+      if (!pet.birth_date) {
+        toast.error(`Please enter the birth date for pet ${i + 1}.`);
+        return;
+      }
+      if (!pet.vaccine_photo) {
+        toast.error(`Please upload the vaccination photo for pet ${i + 1}.`);
+        return;
+      }
+    }
+
     if (isFormValid) {
       toast.success("Form submitted!");
     } else {
@@ -90,6 +148,8 @@ function Page() {
                 <input
                   type="text"
                   placeholder="Enter Your Name"
+                  value={ownerName}
+                  onChange={(e) => setOwnerName(e.target.value)}
                   className="w-full text-primary-dark h-[40px] border border-primary-dark ps-2 rounded-[8px]"
                 />
               </div>
@@ -100,6 +160,8 @@ function Page() {
                 <input
                   type="text"
                   placeholder="Enter Your Email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   className="w-full text-primary-dark h-[40px] border border-primary-dark ps-2 rounded-[8px]"
                 />
               </div>
@@ -112,6 +174,8 @@ function Page() {
                 <input
                   type="text"
                   placeholder="Enter Your Address"
+                  value={address}
+                  onChange={(e) => setAddress(e.target.value)}
                   className="w-full text-primary-dark h-[40px] border border-primary-dark ps-2 rounded-[8px]"
                 />
               </div>
@@ -119,9 +183,11 @@ function Page() {
                 <div className="mb-1 text-primary-dark font-semibold">
                   Phone Number <span className="text-red">*</span>
                 </div>
-                <input
-                  type="text"
-                  placeholder="Enter Your Phone Number"
+                <PhoneInput
+                  defaultCountry="PH"
+                  placeholder="Enter phone number"
+                  value={value}
+                  onChange={setValue}
                   className="w-full text-primary-dark h-[40px] border border-primary-dark ps-2 rounded-[8px]"
                 />
               </div>
@@ -155,6 +221,7 @@ function Page() {
                   Check In Time <span className="text-red">*</span>
                 </div>
                 <DatePicker
+                  wrapperClassName="w-full"
                   selected={checkInDate}
                   onChange={(date) => setCheckInDate(date)}
                   showTimeSelect
@@ -255,35 +322,32 @@ function Page() {
                   <div className="mb-1 text-primary-dark font-semibold">
                     Size <span className="text-red">*</span>
                   </div>
-                  <input
-                    type="text"
-                    placeholder="Enter Your Pet's Size"
-                    value={petsDetails[activePetIndex].size}
-                    onChange={(e) =>
-                      handlePetDetailChange(
-                        activePetIndex,
-                        "size",
-                        e.target.value,
-                      )
-                    }
+                  <select
+                    name="numberOfPets"
+                    id="numberOfPets"
+                    value={numberOfPets}
+                    onChange={(e) => setNumberOfPets(parseInt(e.target.value))}
                     className="w-full text-primary-dark h-[40px] border border-primary-dark ps-2 rounded-[8px]"
-                  />
+                  >
+                    <option value="1">Small</option>
+                    <option value="2">Medium</option>
+                    <option value="3">Large</option>
+                  </select>
                 </div>
                 <div>
                   <div className="mb-1 text-primary-dark font-semibold">
                     Birth Date <span className="text-red">*</span>
                   </div>
-                  <input
-                    type="text"
-                    placeholder="Enter Your Pet's Birth Date"
-                    value={petsDetails[activePetIndex].birth_date}
-                    onChange={(e) =>
-                      handlePetDetailChange(
-                        activePetIndex,
-                        "birth_date",
-                        e.target.value,
-                      )
-                    }
+                  <DatePicker
+                    wrapperClassName="w-full"
+                    selected={checkInDate}
+                    onChange={(date) => setCheckInDate(date)}
+                    showTimeSelect
+                    minDate={new Date()} // Disable past dates
+                    minTime={minTime} // Earliest time selectable
+                    maxTime={maxTime} // Latest time selectable
+                    dateFormat="Pp"
+                    placeholderText="Select a Check-in Time"
                     className="w-full text-primary-dark h-[40px] border border-primary-dark ps-2 rounded-[8px]"
                   />
                 </div>

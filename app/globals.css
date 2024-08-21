@@ -7,3 +7,9 @@ body {
   background-image: url("https://www.transparenttextures.com/patterns/foggy-birds.png");
   /* This is mostly intended for prototyping; please download the pattern and re-host for production environments. Thank you! */
 }
+
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+}
