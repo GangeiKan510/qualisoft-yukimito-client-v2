@@ -19,32 +19,12 @@ function Page() {
       size: "",
       birth_date: "",
       vaccine_photo: null,
-    }),
+    })
   );
-  const [isFormValid, setIsFormValid] = useState<boolean | null | "">(false);
   const [value, setValue] = useState<any>();
   const [ownerName, setOwnerName] = useState("");
   const [email, setEmail] = useState("");
   const [address, setAddress] = useState("");
-
-  useEffect(() => {
-    const isFormValid =
-      ownerName &&
-      email &&
-      address &&
-      value &&
-      service &&
-      checkInDate &&
-      petsDetails.every(
-        (pet) =>
-          pet.name !== "" &&
-          pet.breed !== "" &&
-          pet.size !== "" &&
-          pet.birth_date !== "" &&
-          pet.vaccine_photo !== null,
-      );
-    setIsFormValid(isFormValid);
-  }, [ownerName, email, address, value, service, checkInDate, petsDetails]);
 
   const today = new Date();
   const minTime =
@@ -92,7 +72,7 @@ function Page() {
       toast.error("Please select a check-in date and time.");
       return;
     }
-    for (let i = 0; i < petsDetails.length; i++) {
+    for (let i = 0; i < numberOfPets; i++) {
       const pet = petsDetails[i];
       if (!pet.name) {
         toast.error(`Please enter the name for pet ${i + 1}.`);
@@ -116,11 +96,7 @@ function Page() {
       }
     }
 
-    if (isFormValid) {
-      toast.success("Form submitted!");
-    } else {
-      toast.error("Please fill in all required fields.");
-    }
+    toast.success("Form submitted successfully!");
   };
 
   return (
@@ -294,7 +270,7 @@ function Page() {
                       handlePetDetailChange(
                         activePetIndex,
                         "name",
-                        e.target.value,
+                        e.target.value
                       )
                     }
                     className="w-full text-primary-dark h-[40px] border border-primary-dark ps-2 rounded-[8px]"
@@ -312,7 +288,7 @@ function Page() {
                       handlePetDetailChange(
                         activePetIndex,
                         "breed",
-                        e.target.value,
+                        e.target.value
                       )
                     }
                     className="w-full text-primary-dark h-[40px] border border-primary-dark ps-2 rounded-[8px]"
@@ -323,15 +299,21 @@ function Page() {
                     Size <span className="text-red">*</span>
                   </div>
                   <select
-                    name="numberOfPets"
-                    id="numberOfPets"
-                    value={numberOfPets}
-                    onChange={(e) => setNumberOfPets(parseInt(e.target.value))}
+                    name="size"
+                    id="size"
+                    value={petsDetails[activePetIndex].size}
+                    onChange={(e) =>
+                      handlePetDetailChange(
+                        activePetIndex,
+                        "size",
+                        e.target.value
+                      )
+                    }
                     className="w-full text-primary-dark h-[40px] border border-primary-dark ps-2 rounded-[8px]"
                   >
-                    <option value="1">Small</option>
-                    <option value="2">Medium</option>
-                    <option value="3">Large</option>
+                    <option value="Small">Small</option>
+                    <option value="Medium">Medium</option>
+                    <option value="Large">Large</option>
                   </select>
                 </div>
                 <div>
@@ -340,14 +322,16 @@ function Page() {
                   </div>
                   <DatePicker
                     wrapperClassName="w-full"
-                    selected={checkInDate}
-                    onChange={(date) => setCheckInDate(date)}
-                    showTimeSelect
-                    minDate={new Date()} // Disable past dates
-                    minTime={minTime} // Earliest time selectable
-                    maxTime={maxTime} // Latest time selectable
-                    dateFormat="Pp"
-                    placeholderText="Select a Check-in Time"
+                    selected={
+                      petsDetails[activePetIndex].birth_date
+                        ? new Date(petsDetails[activePetIndex].birth_date)
+                        : null
+                    }
+                    onChange={(date) =>
+                      handlePetDetailChange(activePetIndex, "birth_date", date)
+                    }
+                    dateFormat="yyyy/MM/dd"
+                    placeholderText="Select Birth Date"
                     className="w-full text-primary-dark h-[40px] border border-primary-dark ps-2 rounded-[8px]"
                   />
                 </div>
@@ -362,7 +346,7 @@ function Page() {
                       handlePetDetailChange(
                         activePetIndex,
                         "vaccine_photo",
-                        e.target.files ? e.target.files[0] : null,
+                        e.target.files ? e.target.files[0] : null
                       )
                     }
                     className="w-full text-primary-dark h-[40px] rounded-[8px] file:border-0 file:bg-primary-light file:rounded-[8px]"
@@ -375,10 +359,7 @@ function Page() {
           <div className="flex justify-center mt-6">
             <button
               onClick={handleSubmit}
-              disabled={!isFormValid}
-              className={`flex items-center justify-center h-[40px] px-5 border border-primary-dark bg-primary-dark text-white rounded-full cursor-pointer font-semibold ${
-                !isFormValid ? "opacity-50 cursor-not-allowed" : ""
-              }`}
+              className="flex items-center justify-center h-[40px] px-5 border border-primary-dark bg-primary-dark text-white rounded-full cursor-pointer font-semibold"
             >
               Submit Booking
             </button>
