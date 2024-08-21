@@ -7,6 +7,7 @@ import { AppProvider } from "./components/config/app-context";
 import "./globals.css";
 import { routes } from "./components/utils/routes/routes";
 import { UserProvider } from "./components/config/user-context";
+import { SidebarProvider } from "./components/config/sidebar-context";
 
 export default function RootLayout({
   children,
@@ -38,12 +39,14 @@ export default function RootLayout({
       </head>
       <body className="font-sans">
         <AppProvider>
-          <UserProvider>
-            {routesWithHeader.includes(pathname) && <Header />}
-            <div>{children}</div>
-            {/* Conditionally render the footer */}
-            {routesWithFooter.includes(pathname) && <Footer />}
-          </UserProvider>
+          <SidebarProvider>
+            <UserProvider>
+              {routesWithHeader.includes(pathname) && <Header />}
+              <div className="pt-[70px]">{children}</div>
+              {/* Conditionally render the footer */}
+              {routesWithFooter.includes(pathname) && <Footer />}
+            </UserProvider>
+          </SidebarProvider>
         </AppProvider>
       </body>
     </html>

@@ -13,6 +13,10 @@ const routes = {
 
   // Protected routes
   dashboard: "/dashboard",
+
+  admin: "/admin",
+  adminBookings: "/admin/bookings",
+  adminInventory: "/admin/inventory",
 };
 
 export { routes };

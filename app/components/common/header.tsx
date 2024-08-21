@@ -56,7 +56,7 @@ function Header() {
   };
 
   return (
-    <div className="h-[75px] flex justify-between px-4 sm:px-6 lg:px-20 items-center text-white relative">
+    <div className="h-[75px] fixed top-0 left-0 right-0 z-50 flex justify-between px-4 sm:px-6 lg:px-10 items-center text-white bg-white border-b border-gray border-opacity-25">
       <div
         className="flex gap-2 items-center cursor-pointer"
         onClick={() => {
