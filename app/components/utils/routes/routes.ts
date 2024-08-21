@@ -17,6 +17,7 @@ const routes = {
   admin: "/admin",
   adminBookings: "/admin/bookings",
   adminInventory: "/admin/inventory",
+  adminPendingVaccines: "/admin/pending-vaccines",
 };
 
 export { routes };

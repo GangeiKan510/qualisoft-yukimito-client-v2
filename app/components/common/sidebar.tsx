@@ -11,7 +11,7 @@ const Sidebar = () => {
   const router = useRouter();
   const pathname = usePathname();
 
-  const { isExpanded, toggleSidebar } = useSidebar();
+  const { isExpanded } = useSidebar();
 
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [pendingRoute, setPendingRoute] = useState<string | null>(null);
@@ -96,9 +96,9 @@ const Sidebar = () => {
         </button>
         <button
           className={`${buttonBaseClasses} ${getActiveClass(
-            routes.adminInventory,
+            routes.adminPendingVaccines,
           )}`}
-          onClick={() => goTo(routes.adminInventory)}
+          onClick={() => goTo(routes.adminPendingVaccines)}
         >
           <div className={`flex items-center ${itemContainerBaseClasses}`}>
             <span
@@ -108,10 +108,10 @@ const Sidebar = () => {
                 width={20}
                 height={20}
                 src={getIconSrc(
-                  "/svg/inventory-tab-icon.svg",
-                  routes.adminInventory,
+                  "/svg/pending-vaccine-tab-icon.svg",
+                  routes.adminPendingVaccines,
                 )}
-                alt="inventory-tab-icon-img"
+                alt="vaccine-tab-icon-img"
               />
               Pending Vaccines
             </span>
