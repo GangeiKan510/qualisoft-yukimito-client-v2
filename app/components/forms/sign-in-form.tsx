@@ -38,7 +38,7 @@ function SignInForm() {
             className="flex flex-col gap-6 lg:gap-5 text-[18px]"
           >
             <div className="flex gap-2 justify-center lg:justify-start">
-              <div className="text-gray">Don't have an account?</div>
+              <div className="text-gray">Don&apos;t have an account?</div>
               <div
                 className="font-semibold underline cursor-pointer text-secondary"
                 onClick={() => {
