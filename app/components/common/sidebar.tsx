@@ -117,6 +117,29 @@ const Sidebar = () => {
             </span>
           </div>
         </button>
+        <button
+          className={`${buttonBaseClasses} ${getActiveClass(
+            routes.adminUsers,
+          )}`}
+          onClick={() => goTo(routes.adminUsers)}
+        >
+          <div className={`flex items-center ${itemContainerBaseClasses}`}>
+            <span
+              className={`flex ${textBaseClasses} text-[20px] font-bold gap-2 items-center justify-center`}
+            >
+              <Image
+                width={20}
+                height={20}
+                src={getIconSrc(
+                  "/svg/manage-accounts-tab.svg",
+                  routes.adminUsers,
+                )}
+                alt="admin-users-tab-icon-img"
+              />
+              Admin Users
+            </span>
+          </div>
+        </button>
       </div>
     </aside>
   ) : null;
