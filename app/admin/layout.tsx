@@ -2,7 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import Sidebar from "../components/common/sidebar";
-import ProtectedRoutes from "../dashboard/layout";
+import ProtectedRoutes from "../profile/layout";
 import { routes } from "../components/utils/routes/routes";
 import Header from "../components/common/header";
 

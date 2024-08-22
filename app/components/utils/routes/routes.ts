@@ -12,7 +12,7 @@ const routes = {
   team: "/team",
 
   // Protected routes
-  dashboard: "/dashboard",
+  profile: "/profile",
 
   admin: "/admin",
   adminBookings: "/admin/bookings",

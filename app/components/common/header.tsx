@@ -106,7 +106,7 @@ function Header() {
                   <div
                     className="flex gap-1 justify-end px-4 py-2 text-primary-dark cursor-pointer hover:bg-gray-100 rounded-t-lg"
                     onClick={() => {
-                      router.replace(routes.dashboard);
+                      router.replace(routes.profile);
                     }}
                   >
                     My Profile
@@ -114,7 +114,7 @@ function Header() {
                   <div
                     className="flex gap-1 justify-end px-4 py-2 text-primary-dark cursor-pointer hover:bg-gray-100 rounded-t-lg"
                     onClick={() => {
-                      router.replace(routes.dashboard);
+                      router.replace(routes.profile);
                     }}
                   >
                     My Bookings
