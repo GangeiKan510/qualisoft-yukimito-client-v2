@@ -13,6 +13,7 @@ const routes = {
 
   // Protected routes
   profile: "/profile",
+  userCreateBooking: "profile/create-booking",
 
   admin: "/admin",
   adminBookings: "/admin/bookings",

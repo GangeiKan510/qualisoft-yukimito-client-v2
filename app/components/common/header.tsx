@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { routes } from "../utils/routes/routes";
 import { auth } from "../helpers/config";
@@ -18,6 +18,7 @@ function Header() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [signOutMessage, setSignOutMessage] = useState<any>("Confirm");
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const getToken = async () => {
@@ -40,6 +41,22 @@ function Header() {
     };
 
     getToken();
+  }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
   }, []);
 
   const handleSignOut = async () => {
@@ -86,7 +103,7 @@ function Header() {
           {loadingUser ? (
             <Spinner type="secondary" />
           ) : jwtToken ? (
-            <div className="relative">
+            <div className="relative" ref={dropdownRef}>
               <div
                 className="flex gap-1 text-primary-dark underline underline-offset-4 font-semibold cursor-pointer"
                 onClick={() => setDropdownOpen(!dropdownOpen)}
@@ -110,14 +127,6 @@ function Header() {
                     }}
                   >
                     My Profile
-                  </div>
-                  <div
-                    className="flex gap-1 justify-end px-4 py-2 text-primary-dark cursor-pointer hover:bg-gray-100 rounded-t-lg"
-                    onClick={() => {
-                      router.replace(routes.profile);
-                    }}
-                  >
-                    My Bookings
                   </div>
                   <div
                     className="flex gap-1 justify-end px-4 py-2 text-primary cursor-pointer hover:bg-gray-100 border-t border-gray border-opacity-25"

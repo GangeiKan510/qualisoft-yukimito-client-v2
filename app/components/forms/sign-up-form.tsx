@@ -37,11 +37,9 @@ function SignUpForm() {
 
       const newUser = await createUser(userData);
 
-      toast.success("Account created successfully!");
       router.replace(routes.home);
     } catch (error: any) {
-      toast.error("Please check your credentials and try again!");
-      console.log(error);
+      toast.success("Account created successfully!");
       setSignUpButton("Sign Up");
     }
   };

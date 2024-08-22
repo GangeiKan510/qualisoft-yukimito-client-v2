@@ -28,7 +28,7 @@ function ConfirmationModal({
         <p className="mb-6 text-primary-dark">{message}</p>
         <div className="flex justify-end gap-4">
           <button
-            className="text-secondary border border-secondary py-2 px-4 rounded-[8px]"
+            className="text-primary-dark border border-primary-dark py-2 px-4 rounded-[8px]"
             onClick={onCancel}
           >
             Cancel
