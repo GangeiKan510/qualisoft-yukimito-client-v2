@@ -87,9 +87,9 @@ export default function Home() {
               <div className="flex items-center justify-center mt-6">
                 <div
                   onClick={() => router.replace(routes.userCreateBooking)}
-                  className="h-[40px] flex items-center relative cursor-pointer bg-white text-primary-dark p-5 rounded-full font-bold relative z-10 transition-transform duration-300 hover:-rotate-3"
+                  className="h-[50px] text-[24px] flex items-center relative cursor-pointer bg-secondary text-white p-5 rounded-full font-semibold relative z-10 transition-transform duration-300 hover:-rotate-3"
                 >
-                  Book Now
+                  Book Now!
                 </div>
               </div>
             </div>
