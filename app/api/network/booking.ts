@@ -1,4 +1,8 @@
-import { getWithFirebaseJwt, postWithFirebaseJwt } from "../firebase/requests-with-firebase";
+import { BookingData } from "@/app/components/utils/types/types";
+import {
+  getWithFirebaseJwt,
+  postWithFirebaseJwt,
+} from "../firebase/requests-with-firebase";
 
 export const getBookingAvailability = async () => {
   try {
@@ -11,6 +15,28 @@ export const getBookingAvailability = async () => {
     return response;
   } catch (error) {
     console.error("Failed to get user details:", error);
+    throw error;
+  }
+};
+
+export const createBookingWithFirebaseJwt = async (
+  bookingData: BookingData,
+) => {
+  try {
+    const response = await postWithFirebaseJwt("/web/booking/create", {
+      body: bookingData,
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response) {
+      throw new Error("Failed to create booking");
+    }
+
+    return response;
+  } catch (error) {
+    console.error("Failed to create booking:", error);
     throw error;
   }
 };
