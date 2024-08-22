@@ -1,11 +1,12 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import toast, { Toaster } from "react-hot-toast";
 import "react-phone-number-input/style.css";
 import PhoneInput from "react-phone-number-input";
+import { createInstantBooking } from "../api/network/booking";
 
 function Page() {
   const [service, setService] = useState("Home Care");
@@ -19,7 +20,7 @@ function Page() {
       size: "",
       birth_date: "",
       vaccine_photo: null,
-    })
+    }),
   );
   const [value, setValue] = useState<any>();
   const [ownerName, setOwnerName] = useState("");
@@ -47,7 +48,7 @@ function Page() {
     }
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!ownerName) {
       toast.error("Please enter your name.");
       return;
@@ -96,7 +97,33 @@ function Page() {
       }
     }
 
-    toast.success("Form submitted successfully!");
+    const bookingData = {
+      pet_owner_name: ownerName,
+      service: service,
+      address: address,
+      phone_number: value,
+      email: email,
+      check_in_date: checkInDate.toISOString(),
+      check_out_date: checkInDate.toISOString(),
+      raw_pet_data: petsDetails.slice(0, numberOfPets).map((pet) => ({
+        ...pet,
+        birth_date: pet.birth_date
+          ? new Date(pet.birth_date).toISOString().split("T")[0]
+          : "",
+        vaccine_photo: pet.vaccine_photo
+          ? URL.createObjectURL(pet.vaccine_photo)
+          : "",
+      })),
+    };
+
+    try {
+      const response = await createInstantBooking(bookingData);
+      toast.success("Booking created successfully!");
+      console.log("Booking response:", response);
+    } catch (error) {
+      toast.error("Failed to create booking.");
+      console.error("Booking error:", error);
+    }
   };
 
   return (
@@ -270,7 +297,7 @@ function Page() {
                       handlePetDetailChange(
                         activePetIndex,
                         "name",
-                        e.target.value
+                        e.target.value,
                       )
                     }
                     className="w-full text-primary-dark h-[40px] border border-primary-dark ps-2 rounded-[8px]"
@@ -288,7 +315,7 @@ function Page() {
                       handlePetDetailChange(
                         activePetIndex,
                         "breed",
-                        e.target.value
+                        e.target.value,
                       )
                     }
                     className="w-full text-primary-dark h-[40px] border border-primary-dark ps-2 rounded-[8px]"
@@ -306,7 +333,7 @@ function Page() {
                       handlePetDetailChange(
                         activePetIndex,
                         "size",
-                        e.target.value
+                        e.target.value,
                       )
                     }
                     className="w-full text-primary-dark h-[40px] border border-primary-dark ps-2 rounded-[8px]"
@@ -346,7 +373,7 @@ function Page() {
                       handlePetDetailChange(
                         activePetIndex,
                         "vaccine_photo",
-                        e.target.files ? e.target.files[0] : null
+                        e.target.files ? e.target.files[0] : null,
                       )
                     }
                     className="w-full text-primary-dark h-[40px] rounded-[8px] file:border-0 file:bg-primary-light file:rounded-[8px]"

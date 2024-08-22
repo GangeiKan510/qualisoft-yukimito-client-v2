@@ -19,16 +19,17 @@ export const getBookingAvailability = async () => {
   }
 };
 
-export const createBookingWithFirebaseJwt = async (
-  bookingData: BookingData,
-) => {
+export const createInstantBooking = async (bookingData: BookingData) => {
   try {
-    const response = await postWithFirebaseJwt("/web/booking/create", {
-      body: bookingData,
-      headers: {
-        "Content-Type": "application/json",
+    const response = await postWithFirebaseJwt(
+      "/web/booking/create-instant-booking",
+      {
+        body: bookingData,
+        headers: {
+          "Content-Type": "application/json",
+        },
       },
-    });
+    );
 
     if (!response) {
       throw new Error("Failed to create booking");
