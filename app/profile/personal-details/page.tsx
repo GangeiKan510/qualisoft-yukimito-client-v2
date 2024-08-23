@@ -2,11 +2,13 @@
 
 import { auth } from "@/app/components/helpers/config";
 import { useEffect, useState } from "react";
+import { useUser } from "@/app/components/config/user-context";
 import "react-phone-number-input/style.css";
 import toast, { Toaster } from "react-hot-toast";
 import Spinner from "@/app/components/common/spinner";
 
 function Page() {
+  const { user } = useUser();
   const [saveLabel, setSaveLabel] = useState<any>("Save");
   const [isEmailVerified, setIsEmailVerified] = useState(false);
   const [isEditing, setIsEditing] = useState({
@@ -15,11 +17,12 @@ function Page() {
     address: false,
   });
 
-  const [formData, setFormData] = useState({
-    name: "Sean Patrick Paguntalan Namo",
-    email: auth.currentUser?.email || "",
-    phone: "+639497097025",
-    address: "Your Address Here",
+  // Initialize formData with user details if available
+  const [formData, setFormData] = useState<any>({
+    name: user?.userInfo?.name || "",
+    email: user?.userInfo?.email || auth.currentUser?.email || "",
+    phone: user?.userInfo?.phone || "",
+    address: user?.userInfo?.address || "",
   });
 
   useEffect(() => {
@@ -43,9 +46,19 @@ function Page() {
       phone: false,
       address: false,
     });
+    console.log(formData);
     setSaveLabel("Save");
     toast.success("Successfully updated!");
+
+    // Add your save logic here (e.g., API call to update user details)
   };
+
+  // Dynamically set button label to "Add" if any field is empty
+  const getButtonLabel = (field: string) => {
+    return formData[field] ? "Edit" : "Add";
+  };
+
+  console.log(user);
 
   return (
     <div className="flex flex-col gap-5 p-4 md:p-6 lg:p-8">
@@ -78,7 +91,7 @@ function Page() {
               className="mt-3 md:mt-0 flex items-center font-semibold cursor-pointer"
               onClick={() => handleEditClick("name")}
             >
-              Edit
+              {getButtonLabel("name")}
             </div>
           </div>
         </div>
@@ -125,7 +138,7 @@ function Page() {
               className="mt-3 md:mt-0 flex items-center font-semibold cursor-pointer"
               onClick={() => handleEditClick("phone")}
             >
-              Edit
+              {getButtonLabel("phone")}
             </div>
           </div>
         </div>
@@ -152,7 +165,7 @@ function Page() {
               className="mt-3 md:mt-0 flex items-center font-semibold cursor-pointer"
               onClick={() => handleEditClick("address")}
             >
-              Edit
+              {getButtonLabel("address")}
             </div>
           </div>
         </div>
