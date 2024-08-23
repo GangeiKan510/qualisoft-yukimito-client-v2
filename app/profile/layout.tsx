@@ -8,6 +8,8 @@ import { auth } from "../components/helpers/config";
 import { routes } from "../components/utils/routes/routes";
 import { useUser } from "../components/config/user-context";
 import Spinner from "../components/common/spinner";
+import Header from "../components/common/header";
+import Sidebar from "../components/common/user-sidebar";
 
 const ProtectedRoutes = ({
   children,
@@ -42,7 +44,15 @@ const ProtectedRoutes = ({
     );
   }
 
-  return <>{children}</>;
+  return (
+    <>
+      <Header />
+      <main className="flex">
+        <Sidebar />
+        {children}
+      </main>
+    </>
+  );
 };
 
 export default ProtectedRoutes;
