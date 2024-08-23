@@ -16,26 +16,33 @@ function Page() {
     phone: false,
     address: false,
   });
-
-  // Initialize formData with user details if available
   const [formData, setFormData] = useState<any>({
-    name: user?.userInfo?.name || "",
-    email: user?.userInfo?.email || auth.currentUser?.email || "",
-    phone: user?.userInfo?.phone || "",
-    address: user?.userInfo?.address || "",
+    name: "",
+    email: "",
+    phone: "",
+    address: "",
   });
 
   useEffect(() => {
+    if (user?.userInfo) {
+      setFormData({
+        name: user.userInfo.name || "",
+        email: user.userInfo.email || auth.currentUser?.email || "",
+        phone: user.userInfo.phone || "",
+        address: user.userInfo.address || "",
+      });
+    }
+
     if (auth.currentUser) {
       setIsEmailVerified(auth.currentUser.emailVerified);
     }
-  }, []);
+  }, [user]);
 
   const handleEditClick = (field: string) => {
     setIsEditing({ ...isEditing, [field]: true });
   };
 
-  const handleInputChange = (e: { target: { name: any; value: any } }) => {
+  const handleInputChange = (e: { target: { name: string; value: any } }) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
@@ -53,12 +60,13 @@ function Page() {
     // Add your save logic here (e.g., API call to update user details)
   };
 
-  // Dynamically set button label to "Add" if any field is empty
   const getButtonLabel = (field: string) => {
     return formData[field] ? "Edit" : "Add";
   };
 
-  console.log(user);
+  if (!user?.userInfo) {
+    return <Spinner type="secondary" />;
+  }
 
   return (
     <div className="flex flex-col gap-5 p-4 md:p-6 lg:p-8">
