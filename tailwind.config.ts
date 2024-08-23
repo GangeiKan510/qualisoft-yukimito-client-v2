@@ -20,9 +20,12 @@ const config: Config = {
         "primary-dark": "#46B2A2",
         "primary-darkest": "#4B70F5",
         secondary: "#F5CE02",
-        text: "#212529",
+        text: "#1E201E",
         gray: "#A4A4A4",
         red: "#FF4B4B",
+      },
+      textColor: {
+        DEFAULT: "#1E201E",
       },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",

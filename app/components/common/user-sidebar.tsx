@@ -24,8 +24,8 @@ const Sidebar = () => {
 
   const getActiveClass = (route: string) => {
     return pathname === route
-      ? "active bg-[#FFF9F2] text-secondary"
-      : "text-text-primary";
+      ? "active bg-[#FFF9F2] text-secondary font-semibold"
+      : "text-text-primary font-normal";
   };
 
   const getIconSrc = (baseSrc: string, route: string) => {
@@ -52,7 +52,7 @@ const Sidebar = () => {
         >
           <div className={`flex items-center ${itemContainerBaseClasses}`}>
             <span
-              className={`flex ${textBaseClasses} text-[20px] font-bold gap-2 items-center justify-center`}
+              className={`flex ${textBaseClasses} text-[16px] gap-2 items-center justify-center`}
             >
               <Image
                 width={20}
@@ -73,7 +73,7 @@ const Sidebar = () => {
         >
           <div className={`flex items-center ${itemContainerBaseClasses}`}>
             <span
-              className={`flex ${textBaseClasses} text-[20px] font-bold gap-2 items-center justify-center`}
+              className={`flex ${textBaseClasses} text-[16px] gap-2 items-center justify-center`}
             >
               <Image
                 width={20}
@@ -93,7 +93,7 @@ const Sidebar = () => {
         >
           <div className={`flex items-center ${itemContainerBaseClasses}`}>
             <span
-              className={`flex ${textBaseClasses} text-[20px] font-bold gap-2 items-center justify-center`}
+              className={`flex ${textBaseClasses} text-[16px] gap-2 items-center justify-center`}
             >
               <Image
                 width={20}
