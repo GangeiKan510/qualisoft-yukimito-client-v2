@@ -2,9 +2,25 @@
 
 import { auth } from "@/app/components/helpers/config";
 import { useEffect, useState } from "react";
+import "react-phone-number-input/style.css";
+import toast, { Toaster } from "react-hot-toast";
+import Spinner from "@/app/components/common/spinner";
 
 function Page() {
+  const [saveLabel, setSaveLabel] = useState<any>("Save");
   const [isEmailVerified, setIsEmailVerified] = useState(false);
+  const [isEditing, setIsEditing] = useState({
+    name: false,
+    phone: false,
+    address: false,
+  });
+
+  const [formData, setFormData] = useState({
+    name: "Sean Patrick Paguntalan Namo",
+    email: auth.currentUser?.email || "",
+    phone: "+639497097025",
+    address: "Your Address Here",
+  });
 
   useEffect(() => {
     if (auth.currentUser) {
@@ -12,30 +28,61 @@ function Page() {
     }
   }, []);
 
+  const handleEditClick = (field: string) => {
+    setIsEditing({ ...isEditing, [field]: true });
+  };
+
+  const handleInputChange = (e: { target: { name: any; value: any } }) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSave = () => {
+    setSaveLabel(<Spinner />);
+    setIsEditing({
+      name: false,
+      phone: false,
+      address: false,
+    });
+    setSaveLabel("Save");
+    toast.success("Successfully updated!");
+  };
+
   return (
     <div className="flex flex-col gap-5 p-4 md:p-6 lg:p-8">
+      <Toaster />
       <div className="text-[24px] font-semibold text-primary-dark">
         Your Personal Information
       </div>
-
       {/* Name */}
       <div className="w-full lg:w-[950px] h-auto md:h-[103px] flex flex-col md:flex-row items-center bg-[#D2EAE7] rounded-[16px] shadow hover:shadow-lg">
         <div className="w-full p-5 flex gap-4 items-center">
-          <div className="hidden lg:flex items-center justify-center text-white !w-[50px] !h-[50px] bg-primary-dark rounded-full leading-none">
+          <div className="hidden lg:flex items-center justify-center text-[24px] text-white !w-[50px] !h-[50px] bg-primary-dark rounded-full leading-none">
             {auth.currentUser?.email?.charAt(0).toUpperCase()}
           </div>
           <div className="w-full flex flex-col md:flex-row justify-between items-start md:items-center">
             <div>
               <div className="font-semibold">Name</div>
-              <div>Sean Patrick Paguntalan Namo</div>
+              {isEditing.name ? (
+                <input
+                  type="text"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleInputChange}
+                  className="w-[250px] mt-2 border-[2px] border-primary-dark rounded px-2 py-1"
+                />
+              ) : (
+                <div>{formData.name}</div>
+              )}
             </div>
-            <div className="mt-3 md:mt-0 flex items-center font-semibold cursor-pointer">
+            <div
+              className="mt-3 md:mt-0 flex items-center font-semibold cursor-pointer"
+              onClick={() => handleEditClick("name")}
+            >
               Edit
             </div>
           </div>
         </div>
       </div>
-
       {/* Email */}
       <div className="w-full lg:w-[950px] h-auto md:h-[103px] flex flex-col md:flex-row items-center bg-white rounded-[16px] shadow hover:shadow-lg">
         <div className="w-full p-5 flex gap-4 items-center">
@@ -43,7 +90,7 @@ function Page() {
             <div>
               <div className="font-semibold">Email</div>
               <div className="flex items-center gap-3">
-                <div>{auth.currentUser?.email}</div>
+                <div>{formData.email}</div>
                 <div>
                   {isEmailVerified ? (
                     <div className="bg-secondary text-white text-[12px] p-2 rounded-[8px]">
@@ -56,43 +103,68 @@ function Page() {
           </div>
         </div>
       </div>
-
       {/* Phone Number */}
       <div className="w-full lg:w-[950px] h-auto md:h-[103px] flex flex-col md:flex-row items-center bg-white rounded-[16px] shadow hover:shadow-lg">
         <div className="w-full p-5 flex gap-4 items-center">
           <div className="w-full flex flex-col md:flex-row justify-between items-start md:items-center">
             <div>
               <div className="font-semibold">Phone number</div>
-              <div>+639497097025</div>
+              {isEditing.phone ? (
+                <input
+                  type="text"
+                  name="phone"
+                  value={formData.phone}
+                  onChange={handleInputChange}
+                  className="w-[250px] mt-2 border-[2px] border-primary-dark rounded px-2 py-1"
+                />
+              ) : (
+                <div>{formData.phone}</div>
+              )}
             </div>
-            <div className="mt-3 md:mt-0 flex items-center font-semibold cursor-pointer">
+            <div
+              className="mt-3 md:mt-0 flex items-center font-semibold cursor-pointer"
+              onClick={() => handleEditClick("phone")}
+            >
               Edit
             </div>
           </div>
         </div>
       </div>
-
       {/* Address */}
       <div className="w-full lg:w-[950px] h-auto md:h-[103px] flex flex-col md:flex-row items-center bg-white rounded-[16px] shadow hover:shadow-lg">
         <div className="w-full p-5 flex gap-4 items-center">
           <div className="w-full flex flex-col md:flex-row justify-between items-start md:items-center">
             <div>
               <div className="font-semibold">Address</div>
-              <div>{auth.currentUser?.email}</div>
+              {isEditing.address ? (
+                <input
+                  type="text"
+                  name="address"
+                  value={formData.address}
+                  onChange={handleInputChange}
+                  className="w-[250px] mt-2 border-[2px] border-primary-dark rounded px-2 py-1"
+                />
+              ) : (
+                <div>{formData.address}</div>
+              )}
             </div>
-            <div className="mt-3 md:mt-0 flex items-center font-semibold cursor-pointer">
+            <div
+              className="mt-3 md:mt-0 flex items-center font-semibold cursor-pointer"
+              onClick={() => handleEditClick("address")}
+            >
               Edit
             </div>
           </div>
         </div>
       </div>
-
       <div className="w-full lg:w-[950px] h-auto md:h-[103px] flex items-center justify-end">
-        <button className="h-[40px] border border-primary-dark bg-primary-dark text-white px-8 rounded-full flex items-center justify-center">
-          Save
+        <button
+          onClick={handleSave}
+          className="h-[40px] border border-primary-dark bg-primary-dark text-white px-8 rounded-full flex items-center justify-center"
+        >
+          {saveLabel}
         </button>
       </div>
-
       {/* TODO: Change Password */}
     </div>
   );

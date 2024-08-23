@@ -12,7 +12,12 @@ import ConfirmationModal from "./confirmation-modal";
 function Header() {
   const pathname = usePathname();
   const router = useRouter();
-  const routesWithHeaderNav = [routes.home];
+  const routesWithHeaderNav = [
+    routes.home,
+    routes.userBookingHistory,
+    routes.userPersonalDetails,
+    routes.userPets,
+  ];
   const [jwtToken, setJwtToken] = useState<string | null>(null);
   const [loadingUser, setLoadingUser] = useState(true);
   const [dropdownOpen, setDropdownOpen] = useState(false);
