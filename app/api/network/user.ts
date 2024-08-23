@@ -3,6 +3,7 @@ import {
   getWithFirebaseJwt,
   postWithFirebaseJwt,
 } from "../firebase/requests-with-firebase";
+import { UpdateUserData } from "@/app/components/utils/types/update-user-type";
 
 export const getMe = async (email: string) => {
   try {
@@ -38,6 +39,24 @@ export const createUser = async (userData: CreateUserData) => {
     return newUser;
   } catch (error) {
     console.error("Failed to create user", error);
+    throw error;
+  }
+};
+
+export const updateUserByEmail = async (userData: UpdateUserData) => {
+  try {
+    const response = await postWithFirebaseJwt("/web/users/update-user", {
+      body: userData,
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to update user details");
+    }
+
+    const updatedUser = await response.json();
+    return updatedUser;
+  } catch (error) {
+    console.error("Failed to update user details:", error);
     throw error;
   }
 };

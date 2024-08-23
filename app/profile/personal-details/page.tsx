@@ -6,9 +6,17 @@ import { useUser } from "@/app/components/config/user-context";
 import "react-phone-number-input/style.css";
 import toast, { Toaster } from "react-hot-toast";
 import Spinner from "@/app/components/common/spinner";
+import { updateUserByEmail } from "@/app/api/network/user";
+
+type FormData = {
+  name: string;
+  email: string;
+  phone: string;
+  address: string;
+};
 
 function Page() {
-  const { user } = useUser();
+  const { user, updateUser, refetchMe } = useUser();
   const [saveLabel, setSaveLabel] = useState<any>("Save");
   const [isEmailVerified, setIsEmailVerified] = useState(false);
   const [isEditing, setIsEditing] = useState({
@@ -16,7 +24,8 @@ function Page() {
     phone: false,
     address: false,
   });
-  const [formData, setFormData] = useState<any>({
+
+  const [formData, setFormData] = useState<FormData>({
     name: "",
     email: "",
     phone: "",
@@ -38,29 +47,54 @@ function Page() {
     }
   }, [user]);
 
-  const handleEditClick = (field: string) => {
+  const handleEditClick = (field: keyof FormData) => {
     setIsEditing({ ...isEditing, [field]: true });
   };
 
-  const handleInputChange = (e: { target: { name: string; value: any } }) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     setSaveLabel(<Spinner />);
     setIsEditing({
       name: false,
       phone: false,
       address: false,
     });
-    console.log(formData);
-    setSaveLabel("Save");
-    toast.success("Successfully updated!");
 
-    // Add your save logic here (e.g., API call to update user details)
+    try {
+      const updatedUser = await updateUserByEmail(formData);
+      console.log("Updated User:", updatedUser);
+
+      if (updatedUser && updatedUser.email === formData.email) {
+        updateUser({
+          ...user,
+          userInfo: updatedUser,
+          displayName: user?.displayName ?? null,
+          email: user?.email ?? null,
+          refreshToken: user?.refreshToken ?? "",
+          uid: user?.uid ?? "",
+        });
+        toast.success("Successfully updated!");
+        refetchMe();
+      } else {
+        console.warn("Unexpected response data:", updatedUser);
+        throw new Error("Update failed or returned unexpected data");
+      }
+    } catch (error) {
+      console.error("Failed to update user:", error);
+      toast.success("Successfully updated!");
+    } finally {
+      setSaveLabel("Save");
+    }
   };
 
-  const getButtonLabel = (field: string) => {
+  const getButtonLabel = (field: keyof FormData) => {
     return formData[field] ? "Edit" : "Add";
   };
 
@@ -163,7 +197,7 @@ function Page() {
                   name="address"
                   value={formData.address}
                   onChange={handleInputChange}
-                  className="w-[250px] mt-2 border-[2px] border-primary-dark rounded px-2 py-1"
+                  className="w-[450px] mt-2 border-[2px] border-primary-dark rounded px-2 py-1"
                 />
               ) : (
                 <div>{formData.address}</div>
