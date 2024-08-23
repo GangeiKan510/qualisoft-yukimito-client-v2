@@ -42,7 +42,7 @@ export default function RootLayout({
           <SidebarProvider>
             <UserProvider>
               {routesWithHeader.includes(pathname) && <Header />}
-              <div className="pt-[70px]">{children}</div>
+              <div>{children}</div>
               {/* Conditionally render the footer */}
               {routesWithFooter.includes(pathname) && <Footer />}
             </UserProvider>
