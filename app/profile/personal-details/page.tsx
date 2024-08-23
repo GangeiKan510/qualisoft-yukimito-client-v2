@@ -106,12 +106,12 @@ function Page() {
     <div className="flex flex-col gap-5 p-4 md:p-6 lg:p-8">
       <Toaster />
       <div className="text-[24px] font-semibold text-primary-dark">
-        Your Personal Information
+        User Details
       </div>
       {/* Name */}
       <div className="w-full lg:w-[950px] h-auto md:h-[103px] flex flex-col md:flex-row items-center bg-[#D2EAE7] rounded-[16px] shadow hover:shadow-lg">
         <div className="w-full p-5 flex gap-4 items-center">
-          <div className="hidden lg:flex items-center justify-center text-[24px] text-white !w-[50px] !h-[50px] bg-primary-dark rounded-full leading-none">
+          <div className="hidden lg:flex items-center justify-center text-[24px] text-white !w-[50px] !h-[44.234px] bg-primary-dark rounded-full leading-none">
             {auth.currentUser?.email?.charAt(0).toUpperCase()}
           </div>
           <div className="w-full flex flex-col md:flex-row justify-between items-start md:items-center">
@@ -199,7 +199,7 @@ function Page() {
                   name="address"
                   value={formData.address}
                   onChange={handleInputChange}
-                  className="w-[450px] mt-2 border-[2px] border-primary-dark rounded px-2 py-1"
+                  className="w-[350px] lg:w-[450px] mt-2 border-[2px] border-primary-dark rounded px-2 py-1"
                 />
               ) : (
                 <div>{formData.address}</div>

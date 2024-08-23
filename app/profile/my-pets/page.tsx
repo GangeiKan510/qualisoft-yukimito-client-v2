@@ -1,3 +1,6 @@
+"use client"; // Make the entire page a client component
+
+import PetCard from "@/app/components/ cards/pet-card";
 import React from "react";
 import { Toaster } from "react-hot-toast";
 
@@ -9,7 +12,29 @@ function Page() {
         <div className="text-[24px] font-semibold text-primary-dark">
           Your Pets
         </div>
-        <div>Add pet</div>
+        <div className="h-[40px] flex items-center px-5 bg-secondary text-white rounded-full cursor-pointer">
+          Add pet
+        </div>
+      </div>
+
+      {/* Pet Card */}
+      <div className="flex flex-col gap-3">
+        <PetCard
+          petName="Jax"
+          size="large"
+          breed="Doberman"
+          vaccineStatus="pending"
+          onEdit={() => console.log("Edit clicked")}
+          onViewVaccine={() => console.log("View Vaccine clicked")}
+        />
+        <PetCard
+          petName="Riri"
+          size="small"
+          breed="Exo Persian"
+          vaccineStatus="pending"
+          onEdit={() => console.log("Edit clicked")}
+          onViewVaccine={() => console.log("View Vaccine clicked")}
+        />
       </div>
     </div>
   );
