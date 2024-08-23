@@ -132,6 +132,12 @@ function Header() {
                     }}
                   >
                     My Profile
+                    <Image
+                      width={16}
+                      height={16}
+                      src="/svg/profile-icon.svg"
+                      alt="logo-img"
+                    />
                   </div>
                   <div
                     className="flex gap-1 justify-end px-4 py-2 text-primary cursor-pointer hover:bg-gray-100 border-t border-gray border-opacity-25"

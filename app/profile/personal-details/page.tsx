@@ -130,7 +130,7 @@ function Page() {
               )}
             </div>
             <div
-              className="mt-3 md:mt-0 flex items-center font-semibold cursor-pointer"
+              className="mt-3 md:mt-0 flex items-center font-semibold cursor-pointer text-primary-dark"
               onClick={() => handleEditClick("name")}
             >
               {getButtonLabel("name")}
@@ -179,7 +179,7 @@ function Page() {
               )}
             </div>
             <div
-              className="mt-3 md:mt-0 flex items-center font-semibold cursor-pointer"
+              className="mt-3 md:mt-0 flex items-center font-semibold cursor-pointer text-secondary"
               onClick={() => handleEditClick("phone")}
             >
               {getButtonLabel("phone")}
@@ -206,7 +206,7 @@ function Page() {
               )}
             </div>
             <div
-              className="mt-3 md:mt-0 flex items-center font-semibold cursor-pointer"
+              className="mt-3 md:mt-0 flex items-center font-semibold cursor-pointer text-secondary"
               onClick={() => handleEditClick("address")}
             >
               {getButtonLabel("address")}
