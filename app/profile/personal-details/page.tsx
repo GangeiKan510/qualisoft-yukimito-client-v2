@@ -116,7 +116,7 @@ function Page() {
           </div>
           <div className="w-full flex flex-col md:flex-row justify-between items-start md:items-center">
             <div>
-              <div className="font-semibold">Name</div>
+              <div className="font-semibold text-primary-dark">Name</div>
               {isEditing.name ? (
                 <input
                   type="text"
@@ -143,7 +143,7 @@ function Page() {
         <div className="w-full p-5 flex gap-4 items-center">
           <div className="w-full flex flex-col md:flex-row justify-between items-start md:items-center">
             <div>
-              <div className="font-semibold">Email</div>
+              <div className="font-semibold text-primary-dark">Email</div>
               <div className="flex items-center gap-3">
                 <div>{formData.email}</div>
                 <div>
@@ -163,7 +163,9 @@ function Page() {
         <div className="w-full p-5 flex gap-4 items-center">
           <div className="w-full flex flex-col md:flex-row justify-between items-start md:items-center">
             <div>
-              <div className="font-semibold">Phone number</div>
+              <div className="font-semibold text-primary-dark">
+                Phone number
+              </div>
               {isEditing.phone ? (
                 <input
                   type="text"
@@ -190,7 +192,7 @@ function Page() {
         <div className="w-full p-5 flex gap-4 items-center">
           <div className="w-full flex flex-col md:flex-row justify-between items-start md:items-center">
             <div>
-              <div className="font-semibold">Address</div>
+              <div className="font-semibold text-primary-dark">Address</div>
               {isEditing.address ? (
                 <input
                   type="text"

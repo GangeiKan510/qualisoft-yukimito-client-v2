@@ -49,7 +49,9 @@ const ProtectedRoutes = ({
       <main className="flex">
         <Header />
         <Sidebar />
-        <div className="lg:ms-[25%] mx-auto mt-[50px]">{children}</div>
+        <div className="lg:ms-[25%] mx-auto mt-[50px] pt-[50px]">
+          {children}
+        </div>
       </main>
     </>
   );
