@@ -72,7 +72,7 @@ function SignIn() {
 
     return {
       signInOptions,
-      signInSuccessUrl: routes.dashboard,
+      signInSuccessUrl: routes.profile,
       signInFlow: "popup",
       popupMode: true,
       callbacks: {
@@ -118,7 +118,7 @@ function SignIn() {
                 <div className="w-full rounded-xl flex flex-col items-center">
                   <div
                     className="flex gap-2 cursor-pointer border border-secondary p-3 px-5 rounded-full text-white bg-secondary items-center justify-center"
-                    onClick={() => router.push(routes.dashboard)}
+                    onClick={() => router.push(routes.profile)}
                   >
                     <div>Go to Dashboard</div>
                     <Image
