@@ -4,6 +4,7 @@ import { auth } from "@/app/components/helpers/config";
 import { useEffect, useState } from "react";
 import { useUser } from "@/app/components/config/user-context";
 import "react-phone-number-input/style.css";
+import PhoneInput from "react-phone-number-input";
 import toast, { Toaster } from "react-hot-toast";
 import Spinner from "@/app/components/common/spinner";
 import { updateUserByEmail } from "@/app/api/network/user";
@@ -56,6 +57,13 @@ function Page() {
     setFormData((prevData) => ({
       ...prevData,
       [name]: value,
+    }));
+  };
+
+  const handlePhoneChange = (value: string | undefined) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      phone: value || "",
     }));
   };
 
@@ -167,11 +175,11 @@ function Page() {
                 Phone number
               </div>
               {isEditing.phone ? (
-                <input
-                  type="text"
-                  name="phone"
+                <PhoneInput
+                  defaultCountry="PH"
+                  placeholder="Enter phone number"
                   value={formData.phone}
-                  onChange={handleInputChange}
+                  onChange={handlePhoneChange}
                   className="w-[250px] mt-2 border-[2px] border-primary-dark rounded px-2 py-1"
                 />
               ) : (
