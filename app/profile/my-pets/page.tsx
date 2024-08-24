@@ -5,12 +5,14 @@ import PetCard from "@/app/components/ cards/pet-card";
 import { Toaster } from "react-hot-toast";
 import { useUser } from "@/app/components/config/user-context";
 import Spinner from "@/app/components/common/spinner";
+import AddPetModal from "@/app/components/modals/add-pet";
 
 function Page() {
   const { user } = useUser();
   const [pets, setPets] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isModalVisible, setModalVisible] = useState(false);
 
   useEffect(() => {
     if (user?.userInfo?.pets) {
@@ -34,7 +36,9 @@ function Page() {
     }
   }, [user]);
 
-  console.log(user);
+  const handleAddPet = (newPet: any) => {
+    setPets((prevPets) => [...prevPets, newPet]);
+  };
 
   return (
     <div className="w-full flex flex-col gap-5 p-4 md:p-6 lg:p-8">
@@ -43,7 +47,10 @@ function Page() {
         <div className="text-[24px] font-semibold text-primary-dark">
           Your Pets
         </div>
-        <div className="h-[40px] flex items-center px-5 bg-secondary text-white rounded-full cursor-pointer">
+        <div
+          className="h-[40px] flex items-center px-5 bg-secondary text-white rounded-full cursor-pointer"
+          onClick={() => setModalVisible(true)}
+        >
           Add pet
         </div>
       </div>
@@ -72,6 +79,13 @@ function Page() {
           ))}
         </div>
       )}
+
+      {/* Add Pet Modal */}
+      <AddPetModal
+        isVisible={isModalVisible}
+        onClose={() => setModalVisible(false)}
+        onAddPet={handleAddPet}
+      />
     </div>
   );
 }
