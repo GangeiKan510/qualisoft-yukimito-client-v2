@@ -29,8 +29,6 @@ export const createUser = async (userData: CreateUserData) => {
       body: userData,
     });
 
-    console.log(response);
-
     if (!response) {
       throw new Error(`Error creating user: ${response.statusText}`);
     }
