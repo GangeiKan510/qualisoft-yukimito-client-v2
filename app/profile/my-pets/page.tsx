@@ -4,7 +4,6 @@ import React, { useEffect, useState } from "react";
 import PetCard from "@/app/components/ cards/pet-card";
 import { Toaster } from "react-hot-toast";
 import { useUser } from "@/app/components/config/user-context";
-import { getUserPets } from "@/app/api/network/pet";
 import Spinner from "@/app/components/common/spinner";
 
 function Page() {
@@ -14,34 +13,28 @@ function Page() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchPets = async () => {
-      try {
-        setLoading(true);
-        setError(null);
+    if (user?.userInfo?.pets) {
+      setPets(user.userInfo.pets);
+      setLoading(false);
+    } else {
+      setLoading(true);
 
-        const userId = user?.userInfo.id;
-        if (!userId) {
-          setError("User ID is not available.");
-          return;
-        }
-
-        const petsData = await getUserPets(userId);
-        if (!Array.isArray(petsData)) {
+      const fetchPets = async () => {
+        try {
+          const fetchedPets: React.SetStateAction<any[]> = [];
+          setPets(fetchedPets);
+        } catch (err) {
           setError("Failed to load pets.");
-          return;
+        } finally {
+          setLoading(false);
         }
+      };
 
-        setPets(petsData);
-      } catch (error) {
-        console.error("Error fetching pets:", error);
-        setError("Error fetching pets. Please try again.");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchPets();
+      fetchPets();
+    }
   }, [user]);
+
+  console.log(user);
 
   return (
     <div className="w-full flex flex-col gap-5 p-4 md:p-6 lg:p-8">
@@ -55,15 +48,14 @@ function Page() {
         </div>
       </div>
 
-      {/* Display loading, error, or pets */}
       {loading ? (
         <div>
-          <Spinner />
+          <Spinner type="secondary" />
         </div>
       ) : error ? (
         <div className="text-red-500">{error}</div>
       ) : pets.length === 0 ? (
-        <div>No pets yet.</div>
+        <div className="text-center text-gray">No pets yet.</div>
       ) : (
         <div className="flex flex-col gap-3">
           {pets.map((pet) => (
@@ -73,6 +65,7 @@ function Page() {
               size={pet.size}
               breed={pet.breed}
               vaccineStatus={pet.vaccine_photo ? "approved" : "pending"}
+              vaccinePhotoUrl={pet.vaccine_photo}
               onEdit={() => console.log("Edit clicked")}
               onViewVaccine={() => console.log("View Vaccine clicked")}
             />
