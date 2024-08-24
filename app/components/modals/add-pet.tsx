@@ -3,36 +3,50 @@
 import React, { useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { useUser } from "../config/user-context";
+import { addPet } from "@/app/api/network/pet";
+import { toast } from "react-hot-toast";
+import Spinner from "../common/spinner";
 
 type AddPetModalProps = {
   isVisible: boolean;
   onClose: () => void;
-  onAddPet: (pet: {
-    name: string;
-    breed: string;
-    birth_date: string;
-    size: string;
-    vaccine_photo: File | null;
-  }) => void;
 };
 
-function AddPetModal({ isVisible, onClose, onAddPet }: AddPetModalProps) {
+function AddPetModal({ isVisible, onClose }: AddPetModalProps) {
+  const { user, refetchMe } = useUser();
+  const userId = user?.userInfo?.id;
+
   const [petName, setPetName] = useState("");
   const [breed, setBreed] = useState("");
   const [birthDate, setBirthDate] = useState<Date | null>(null);
   const [size, setSize] = useState("Small");
   const [vaccinePhoto, setVaccinePhoto] = useState<File | null>(null);
+  const [saveLabel, setSaveLabel] = useState<any>("Add");
 
-  const handleAddPet = () => {
-    if (birthDate) {
-      onAddPet({
-        name: petName,
-        breed,
-        birth_date: birthDate.toISOString().split("T")[0],
-        size,
-        vaccine_photo: vaccinePhoto,
-      });
+  const handleAddPet = async () => {
+    setSaveLabel(<Spinner />);
+    if (!birthDate || !userId) {
+      toast.error("Please fill all fields correctly.");
+      return;
+    }
+
+    const petData = {
+      userId,
+      name: petName,
+      breed,
+      birth_date: birthDate.toISOString().split("T")[0],
+      size,
+      vaccine_photo: vaccinePhoto,
+    };
+
+    try {
+      await addPet(petData);
+    } catch (error) {
+      refetchMe();
       onClose();
+      toast.success("Pet added successfully!");
+      console.error("Error adding pet:", error);
     }
   };
 
@@ -100,7 +114,7 @@ function AddPetModal({ isVisible, onClose, onAddPet }: AddPetModalProps) {
               type="button"
               className="w-full max-w-[120px] h-[40px] bg-primary-dark flex items-center justify-center rounded-full cursor-pointer mt-6 lg:mt-0"
             >
-              <span className="text-white">Add Pet</span>
+              <span className="text-white">{saveLabel}</span>
             </button>
           </div>
         </div>

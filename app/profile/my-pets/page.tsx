@@ -36,10 +36,6 @@ function Page() {
     }
   }, [user]);
 
-  const handleAddPet = (newPet: any) => {
-    setPets((prevPets) => [...prevPets, newPet]);
-  };
-
   return (
     <div className="w-full flex flex-col gap-5 p-4 md:p-6 lg:p-8">
       <Toaster />
@@ -84,7 +80,6 @@ function Page() {
       <AddPetModal
         isVisible={isModalVisible}
         onClose={() => setModalVisible(false)}
-        onAddPet={handleAddPet}
       />
     </div>
   );
