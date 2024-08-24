@@ -42,11 +42,14 @@ function AddPetModal({ isVisible, onClose }: AddPetModalProps) {
 
     try {
       await addPet(petData);
-    } catch (error) {
       refetchMe();
       onClose();
       toast.success("Pet added successfully!");
+    } catch (error) {
+      toast.error("Failed to add pet.");
       console.error("Error adding pet:", error);
+    } finally {
+      setSaveLabel("Add");
     }
   };
 
@@ -55,6 +58,9 @@ function AddPetModal({ isVisible, onClose }: AddPetModalProps) {
       setVaccinePhoto(e.target.files[0]);
     }
   };
+
+  const today = new Date();
+  const maxDate = today;
 
   if (!isVisible) return null;
 
@@ -84,6 +90,7 @@ function AddPetModal({ isVisible, onClose }: AddPetModalProps) {
             onChange={(date: Date | null) => setBirthDate(date)}
             dateFormat="yyyy-MM-dd"
             placeholderText="Select Birth Date"
+            maxDate={maxDate} // Set the maximum date to today
             className="w-full h-[50px] border border-gray rounded-[8px] px-5"
           />
           <select
