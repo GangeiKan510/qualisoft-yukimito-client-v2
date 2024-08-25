@@ -46,6 +46,29 @@ const Sidebar = () => {
       <div className="flex flex-col tracking-wider mt-10">
         <button
           className={`${buttonBaseClasses} ${getActiveClass(
+            routes.userCreateBooking,
+          )}`}
+          onClick={() => goTo(routes.userCreateBooking)}
+        >
+          <div className={`flex items-center ${itemContainerBaseClasses}`}>
+            <span
+              className={`flex ${textBaseClasses} text-[16px] gap-2 items-center justify-center`}
+            >
+              <Image
+                width={20}
+                height={20}
+                src={getIconSrc(
+                  "/svg/booking-tab-icon.svg",
+                  routes.userCreateBooking,
+                )}
+                alt="booking-tab-icon-img"
+              />
+              Create Booking
+            </span>
+          </div>
+        </button>
+        <button
+          className={`${buttonBaseClasses} ${getActiveClass(
             routes.userPersonalDetails,
           )}`}
           onClick={() => goTo(routes.userPersonalDetails)}
@@ -58,10 +81,10 @@ const Sidebar = () => {
                 width={20}
                 height={20}
                 src={getIconSrc(
-                  "/svg/booking-tab-icon.svg",
+                  "/svg/personal-details.svg",
                   routes.userPersonalDetails,
                 )}
-                alt="booking-tab-icon-img"
+                alt="personal-details-img"
               />
               Personal Details
             </span>

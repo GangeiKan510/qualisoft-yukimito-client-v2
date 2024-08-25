@@ -60,10 +60,17 @@ function PetCard({
           </div>
 
           <div
-            className="mt-3 md:mt-0 flex items-center font-semibold cursor-pointer text-primary-dark"
+            className="flex gap-3 mt-3 md:mt-0 items-center font-semibold cursor-pointer text-primary-dark"
             onClick={onEdit}
           >
-            Edit
+            <div>Edit</div>
+            <Image
+              width={24}
+              height={24}
+              src="/svg/delete-pet-icon.svg"
+              alt="Vaccine Photo"
+              className="max-w-full h-auto rounded-lg"
+            />
           </div>
         </div>
       </div>

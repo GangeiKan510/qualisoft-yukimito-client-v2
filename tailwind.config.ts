@@ -22,7 +22,7 @@ const config: Config = {
         secondary: "#F5CE02",
         text: "#1E201E",
         gray: "#A4A4A4",
-        red: "#FF4B4B",
+        red: "#FF4C4C",
       },
       textColor: {
         DEFAULT: "#1E201E",

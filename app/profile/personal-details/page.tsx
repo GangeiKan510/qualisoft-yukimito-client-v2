@@ -134,7 +134,7 @@ function Page() {
                   className="w-[250px] mt-2 border-[2px] border-primary-dark rounded px-2 py-1"
                 />
               ) : (
-                <div>{formData.name}</div>
+                <div className="text-gray">{formData.name}</div>
               )}
             </div>
             <div
@@ -153,7 +153,7 @@ function Page() {
             <div>
               <div className="font-semibold text-primary-dark">Email</div>
               <div className="flex items-center gap-3">
-                <div>{formData.email}</div>
+                <div className="text-gray">{formData.email}</div>
                 <div>
                   {isEmailVerified ? (
                     <div className="bg-secondary text-white text-[12px] p-2 rounded-[8px]">
@@ -183,7 +183,7 @@ function Page() {
                   className="w-[250px] mt-2 border-[2px] border-primary-dark rounded px-2 py-1"
                 />
               ) : (
-                <div>{formData.phone}</div>
+                <div className="text-gray">{formData.phone}</div>
               )}
             </div>
             <div
@@ -210,7 +210,7 @@ function Page() {
                   className="w-[350px] lg:w-[450px] mt-2 border-[2px] border-primary-dark rounded px-2 py-1"
                 />
               ) : (
-                <div>{formData.address}</div>
+                <div className="text-gray">{formData.address}</div>
               )}
             </div>
             <div
