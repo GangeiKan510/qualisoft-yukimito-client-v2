@@ -127,7 +127,7 @@ const Sidebar = () => {
                 )}
                 alt="vaccine-tab-icon-img"
               />
-              Booking History
+              Bookings
             </span>
           </div>
         </button>
