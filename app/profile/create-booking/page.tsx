@@ -5,13 +5,51 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import toast, { Toaster } from "react-hot-toast";
 import { useUser } from "@/app/components/config/user-context";
+import BookingSummary from "@/app/components/modals/booking-summary";
 
-function Page() {
-  const { user } = useUser();
-  const [service, setService] = useState("Home Care");
+interface Pet {
+  id: string;
+  name: string;
+  breed: string;
+  birth_date: string;
+  size: string;
+  vaccine_photo: string;
+}
+
+interface UserInfo {
+  id: string;
+  name: string;
+  phone: string;
+  address: string;
+  email: string;
+  pets: Pet[];
+}
+
+interface UserContext {
+  userInfo: UserInfo;
+  uid: string;
+}
+
+interface BookingData {
+  pet_owner_name: string;
+  service: string;
+  address: string;
+  phone_number: string;
+  email: string;
+  check_in_date: string;
+  check_out_date?: string;
+  user_id: string;
+  pets: Pet[];
+  raw_pet_data: Pet[];
+}
+
+const Page: React.FC = () => {
+  const { user } = useUser() as { user: UserContext };
+  const [service, setService] = useState<string>("Home Care");
   const [checkInDate, setCheckInDate] = useState<Date | null>(null);
   const [checkOutDate, setCheckOutDate] = useState<Date | null>(null);
   const [selectedPets, setSelectedPets] = useState<string[]>([]);
+  const [bookingData, setBookingData] = useState<BookingData | null>(null);
 
   const today = new Date();
   const minTime =
@@ -20,7 +58,6 @@ function Page() {
       : new Date(0, 0, 0, 7, 30); // 7:30 AM
   const maxTime = new Date(0, 0, 0, 19, 0); // 7:00 PM
 
-  // Calculate the expected check-out time based on the selected service and check-in date
   const calculateCheckOutDate = (checkIn: Date | null, serviceType: string) => {
     if (!checkIn) return null;
     const newDate = new Date(checkIn);
@@ -52,7 +89,7 @@ function Page() {
     }
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = () => {
     if (!service) {
       toast.error("Please select a service.");
       return;
@@ -70,11 +107,13 @@ function Page() {
       return;
     }
 
-    const selectedPetDetails = user?.userInfo.pets.filter((pet: any) =>
+    const selectedPetDetails = user?.userInfo.pets.filter((pet) =>
       selectedPets.includes(pet.id),
     );
 
-    const formattedPets = selectedPetDetails.map((pet: any) => ({
+    // Include the `id` property in formattedPets
+    const formattedPets: Pet[] = selectedPetDetails.map((pet) => ({
+      id: pet.id,
       name: pet.name,
       breed: pet.breed,
       birth_date: pet.birth_date,
@@ -82,7 +121,7 @@ function Page() {
       vaccine_photo: pet.vaccine_photo,
     }));
 
-    const bookingData = {
+    const bookingData: BookingData = {
       pet_owner_name: user?.userInfo.name,
       service,
       address: user?.userInfo.address,
@@ -95,8 +134,9 @@ function Page() {
       raw_pet_data: formattedPets,
     };
 
-    console.log("Booking Data:", bookingData);
-    toast.success("Booking created successfully!");
+    setBookingData(bookingData); // Set the booking data to display in the summary modal
+    toast.success("Booking data captured successfully!");
+    console.log(bookingData);
   };
 
   return (
@@ -133,17 +173,16 @@ function Page() {
           wrapperClassName="w-full"
           selected={checkInDate}
           onChange={handleCheckInDateChange}
-          showTimeSelect={service !== "Home Care"} // Only show time select for non-Home Care services
+          showTimeSelect={service !== "Home Care"}
           minDate={new Date()}
-          minTime={minTime} // Earliest time selectable
-          maxTime={maxTime} // Latest time selectable
-          dateFormat={service === "Home Care" ? "P" : "Pp"} // Change date format based on service
+          minTime={minTime}
+          maxTime={maxTime}
+          dateFormat={service === "Home Care" ? "P" : "Pp"}
           placeholderText={`Select a ${
             service === "Home Care" ? "Check-in" : "Date"
           }`}
           className="w-full text-primary-dark h-[40px] border border-primary-dark ps-2 rounded-[8px]"
         />
-        {/* Display expected checkout time if date and time are selected */}
         {(service === "Errand Care" || service === "Day Care") &&
           checkInDate &&
           checkOutDate && (
@@ -165,7 +204,7 @@ function Page() {
             onChange={(date) => setCheckOutDate(date)}
             minDate={
               checkInDate
-                ? new Date(checkInDate.getTime() + 24 * 60 * 60 * 1000) // One day after check-in date
+                ? new Date(checkInDate.getTime() + 24 * 60 * 60 * 1000)
                 : new Date()
             }
             dateFormat="P"
@@ -185,7 +224,7 @@ function Page() {
           </span>
         </div>
         <div className="flex flex-col gap-2">
-          {user?.userInfo.pets.map((pet: any) => (
+          {user?.userInfo.pets.map((pet) => (
             <label key={pet.id} className="flex items-center">
               <input
                 type="checkbox"
@@ -208,11 +247,19 @@ function Page() {
           onClick={handleSubmit}
           className="h-[40px] border border-primary-dark bg-primary-dark text-white px-8 rounded-full flex items-center justify-center"
         >
-          Submit
+          Confirm
         </button>
       </div>
+
+      {/* Booking Summary Modal */}
+      {bookingData && (
+        <BookingSummary
+          bookingData={bookingData}
+          onClose={() => setBookingData(null)}
+        />
+      )}
     </div>
   );
-}
+};
 
 export default Page;
