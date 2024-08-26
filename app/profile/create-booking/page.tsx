@@ -20,6 +20,30 @@ function Page() {
       : new Date(0, 0, 0, 7, 30); // 7:30 AM
   const maxTime = new Date(0, 0, 0, 19, 0); // 7:00 PM
 
+  // Calculate the expected check-out time based on the selected service and check-in date
+  const calculateCheckOutDate = (checkIn: Date | null, serviceType: string) => {
+    if (!checkIn) return null;
+    const newDate = new Date(checkIn);
+
+    if (serviceType === "Errand Care") {
+      newDate.setHours(newDate.getHours() + 4);
+    } else if (serviceType === "Day Care") {
+      newDate.setHours(newDate.getHours() + 10);
+    }
+
+    return newDate;
+  };
+
+  const handleCheckInDateChange = (date: Date | null) => {
+    setCheckInDate(date);
+    if (service === "Errand Care" || service === "Day Care") {
+      const calculatedCheckOutDate = calculateCheckOutDate(date, service);
+      setCheckOutDate(calculatedCheckOutDate);
+    } else {
+      setCheckOutDate(null);
+    }
+  };
+
   const handlePetSelection = (petId: string) => {
     if (selectedPets.includes(petId)) {
       setSelectedPets(selectedPets.filter((id) => id !== petId));
@@ -92,7 +116,7 @@ function Page() {
         <DatePicker
           wrapperClassName="w-full"
           selected={checkInDate}
-          onChange={(date) => setCheckInDate(date)}
+          onChange={handleCheckInDateChange}
           showTimeSelect={service !== "Home Care"} // Only show time select for non-Home Care services
           minDate={new Date()}
           minTime={minTime} // Earliest time selectable
@@ -103,6 +127,14 @@ function Page() {
           }`}
           className="w-full text-primary-dark h-[40px] border border-primary-dark ps-2 rounded-[8px]"
         />
+        {/* Display expected checkout time if date and time are selected */}
+        {(service === "Errand Care" || service === "Day Care") &&
+          checkInDate &&
+          checkOutDate && (
+            <div className="text-secondary mt-2">
+              Expected Check-out Time: {checkOutDate.toLocaleString()}
+            </div>
+          )}
       </div>
 
       {/* Check-Out Date Selection for Home Care */}
@@ -115,7 +147,11 @@ function Page() {
             wrapperClassName="w-full"
             selected={checkOutDate}
             onChange={(date) => setCheckOutDate(date)}
-            minDate={checkInDate || new Date()}
+            minDate={
+              checkInDate
+                ? new Date(checkInDate.getTime() + 24 * 60 * 60 * 1000) // One day after check-in date
+                : new Date()
+            }
             dateFormat="P"
             placeholderText="Select a Check-out Date"
             className="w-full text-primary-dark h-[40px] border border-primary-dark ps-2 rounded-[8px]"
