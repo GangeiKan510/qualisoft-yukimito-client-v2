@@ -41,3 +41,23 @@ export const createInstantBooking = async (bookingData: BookingData) => {
     throw error;
   }
 };
+
+export const createBooking = async (bookingData: BookingData) => {
+  try {
+    const response = await postWithFirebaseJwt("/web/booking/create-booking", {
+      body: bookingData,
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response) {
+      throw new Error("Failed to create booking");
+    }
+
+    return response;
+  } catch (error) {
+    console.error("Failed to create booking:", error);
+    throw error;
+  }
+};
