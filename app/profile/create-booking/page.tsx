@@ -10,6 +10,7 @@ function Page() {
   const { user } = useUser();
   const [service, setService] = useState("Home Care");
   const [checkInDate, setCheckInDate] = useState<Date | null>(null);
+  const [checkOutDate, setCheckOutDate] = useState<Date | null>(null);
   const [selectedPets, setSelectedPets] = useState<string[]>([]);
 
   const today = new Date();
@@ -33,7 +34,11 @@ function Page() {
       return;
     }
     if (!checkInDate) {
-      toast.error("Please select a check-in date and time.");
+      toast.error("Please select a check-in date.");
+      return;
+    }
+    if (service === "Home Care" && !checkOutDate) {
+      toast.error("Please select a check-out date.");
       return;
     }
     if (selectedPets.length === 0) {
@@ -45,6 +50,7 @@ function Page() {
       userId: user?.uid,
       service,
       checkInDate: checkInDate.toISOString(),
+      checkOutDate: checkOutDate?.toISOString(),
       pets: selectedPets,
     };
 
@@ -76,24 +82,46 @@ function Page() {
         </select>
       </div>
 
-      {/* Check-In Time Selection */}
+      {/* Check-In Date Selection */}
       <div className="w-full lg:w-[950px] flex flex-col gap-3">
         <div className="font-semibold text-primary-dark">
-          Select Check-In Time
+          {service === "Home Care"
+            ? "Select Check-In Date"
+            : "Select Check-In Time"}
         </div>
         <DatePicker
           wrapperClassName="w-full"
           selected={checkInDate}
           onChange={(date) => setCheckInDate(date)}
-          showTimeSelect
+          showTimeSelect={service !== "Home Care"} // Only show time select for non-Home Care services
           minDate={new Date()}
           minTime={minTime} // Earliest time selectable
           maxTime={maxTime} // Latest time selectable
-          dateFormat="Pp"
-          placeholderText="Select a Check-in Time"
+          dateFormat={service === "Home Care" ? "P" : "Pp"} // Change date format based on service
+          placeholderText={`Select a ${
+            service === "Home Care" ? "Check-in" : "Date"
+          }`}
           className="w-full text-primary-dark h-[40px] border border-primary-dark ps-2 rounded-[8px]"
         />
       </div>
+
+      {/* Check-Out Date Selection for Home Care */}
+      {service === "Home Care" && (
+        <div className="w-full lg:w-[950px] flex flex-col gap-3">
+          <div className="font-semibold text-primary-dark">
+            Select Check-Out Date
+          </div>
+          <DatePicker
+            wrapperClassName="w-full"
+            selected={checkOutDate}
+            onChange={(date) => setCheckOutDate(date)}
+            minDate={checkInDate || new Date()}
+            dateFormat="P"
+            placeholderText="Select a Check-out Date"
+            className="w-full text-primary-dark h-[40px] border border-primary-dark ps-2 rounded-[8px]"
+          />
+        </div>
+      )}
 
       {/* Pets Selection */}
       <div className="w-full lg:w-[950px] flex flex-col gap-3">
