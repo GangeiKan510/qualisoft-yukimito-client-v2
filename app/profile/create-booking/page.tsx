@@ -6,6 +6,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import toast, { Toaster } from "react-hot-toast";
 import { useUser } from "@/app/components/config/user-context";
 import BookingSummary from "@/app/components/modals/booking-summary";
+import { createBooking } from "@/app/api/network/booking";
 
 interface Pet {
   id: string;
@@ -139,11 +140,20 @@ const Page: React.FC = () => {
     setBookingData(bookingData); // Set the booking data to display in the summary modal
   };
 
-  const handleBookingSubmit = () => {
+  const handleBookingSubmit = async () => {
     if (!bookingData) return;
 
     console.log("Submitting Booking Data:", bookingData);
-    toast.success("Booking created successfully!");
+    try {
+      const response = await createBooking(bookingData);
+      if (response) {
+        toast.success("Booking created successfully!");
+      } else {
+        toast.error("There was a problem creating the booking.");
+      }
+    } catch (error) {
+      console.log(error);
+    }
 
     setBookingData(null);
   };

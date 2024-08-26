@@ -1,4 +1,7 @@
-import { BookingData } from "@/app/components/utils/types/types";
+import {
+  BookingData,
+  RegularBookingData,
+} from "@/app/components/utils/types/types";
 import {
   getWithFirebaseJwt,
   postWithFirebaseJwt,
@@ -42,7 +45,7 @@ export const createInstantBooking = async (bookingData: BookingData) => {
   }
 };
 
-export const createBooking = async (bookingData: BookingData) => {
+export const createBooking = async (bookingData: RegularBookingData) => {
   try {
     const response = await postWithFirebaseJwt("/web/booking/create-booking", {
       body: bookingData,
