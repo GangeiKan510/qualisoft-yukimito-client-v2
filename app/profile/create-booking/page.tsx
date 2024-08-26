@@ -89,7 +89,7 @@ const Page: React.FC = () => {
     }
   };
 
-  const handleSubmit = () => {
+  const prepareBookingData = () => {
     if (!service) {
       toast.error("Please select a service.");
       return;
@@ -111,7 +111,6 @@ const Page: React.FC = () => {
       selectedPets.includes(pet.id),
     );
 
-    // Include the `id` property in formattedPets
     const formattedPets: Pet[] = selectedPetDetails.map((pet) => ({
       id: pet.id,
       name: pet.name,
@@ -127,7 +126,10 @@ const Page: React.FC = () => {
       address: user?.userInfo.address,
       phone_number: user?.userInfo.phone,
       email: user?.userInfo.email,
-      check_in_date: checkInDate.toISOString(),
+      check_in_date:
+        service === "Home Care"
+          ? checkInDate.toISOString().split("T")[0]
+          : checkInDate.toISOString(),
       check_out_date: checkOutDate?.toISOString(),
       user_id: user?.userInfo.id,
       pets: formattedPets,
@@ -135,8 +137,15 @@ const Page: React.FC = () => {
     };
 
     setBookingData(bookingData); // Set the booking data to display in the summary modal
-    toast.success("Booking data captured successfully!");
-    console.log(bookingData);
+  };
+
+  const handleBookingSubmit = () => {
+    if (!bookingData) return;
+
+    console.log("Submitting Booking Data:", bookingData);
+    toast.success("Booking created successfully!");
+
+    setBookingData(null);
   };
 
   return (
@@ -179,7 +188,7 @@ const Page: React.FC = () => {
           maxTime={maxTime}
           dateFormat={service === "Home Care" ? "P" : "Pp"}
           placeholderText={`Select a ${
-            service === "Home Care" ? "Check-in" : "Date"
+            service === "Home Care" ? "Check-in Date" : "Check-in Date & Time"
           }`}
           className="w-full text-primary-dark h-[40px] border border-primary-dark ps-2 rounded-[8px]"
         />
@@ -241,10 +250,10 @@ const Page: React.FC = () => {
         </div>
       </div>
 
-      {/* Submit Button */}
+      {/* Confirm Button */}
       <div className="w-full lg:w-[950px] flex justify-end">
         <button
-          onClick={handleSubmit}
+          onClick={prepareBookingData}
           className="h-[40px] border border-primary-dark bg-primary-dark text-white px-8 rounded-full flex items-center justify-center"
         >
           Confirm
@@ -256,6 +265,7 @@ const Page: React.FC = () => {
         <BookingSummary
           bookingData={bookingData}
           onClose={() => setBookingData(null)}
+          onBookNow={handleBookingSubmit}
         />
       )}
     </div>
