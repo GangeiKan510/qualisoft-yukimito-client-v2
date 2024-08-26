@@ -70,15 +70,31 @@ function Page() {
       return;
     }
 
+    const selectedPetDetails = user?.userInfo.pets.filter((pet: any) =>
+      selectedPets.includes(pet.id),
+    );
+
+    const formattedPets = selectedPetDetails.map((pet: any) => ({
+      name: pet.name,
+      breed: pet.breed,
+      birth_date: pet.birth_date,
+      size: pet.size,
+      vaccine_photo: pet.vaccine_photo,
+    }));
+
     const bookingData = {
-      userId: user?.uid,
+      pet_owner_name: user?.userInfo.name,
       service,
-      checkInDate: checkInDate.toISOString(),
-      checkOutDate: checkOutDate?.toISOString(),
-      pets: selectedPets,
+      address: user?.userInfo.address,
+      phone_number: user?.userInfo.phone,
+      email: user?.userInfo.email,
+      check_in_date: checkInDate.toISOString(),
+      check_out_date: checkOutDate?.toISOString(),
+      user_id: user?.userInfo.id,
+      pets: formattedPets,
+      raw_pet_data: formattedPets,
     };
 
-    // Handle booking submission logic here...
     console.log("Booking Data:", bookingData);
     toast.success("Booking created successfully!");
   };
