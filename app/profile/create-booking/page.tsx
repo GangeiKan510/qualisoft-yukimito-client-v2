@@ -46,7 +46,7 @@ interface BookingData {
 
 const Page: React.FC = () => {
   const { user } = useUser() as { user: UserContext };
-  const [service, setService] = useState<string>("Home Care");
+  const [service, setService] = useState<string>("Errand Care");
   const [checkInDate, setCheckInDate] = useState<Date | null>(null);
   const [checkOutDate, setCheckOutDate] = useState<Date | null>(null);
   const [selectedPets, setSelectedPets] = useState<string[]>([]);

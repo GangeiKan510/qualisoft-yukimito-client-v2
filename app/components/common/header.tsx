@@ -8,15 +8,18 @@ import { auth } from "../helpers/config";
 import { signOut } from "firebase/auth";
 import Spinner from "./spinner";
 import ConfirmationModal from "./confirmation-modal";
+import { useSidebar } from "../config/sidebar-context";
 
 function Header() {
   const pathname = usePathname();
   const router = useRouter();
+  const { toggleSidebar } = useSidebar();
   const routesWithHeaderNav = [
     routes.home,
     routes.userBookingHistory,
     routes.userPersonalDetails,
     routes.userPets,
+    routes.userCreateBooking,
   ];
   const [jwtToken, setJwtToken] = useState<string | null>(null);
   const [loadingUser, setLoadingUser] = useState(true);
@@ -80,18 +83,31 @@ function Header() {
   return (
     <div className="h-[75px] fixed top-0 left-0 right-0 z-50 flex justify-between px-4 sm:px-6 lg:px-10 items-center text-white bg-white border-b border-gray border-opacity-25">
       <div
-        className="flex gap-2 items-center cursor-pointer"
-        onClick={() => {
-          router.replace(routes.home);
-        }}
+        className="flex gap-3 items-center cursor-pointer"
+        onClick={toggleSidebar}
       >
         <Image
+          className="block sm:hidden"
+          width={30}
+          height={30}
+          src="/svg/hamburger-menu.svg"
+          alt="hamburger-menu"
+        />
+        <Image
+          onClick={() => {
+            router.replace(routes.home);
+          }}
           width={40}
           height={40}
           src="/svg/logo-theme.svg"
           alt="logo-img"
         />
-        <span className="hidden sm:block lg:text-xl text-lg font-bold text-primary-dark">
+        <span
+          className="hidden sm:block lg:text-xl text-lg font-bold text-primary-dark"
+          onClick={() => {
+            router.replace(routes.home);
+          }}
+        >
           YUKIMITO: Pet Hotel and Boarding Services
         </span>
       </div>
