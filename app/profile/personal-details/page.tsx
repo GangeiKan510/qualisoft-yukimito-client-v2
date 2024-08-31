@@ -8,6 +8,7 @@ import PhoneInput from "react-phone-number-input";
 import toast, { Toaster } from "react-hot-toast";
 import Spinner from "@/app/components/common/spinner";
 import { updateUserByEmail } from "@/app/api/network/user";
+import Image from "next/image";
 
 type FormData = {
   name: string;
@@ -151,7 +152,16 @@ function Page() {
         <div className="w-full p-5 flex gap-4 items-center">
           <div className="w-full flex flex-col md:flex-row justify-between items-start md:items-center">
             <div>
-              <div className="font-semibold text-primary-dark">Email</div>
+              <div className="flex gap-2 font-semibold text-primary-dark">
+                <Image
+                  width={24}
+                  height={24}
+                  src="/svg/email-icon.svg"
+                  alt="preview-icon"
+                  className="max-w-full h-auto rounded-lg"
+                />
+                Email
+              </div>
               <div className="flex items-center gap-3">
                 <div className="text-gray">{formData.email}</div>
                 <div>
@@ -171,7 +181,14 @@ function Page() {
         <div className="w-full p-5 flex gap-4 items-center">
           <div className="w-full flex flex-col md:flex-row justify-between items-start md:items-center">
             <div>
-              <div className="font-semibold text-primary-dark">
+              <div className="flex gap-2 font-semibold text-primary-dark mb-1">
+                <Image
+                  width={24}
+                  height={24}
+                  src="/svg/phone-icon.svg"
+                  alt="preview-icon"
+                  className="max-w-full h-auto rounded-lg"
+                />
                 Phone number
               </div>
               {isEditing.phone ? (
@@ -200,7 +217,16 @@ function Page() {
         <div className="w-full p-5 flex gap-4 items-center">
           <div className="w-full flex flex-col md:flex-row justify-between items-start md:items-center">
             <div>
-              <div className="font-semibold text-primary-dark">Address</div>
+              <div className="flex gap-2 font-semibold text-primary-dark mb-1">
+                <Image
+                  width={24}
+                  height={24}
+                  src="/svg/location-icon.svg"
+                  alt="preview-icon"
+                  className="max-w-full h-auto rounded-lg"
+                />
+                Address
+              </div>
               {isEditing.address ? (
                 <input
                   type="text"

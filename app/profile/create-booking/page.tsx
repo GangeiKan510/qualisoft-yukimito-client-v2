@@ -7,6 +7,7 @@ import toast, { Toaster } from "react-hot-toast";
 import { useUser } from "@/app/components/config/user-context";
 import BookingSummary from "@/app/components/modals/booking-summary";
 import { createBooking } from "@/app/api/network/booking";
+import Image from "next/image";
 
 interface Pet {
   id: string;
@@ -162,8 +163,15 @@ const Page: React.FC = () => {
     <div className="w-full flex flex-col gap-5 p-4 md:p-6 lg:p-8">
       <Toaster />
       <div className="w-full lg:w-[950px] flex justify-between">
-        <div className="text-[24px] font-semibold text-primary-dark">
+        <div className="flex gap-2 text-[24px] font-semibold text-primary-dark">
           Create Booking
+          <Image
+            width={24}
+            height={24}
+            src="/svg/more-info-icon.svg"
+            alt="preview-icon"
+            className="max-w-full h-auto rounded-lg cursor-pointer"
+          />
         </div>
       </div>
 

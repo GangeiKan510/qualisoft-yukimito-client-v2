@@ -50,9 +50,16 @@ function PetCard({
               <div>
                 <span className="text-gray">{breed}</span>&nbsp;
                 <span
-                  className="text-primary-dark underline underline-offset-2 cursor-pointer"
+                  className="flex gap-1 text-primary-dark underline underline-offset-2 cursor-pointer"
                   onClick={handleViewVaccine}
                 >
+                  <Image
+                    width={24}
+                    height={24}
+                    src="/svg/preview-image.svg"
+                    alt="preview-icon"
+                    className="max-w-full h-auto rounded-lg"
+                  />
                   View Vaccine
                 </span>
               </div>
