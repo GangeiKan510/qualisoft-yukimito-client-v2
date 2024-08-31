@@ -26,7 +26,7 @@ const BookingHistoryTable = ({ bookings }: any) => {
   return (
     <div className="w-full text-primary-dark">
       {/* Table Header */}
-      <div className="flex justify-between font-semibold text-primary-dark bg-gray-100 p-4 rounded-t-lg border-b border-gray-200">
+      <div className="flex justify-between font-semibold bg-[#D2EAE7] text-primary-dark bg-gray-100 p-4 border-y border-gray-200">
         <div className="w-1/6">ID</div>
         <div className="w-1/6">Service</div>
         <div className="w-1/6">Check-In</div>
@@ -81,7 +81,7 @@ const BookingHistoryTable = ({ bookings }: any) => {
                     ? "whitespace-normal"
                     : "truncate"
                 }`}
-                onClick={() => toggleExpandRow(booking.id)} 
+                onClick={() => toggleExpandRow(booking.id)}
                 style={{
                   display: expandedRows.has(booking.id)
                     ? "block"

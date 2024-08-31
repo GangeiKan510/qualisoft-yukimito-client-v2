@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useUser } from "@/app/components/config/user-context";
 import "react-datepicker/dist/react-datepicker.css";
 import { Toaster } from "react-hot-toast";
-import BookingHistoryTable from "@/app/components/ cards/booking-history-table";
+import BookingHistoryTable from "@/app/components/tables/booking-history-table";
 
 function Page() {
   const { user } = useUser();
@@ -15,8 +15,6 @@ function Page() {
       setBookings(user.userInfo.bookings);
     }
   }, [user]);
-
-  console.log(bookings);
 
   return (
     <div className="flex flex-col gap-5 p-4 md:p-6 lg:p-8">

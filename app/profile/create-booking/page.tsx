@@ -163,8 +163,10 @@ const Page: React.FC = () => {
     <div className="w-full flex flex-col gap-5 p-4 md:p-6 lg:p-8">
       <Toaster />
       <div className="w-full lg:w-[950px] flex justify-between">
-        <div className="flex gap-2 text-[24px] font-semibold text-primary-dark">
-          Create Booking
+        <div className="flex gap-1">
+          <span className="text-[24px] font-semibold text-primary-dark">
+            Create Booking
+          </span>
           <Image
             width={24}
             height={24}
@@ -181,7 +183,7 @@ const Page: React.FC = () => {
         <select
           value={service}
           onChange={(e) => setService(e.target.value)}
-          className="text-primary-dark border border-primary-dark rounded px-3 py-2"
+          className="text-primary-dark border border-primary-dark rounded-[8px] px-3 py-2"
         >
           <option value="Home Care">Home Care</option>
           <option value="Errand Care">Errand Care</option>
