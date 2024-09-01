@@ -25,8 +25,8 @@ const BookingHistoryTable = ({ bookings }: any) => {
 
   return (
     <div className="w-full text-primary-dark">
-      {/* Table Header */}
-      <div className="flex justify-between font-semibold bg-[#D2EAE7] text-primary-dark bg-gray-100 p-4 border-y border-gray-200">
+      {/* Table Header for larger screens */}
+      <div className="hidden md:flex justify-between font-semibold bg-[#D2EAE7] text-primary-dark p-4 border-y border-gray-200">
         <div className="w-1/6">ID</div>
         <div className="w-1/6">Service</div>
         <div className="w-1/6">Check-In</div>
@@ -44,12 +44,115 @@ const BookingHistoryTable = ({ bookings }: any) => {
         return (
           <div
             key={booking.id}
-            className={`py-10 flex justify-between text-gray-700 p-4 ${
+            className={`md:flex justify-between items-center text-gray-700 p-4 ${
               index === bookings.length - 1 ? "" : "border-b"
             } border-gray-200`}
           >
-            {/* ID Column with Ellipsis */}
-            <div className="w-1/6 relative px-1">
+            {/* Mobile View as Card Layout */}
+            <div className="flex flex-col md:hidden mb-4">
+              <div className="flex justify-between mb-2">
+                <span className="font-semibold">ID:</span>
+                <span
+                  className={`cursor-pointer ${
+                    expandedRows.has(booking.id)
+                      ? "whitespace-normal"
+                      : "truncate"
+                  }`}
+                  onClick={() => toggleExpandRow(booking.id)}
+                  style={{
+                    display: expandedRows.has(booking.id)
+                      ? "block"
+                      : "-webkit-box",
+                    WebkitLineClamp: expandedRows.has(booking.id) ? "none" : 1,
+                    WebkitBoxOrient: "vertical",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                  }}
+                >
+                  {expandedRows.has(booking.id)
+                    ? booking.id
+                    : `${booking.id.slice(0, 10)}...`}
+                </span>
+              </div>
+
+              <div className="flex justify-between mb-2">
+                <span className="font-semibold">Service:</span>
+                <span
+                  className={`cursor-pointer ${
+                    expandedRows.has(booking.id)
+                      ? "whitespace-normal"
+                      : "truncate"
+                  }`}
+                  onClick={() => toggleExpandRow(booking.id)}
+                  style={{
+                    display: expandedRows.has(booking.id)
+                      ? "block"
+                      : "-webkit-box",
+                    WebkitLineClamp: expandedRows.has(booking.id) ? "none" : 1,
+                    WebkitBoxOrient: "vertical",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                  }}
+                >
+                  {expandedRows.has(booking.id)
+                    ? booking.service
+                    : `${booking.service.slice(0, 10)}...`}
+                </span>
+              </div>
+
+              <div className="flex justify-between mb-2">
+                <span className="font-semibold">Check-In:</span>
+                <span>
+                  {checkIn.date}{" "}
+                  {booking.service !== "Home Care" && (
+                    <span className="text-sm text-gray-500">
+                      {checkIn.time}
+                    </span>
+                  )}
+                </span>
+              </div>
+
+              <div className="flex justify-between mb-2">
+                <span className="font-semibold">Check-Out:</span>
+                <span>
+                  {checkOut.date}{" "}
+                  {booking.service !== "Home Care" && (
+                    <span className="text-sm text-gray-500">
+                      {checkOut.time}
+                    </span>
+                  )}
+                </span>
+              </div>
+
+              <div className="flex justify-between mb-2">
+                <span className="font-semibold">Pets:</span>
+                <div className="flex flex-wrap gap-1 max-h-16 overflow-hidden">
+                  {booking.raw_pet_data.map((pet: any, petIndex: number) => (
+                    <div
+                      key={petIndex}
+                      className="px-2 py-1 border bg-primary text-white border-primary rounded-full text-sm"
+                    >
+                      {pet.name}
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="flex justify-between mb-2">
+                <span className="font-semibold">Status:</span>
+                <div className="inline-block px-3 py-1 border rounded-full border-secondary text-secondary">
+                  {booking.status || "pending"}
+                </div>
+              </div>
+
+              <div className="flex justify-between mb-2">
+                <span className="font-semibold">Total:</span>
+                <span className="font-bold">₱{booking.total_bill}</span>
+              </div>
+            </div>
+
+            {/* Desktop View as Table Layout */}
+            <div className="hidden md:flex w-1/6 px-1">
               <span
                 className={`cursor-pointer ${
                   expandedRows.has(booking.id)
@@ -73,8 +176,7 @@ const BookingHistoryTable = ({ bookings }: any) => {
               </span>
             </div>
 
-            {/* Service Column with Ellipsis */}
-            <div className="w-1/6 relative px-1">
+            <div className="hidden md:flex w-1/6 px-1">
               <span
                 className={`cursor-pointer ${
                   expandedRows.has(booking.id)
@@ -98,28 +200,26 @@ const BookingHistoryTable = ({ bookings }: any) => {
               </span>
             </div>
 
-            {/* Check-In Date and Time */}
-            <div className="w-1/6 px-1">
+            <div className="hidden md:flex w-1/6 px-1 flex-col">
               <div>{checkIn.date}</div>
               {booking.service !== "Home Care" && (
                 <div className="text-sm text-gray-500">{checkIn.time}</div>
               )}
             </div>
 
-            {/* Check-Out Date and Time */}
-            <div className="w-1/6 px-1">
+            <div className="hidden md:flex w-1/6 px-1 flex-col">
               <div>{checkOut.date}</div>
               {booking.service !== "Home Care" && (
                 <div className="text-sm text-gray-500">{checkOut.time}</div>
               )}
             </div>
 
-            <div className="w-1/6 px-1">
-              <div className="flex flex-wrap gap-1 overflow-hidden max-h-16">
+            <div className="hidden md:flex w-1/6 px-1">
+              <div className="flex flex-wrap gap-1 max-h-16 overflow-hidden">
                 {booking.raw_pet_data.map((pet: any, petIndex: number) => (
                   <div
                     key={petIndex}
-                    className="px-2 border bg-primary text-white border-primary rounded-full"
+                    className="px-2 py-1 border bg-primary text-white border-primary rounded-full text-sm"
                   >
                     {pet.name}
                   </div>
@@ -127,13 +227,15 @@ const BookingHistoryTable = ({ bookings }: any) => {
               </div>
             </div>
 
-            <div className="w-1/6 px-1 text-secondary">
-              <div className="inline-block px-3 border rounded-full border-secondary text-secondary">
+            <div className="hidden md:flex w-1/6 px-1">
+              <div className="inline-block px-3 py-1 border rounded-full border-secondary text-secondary">
                 {booking.status || "pending"}
               </div>
             </div>
 
-            <div className="w-1/6 px-1 font-bold">₱{booking.total_bill}</div>
+            <div className="hidden md:flex w-1/6 px-1 font-bold">
+              ₱{booking.total_bill}
+            </div>
           </div>
         );
       })}
