@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import { RegularBookingData } from "../utils/types/types";
+import Spinner from "../common/spinner";
 
 interface BookingSummaryProps {
   bookingData: RegularBookingData | null;
   onClose: () => void;
-  onBookNow: () => void;
+  onBookNow: () => Promise<void>;
 }
 
 const BookingSummary: React.FC<BookingSummaryProps> = ({
@@ -12,6 +13,8 @@ const BookingSummary: React.FC<BookingSummaryProps> = ({
   onClose,
   onBookNow,
 }) => {
+  const [isLoading, setIsLoading] = useState(false);
+
   if (!bookingData) return null;
 
   // Function to calculate the price for a single pet based on the service and size
@@ -64,6 +67,12 @@ const BookingSummary: React.FC<BookingSummaryProps> = ({
 
   const totalBill = calculateTotalBill();
 
+  const handleBookNowClick = async () => {
+    setIsLoading(true);
+    await onBookNow();
+    setIsLoading(false);
+  };
+
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
       <div className="bg-white p-6 rounded-md w-full max-w-md">
@@ -107,9 +116,8 @@ const BookingSummary: React.FC<BookingSummaryProps> = ({
 
               return (
                 <li key={index} className="flex justify-between">
-                  {" "}
                   <span>
-                    {index + 1}. {pet.name} ({pet.breed}) - {pet.size}{" "}
+                    {index + 1}. {pet.name} ({pet.breed}) - {pet.size}
                   </span>
                   <span className="text-primary">₱{petPrice.toFixed(2)}</span>
                 </li>
@@ -133,10 +141,11 @@ const BookingSummary: React.FC<BookingSummaryProps> = ({
             Close
           </button>
           <button
-            onClick={onBookNow}
+            onClick={handleBookNowClick}
+            disabled={isLoading}
             className="h-[40px] border border-primary-dark bg-primary-dark text-white px-8 rounded-full flex items-center justify-center"
           >
-            Book Now!
+            {isLoading ? <Spinner /> : "Book Now!"}
           </button>
         </div>
       </div>
