@@ -89,7 +89,7 @@ function PetCard({
           height={100}
           src={vaccinePhotoUrl}
           alt="Vaccine Photo"
-          className="max-w-full h-auto rounded-lg"
+          className="max-w-full h-auto rounded-lg p-4"
         />
       </VaccinePhoto>
     </>

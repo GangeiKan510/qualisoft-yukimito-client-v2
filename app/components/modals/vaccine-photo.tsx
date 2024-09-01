@@ -1,4 +1,5 @@
 import React from "react";
+import Image from "next/image";
 
 type VaccinePhotoProps = {
   isVisible: boolean;
@@ -15,11 +16,17 @@ const VaccinePhoto = ({ isVisible, onClose, children }: VaccinePhotoProps) => {
         className="absolute inset-0 bg-black opacity-50"
         onClick={onClose}
       ></div>
+
       <div className="relative bg-white p-5 rounded-lg shadow-lg z-10">
+        <Image
+          width={24}
+          height={24}
+          src="/svg/close-icon.svg"
+          alt="close-icon"
+          className="absolute top-3 right-3 cursor-pointer"
+          onClick={onClose}
+        />
         {children}
-        <button onClick={onClose} className="absolute top-2 right-2 text-black">
-          X
-        </button>
       </div>
     </div>
   );

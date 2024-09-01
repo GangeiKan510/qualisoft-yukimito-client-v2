@@ -144,7 +144,6 @@ const Page: React.FC = () => {
   const handleBookingSubmit = async () => {
     if (!bookingData) return;
 
-    console.log("Submitting Booking Data:", bookingData);
     try {
       const response = await createBooking(bookingData);
       if (response) {

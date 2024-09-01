@@ -28,6 +28,7 @@ function AddPetModal({ isVisible, onClose }: AddPetModalProps) {
     setSaveLabel(<Spinner />);
     if (!birthDate || !userId) {
       toast.error("Please fill all fields correctly.");
+      setSaveLabel("Add");
       return;
     }
 
@@ -42,9 +43,8 @@ function AddPetModal({ isVisible, onClose }: AddPetModalProps) {
 
     try {
       await addPet(petData);
-      refetchMe();
+      await refetchMe();
       onClose();
-      toast.error("Failed to add pet.");
     } catch (error) {
       toast.success("Pet added successfully!");
       console.error("Error adding pet:", error);

@@ -19,20 +19,8 @@ function Page() {
       setPets(user.userInfo.pets);
       setLoading(false);
     } else {
-      setLoading(true);
-
-      const fetchPets = async () => {
-        try {
-          const fetchedPets: React.SetStateAction<any[]> = [];
-          setPets(fetchedPets);
-        } catch (err) {
-          setError("Failed to load pets.");
-        } finally {
-          setLoading(false);
-        }
-      };
-
-      fetchPets();
+      setPets([]);
+      setLoading(false);
     }
   }, [user]);
 
