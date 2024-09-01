@@ -6,6 +6,7 @@ import { Toaster } from "react-hot-toast";
 import BookingHistoryTable from "@/app/components/tables/booking-history-table";
 import SortDropdown from "@/app/components/dropdowns/sort-booking-dropdown";
 import { sortBookings } from "@/app/components/utils/sort-booking";
+import Image from "next/image";
 
 const sortOptions = [
   "by Service",
@@ -38,8 +39,19 @@ function Page() {
       <div className="text-[24px] font-semibold text-primary-dark">
         Booking History
       </div>
-
-      <SortDropdown options={sortOptions} onSortChange={handleSortChange} />
+      <div className="flex gap-3">
+        <SortDropdown options={sortOptions} onSortChange={handleSortChange} />
+        <div className="flex gap-1 text-primary-dark cursor-pointer">
+          <Image
+            width={24}
+            height={24}
+            src="/svg/filter-icon.svg"
+            alt="preview-icon"
+            className="max-w-full h-auto rounded-lg cursor-pointer"
+          />
+          Filter
+        </div>
+      </div>
 
       {bookings.length === 0 ? (
         <div className="text-center text-gray">No bookings yet...</div>
