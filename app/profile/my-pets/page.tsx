@@ -78,8 +78,6 @@ function Page() {
               vaccineStatus={pet.vaccine_photo ? "approved" : "pending"}
               vaccinePhotoUrl={pet.vaccine_photo}
               onEdit={() => console.log("Edit clicked")}
-              onDelete={() => handleDeletePet(pet.id)}
-              onViewVaccine={() => console.log("View Vaccine clicked")}
               petId={pet.id}
             />
           ))}

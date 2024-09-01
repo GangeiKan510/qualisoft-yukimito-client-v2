@@ -7,6 +7,7 @@ import Spinner from "../common/spinner";
 import { deletePet } from "@/app/api/network/pet";
 import ConfirmationModal from "../common/confirmation-modal";
 import { toast } from "react-hot-toast";
+import { useUser } from "../config/user-context";
 
 type PetCardProps = {
   petName: string;
@@ -14,8 +15,6 @@ type PetCardProps = {
   breed: string;
   vaccineStatus: "pending" | "approved";
   onEdit: () => void;
-  onDelete: () => void;
-  onViewVaccine: () => void;
   vaccinePhotoUrl: string;
   petId: string;
 };
@@ -26,11 +25,10 @@ function PetCard({
   breed,
   vaccineStatus,
   onEdit,
-  onDelete,
-  onViewVaccine,
   vaccinePhotoUrl,
   petId,
 }: PetCardProps) {
+  const { refetchMe } = useUser();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const [deleteLabel, setDeleteLabel] = useState<any>("Delete");
@@ -55,8 +53,8 @@ function PetCard({
     try {
       await deletePet(petId);
       setShowDeleteConfirmation(false);
-      onDelete();
       toast.success("Pet deleted successfully!");
+      refetchMe();
     } catch (error) {
       console.error("Error deleting pet:", error);
       toast.error("Failed to delete pet.");
@@ -105,8 +103,8 @@ function PetCard({
               ) : (
                 <>
                   <Image
-                    width={24}
-                    height={24}
+                    width={30}
+                    height={30}
                     src="/svg/delete-pet-icon.svg"
                     alt="delete-icon"
                     className="max-w-full h-auto rounded-lg"
