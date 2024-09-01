@@ -10,8 +10,9 @@ type PetCardProps = {
   breed: string;
   vaccineStatus: "pending" | "approved";
   onEdit: () => void;
+  onDelete: () => void;
   onViewVaccine: () => void;
-  vaccinePhotoUrl: string; // Add this prop to hold the vaccine photo URL
+  vaccinePhotoUrl: string;
 };
 
 function PetCard({
@@ -20,6 +21,7 @@ function PetCard({
   breed,
   vaccineStatus,
   onEdit,
+  onDelete,
   onViewVaccine,
   vaccinePhotoUrl,
 }: PetCardProps) {
@@ -66,17 +68,15 @@ function PetCard({
             </div>
           </div>
 
-          <div
-            className="flex gap-3 mt-3 md:mt-0 items-center font-semibold cursor-pointer text-primary-dark"
-            onClick={onEdit}
-          >
-            <div>Edit</div>
+          <div className="flex gap-3 mt-3 md:mt-0 items-center font-semibold cursor-pointer text-primary-dark">
+            <div onClick={onEdit}>Edit</div>
             <Image
               width={24}
               height={24}
               src="/svg/delete-pet-icon.svg"
-              alt="Vaccine Photo"
-              className="max-w-full h-auto rounded-lg"
+              alt="delete-icon"
+              className="max-w-full h-auto rounded-lg cursor-pointer"
+              onClick={onDelete}
             />
           </div>
         </div>

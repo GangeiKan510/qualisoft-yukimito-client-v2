@@ -6,6 +6,7 @@ import { Toaster } from "react-hot-toast";
 import { useUser } from "@/app/components/config/user-context";
 import Spinner from "@/app/components/common/spinner";
 import AddPetModal from "@/app/components/modals/add-pet";
+import ConfirmationModal from "@/app/components/common/confirmation-modal";
 
 function Page() {
   const { user } = useUser();
@@ -13,6 +14,9 @@ function Page() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isModalVisible, setModalVisible] = useState(false);
+  const [isConfirmationModalVisible, setConfirmationModalVisible] =
+    useState(false);
+  const [petToDelete, setPetToDelete] = useState<string | null>(null);
 
   useEffect(() => {
     if (user?.userInfo?.pets) {
@@ -23,6 +27,22 @@ function Page() {
       setLoading(false);
     }
   }, [user]);
+
+  const handleDeletePet = (petId: string) => {
+    setPetToDelete(petId);
+    setConfirmationModalVisible(true);
+  };
+
+  const confirmDeletePet = async () => {
+    if (!petToDelete) return;
+
+    // Call your delete API here
+    // await deletePet(petToDelete);
+
+    setPets(pets.filter((pet) => pet.id !== petToDelete));
+    setConfirmationModalVisible(false);
+    setPetToDelete(null);
+  };
 
   return (
     <div className="w-full flex flex-col gap-5 p-4 md:p-6 lg:p-8">
@@ -58,6 +78,7 @@ function Page() {
               vaccineStatus={pet.vaccine_photo ? "approved" : "pending"}
               vaccinePhotoUrl={pet.vaccine_photo}
               onEdit={() => console.log("Edit clicked")}
+              onDelete={() => handleDeletePet(pet.id)}
               onViewVaccine={() => console.log("View Vaccine clicked")}
             />
           ))}
@@ -68,6 +89,17 @@ function Page() {
       <AddPetModal
         isVisible={isModalVisible}
         onClose={() => setModalVisible(false)}
+      />
+
+      {/* Confirmation Modal */}
+      <ConfirmationModal
+        isOpen={isConfirmationModalVisible}
+        title="Delete Pet"
+        message="Are you sure you want to delete this pet?"
+        type="danger"
+        confirmMessage="Delete"
+        onConfirm={confirmDeletePet}
+        onCancel={() => setConfirmationModalVisible(false)}
       />
     </div>
   );
