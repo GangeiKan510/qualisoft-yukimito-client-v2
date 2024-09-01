@@ -82,17 +82,17 @@ function Header() {
 
   return (
     <div className="h-[75px] fixed top-0 left-0 right-0 z-50 flex justify-between px-4 sm:px-6 lg:px-10 items-center text-white bg-white border-b border-gray border-opacity-25">
-      <div
-        className="flex gap-3 items-center cursor-pointer"
-        onClick={toggleSidebar}
-      >
-        <Image
-          className="block sm:hidden"
-          width={30}
-          height={30}
-          src="/svg/hamburger-menu.svg"
-          alt="hamburger-menu"
-        />
+      <div className="flex gap-3 items-center">
+        {pathname !== routes.home && routesWithHeaderNav.includes(pathname) && (
+          <Image
+            className="block sm:hidden cursor-pointer"
+            width={30}
+            height={30}
+            src="/svg/hamburger-menu.svg"
+            alt="hamburger-menu"
+            onClick={toggleSidebar}
+          />
+        )}
         <Image
           onClick={() => {
             router.replace(routes.home);
@@ -103,7 +103,7 @@ function Header() {
           alt="logo-img"
         />
         <span
-          className="hidden sm:block lg:text-xl text-lg font-bold text-primary-dark"
+          className="hidden sm:block lg:text-xl text-lg font-bold text-primary-dark cursor-pointer"
           onClick={() => {
             router.replace(routes.home);
           }}
@@ -113,14 +113,6 @@ function Header() {
       </div>
       {routesWithHeaderNav.includes(pathname) && (
         <div className="flex items-center gap-2 sm:gap-3 lg:gap-3 text-sm sm:text-base lg:text-lg font-semibold">
-          <div
-            className="cursor-pointer text-primary-dark"
-            onClick={() => {
-              router.replace(routes.services);
-            }}
-          >
-            Our Services
-          </div>
           {loadingUser ? (
             <Spinner type="secondary" />
           ) : jwtToken ? (
