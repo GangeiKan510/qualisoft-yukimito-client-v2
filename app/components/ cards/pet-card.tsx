@@ -6,6 +6,7 @@ import Image from "next/image";
 import Spinner from "../common/spinner";
 import { deletePet } from "@/app/api/network/pet";
 import ConfirmationModal from "../common/confirmation-modal";
+import { toast } from "react-hot-toast";
 
 type PetCardProps = {
   petName: string;
@@ -46,14 +47,20 @@ function PetCard({
     setIsModalVisible(false);
   };
 
+  // TODO: Automaticall Close Confirmation Modal Adter Delete
+  // TODO: Refetch Pets to Load List after adding or deleting a pet
   const handleDelete = async () => {
     setLoading(true);
     setDeleteLabel(<Spinner />);
     try {
       await deletePet(petId);
       onDelete();
+      toast.success("Pet deleted successfully!");
+      setShowDeleteConfirmation(false);
     } catch (error) {
       console.error("Error deleting pet:", error);
+      toast.error("Failed to delete pet.");
+      setShowDeleteConfirmation(false);
     } finally {
       setLoading(false);
       setDeleteLabel("Delete");
