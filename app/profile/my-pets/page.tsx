@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import PetCard from "@/app/components/ cards/pet-card";
+import PetCard from "@/app/components/cards/pet-card";
 import toast, { Toaster } from "react-hot-toast";
 import { useUser } from "@/app/components/config/user-context";
 import Spinner from "@/app/components/common/spinner";
