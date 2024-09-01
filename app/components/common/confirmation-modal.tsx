@@ -1,6 +1,6 @@
 interface ConfirmationModalProps {
   isOpen: boolean;
-  title: string;
+  title: any;
   message: string;
   type: "success" | "danger";
   confirmMessage: any;

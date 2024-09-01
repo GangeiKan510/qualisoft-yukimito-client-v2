@@ -1,4 +1,7 @@
-import { postWithFirebaseJwt } from "../firebase/requests-with-firebase";
+import {
+  postWithFirebaseJwt,
+  deleteWithFirebaseJwt,
+} from "../firebase/requests-with-firebase";
 
 export const addPet = async (petData: {
   userId: string;
@@ -31,6 +34,22 @@ export const addPet = async (petData: {
     return response;
   } catch (error) {
     console.error("Error adding pet:", error);
+    throw error;
+  }
+};
+
+export const deletePet = async (petId: string) => {
+  try {
+    const response = await deleteWithFirebaseJwt("/web/pets/delete-pet", {
+      params: { petId },
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    return response;
+  } catch (error) {
+    console.error("Error deleting pet:", error);
     throw error;
   }
 };

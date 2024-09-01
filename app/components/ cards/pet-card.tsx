@@ -3,6 +3,9 @@
 import React, { useState } from "react";
 import VaccinePhoto from "../modals/vaccine-photo";
 import Image from "next/image";
+import Spinner from "../common/spinner";
+import { deletePet } from "@/app/api/network/pet";
+import ConfirmationModal from "../common/confirmation-modal";
 
 type PetCardProps = {
   petName: string;
@@ -13,6 +16,7 @@ type PetCardProps = {
   onDelete: () => void;
   onViewVaccine: () => void;
   vaccinePhotoUrl: string;
+  petId: string;
 };
 
 function PetCard({
@@ -24,8 +28,13 @@ function PetCard({
   onDelete,
   onViewVaccine,
   vaccinePhotoUrl,
+  petId,
 }: PetCardProps) {
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
+  const [deleteLabel, setDeleteLabel] = useState<any>("Delete");
+  const [loading, setLoading] = useState(false);
+
   const vaccineText =
     vaccineStatus === "pending" ? "vaccine pending" : "vaccine approved";
 
@@ -35,6 +44,21 @@ function PetCard({
 
   const handleCloseModal = () => {
     setIsModalVisible(false);
+  };
+
+  const handleDelete = async () => {
+    setLoading(true);
+    setDeleteLabel(<Spinner />);
+    try {
+      await deletePet(petId);
+      onDelete();
+    } catch (error) {
+      console.error("Error deleting pet:", error);
+    } finally {
+      setLoading(false);
+      setDeleteLabel("Delete");
+      setShowDeleteConfirmation(false);
+    }
   };
 
   return (
@@ -70,14 +94,24 @@ function PetCard({
 
           <div className="flex gap-3 mt-3 md:mt-0 items-center font-semibold cursor-pointer text-primary-dark">
             <div onClick={onEdit}>Edit</div>
-            <Image
-              width={24}
-              height={24}
-              src="/svg/delete-pet-icon.svg"
-              alt="delete-icon"
-              className="max-w-full h-auto rounded-lg cursor-pointer"
-              onClick={onDelete}
-            />
+            <div
+              className="flex items-center cursor-pointer"
+              onClick={() => setShowDeleteConfirmation(true)}
+            >
+              {loading ? (
+                <Spinner />
+              ) : (
+                <>
+                  <Image
+                    width={24}
+                    height={24}
+                    src="/svg/delete-pet-icon.svg"
+                    alt="delete-icon"
+                    className="max-w-full h-auto rounded-lg"
+                  />
+                </>
+              )}
+            </div>
           </div>
         </div>
       </div>
@@ -92,6 +126,17 @@ function PetCard({
           className="max-w-full h-auto rounded-lg p-4"
         />
       </VaccinePhoto>
+
+      {/* Confirmation Modal for deleting a pet */}
+      <ConfirmationModal
+        isOpen={showDeleteConfirmation}
+        title={loading ? <Spinner /> : "Confirm Delete"}
+        message={`Are you sure you want to delete ${petName}?`}
+        type="danger"
+        confirmMessage={deleteLabel}
+        onConfirm={handleDelete}
+        onCancel={() => setShowDeleteConfirmation(false)}
+      />
     </>
   );
 }
