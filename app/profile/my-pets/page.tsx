@@ -2,14 +2,14 @@
 
 import React, { useEffect, useState } from "react";
 import PetCard from "@/app/components/ cards/pet-card";
-import { Toaster } from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 import { useUser } from "@/app/components/config/user-context";
 import Spinner from "@/app/components/common/spinner";
 import AddPetModal from "@/app/components/modals/add-pet";
 import ConfirmationModal from "@/app/components/common/confirmation-modal";
 
 function Page() {
-  const { user } = useUser();
+  const { user, refetchMe } = useUser();
   const [pets, setPets] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);

@@ -43,13 +43,14 @@ function AddPetModal({ isVisible, onClose }: AddPetModalProps) {
 
     try {
       await addPet(petData);
-      await refetchMe();
       onClose();
     } catch (error) {
       toast.success("Pet added successfully!");
       console.error("Error adding pet:", error);
     } finally {
       setSaveLabel("Add");
+      onClose();
+      refetchMe();
     }
   };
 

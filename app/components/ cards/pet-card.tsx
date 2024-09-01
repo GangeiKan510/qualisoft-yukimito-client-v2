@@ -54,17 +54,12 @@ function PetCard({
     setDeleteLabel(<Spinner />);
     try {
       await deletePet(petId);
+      setShowDeleteConfirmation(false);
       onDelete();
       toast.success("Pet deleted successfully!");
-      setShowDeleteConfirmation(false);
     } catch (error) {
       console.error("Error deleting pet:", error);
       toast.error("Failed to delete pet.");
-      setShowDeleteConfirmation(false);
-    } finally {
-      setLoading(false);
-      setDeleteLabel("Delete");
-      setShowDeleteConfirmation(false);
     }
   };
 
