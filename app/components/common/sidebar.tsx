@@ -56,7 +56,7 @@ const Sidebar = () => {
         >
           <div className={`flex items-center ${itemContainerBaseClasses}`}>
             <span
-              className={`flex ${textBaseClasses} text-[20px] font-bold gap-2 items-center justify-center`}
+              className={`flex ${textBaseClasses} text-[20px] gap-2 items-center justify-center`}
             >
               <Image
                 width={20}
@@ -79,7 +79,7 @@ const Sidebar = () => {
         >
           <div className={`flex items-center ${itemContainerBaseClasses}`}>
             <span
-              className={`flex ${textBaseClasses} text-[20px] font-bold gap-2 items-center justify-center`}
+              className={`flex ${textBaseClasses} text-[20px] gap-2 items-center justify-center`}
             >
               <Image
                 width={20}
@@ -102,7 +102,7 @@ const Sidebar = () => {
         >
           <div className={`flex items-center ${itemContainerBaseClasses}`}>
             <span
-              className={`flex ${textBaseClasses} text-[20px] font-bold gap-2 items-center justify-center`}
+              className={`flex ${textBaseClasses} text-[20px] gap-2 items-center justify-center`}
             >
               <Image
                 width={20}
@@ -125,7 +125,7 @@ const Sidebar = () => {
         >
           <div className={`flex items-center ${itemContainerBaseClasses}`}>
             <span
-              className={`flex ${textBaseClasses} text-[20px] font-bold gap-2 items-center justify-center`}
+              className={`flex ${textBaseClasses} text-[20px] gap-2 items-center justify-center`}
             >
               <Image
                 width={20}
