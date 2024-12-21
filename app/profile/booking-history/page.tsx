@@ -28,8 +28,8 @@ function Page() {
 
   useEffect(() => {
     if (user?.userInfo?.bookings) {
-      setBookings(user.userInfo.bookings);
-      setFilteredBookings(user.userInfo.bookings);
+      setBookings(user.userInfo.bookings as any);
+      setFilteredBookings(user.userInfo.bookings as any);
     }
   }, [user]);
 
