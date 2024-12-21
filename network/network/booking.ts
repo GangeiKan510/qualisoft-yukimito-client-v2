@@ -1,7 +1,4 @@
-import {
-  BookingData,
-  RegularBookingData,
-} from "@/app/components/utils/types/types";
+import { BookingData, RegularBookingData } from "@/utils/types/types";
 import {
   getWithFirebaseJwt,
   postWithFirebaseJwt,

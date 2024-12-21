@@ -1,6 +1,6 @@
 "use client";
 import { usePathname, useRouter } from "next/navigation";
-import { routes } from "../utils/routes/routes";
+import { routes } from "../../../utils/routes/routes";
 import { useSidebar } from "../config/sidebar-context";
 import Image from "next/image";
 

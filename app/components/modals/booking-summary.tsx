@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { RegularBookingData } from "../utils/types/types";
+import { RegularBookingData } from "../../../utils/types/types";
 import Spinner from "../common/spinner";
 
 interface BookingSummaryProps {

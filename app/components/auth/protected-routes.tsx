@@ -5,7 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 import React from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../helpers/config";
-import { routes } from "../utils/routes/routes";
+import { routes } from "../../../utils/routes/routes";
 import Spinner from "../common/spinner";
 
 const ProtectedRoutes = ({

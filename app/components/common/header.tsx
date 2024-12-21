@@ -3,7 +3,7 @@
 import Image from "next/image";
 import React, { useEffect, useRef, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { routes } from "../utils/routes/routes";
+import { routes } from "../../../utils/routes/routes";
 import { auth } from "../helpers/config";
 import { signOut } from "firebase/auth";
 import Spinner from "./spinner";

@@ -6,7 +6,7 @@ import { Toaster } from "react-hot-toast";
 import BookingHistoryTable from "@/app/components/tables/booking-history-table";
 import SortDropdown from "@/app/components/dropdowns/sort-booking-dropdown";
 import FilterDropdown from "@/app/components/dropdowns/filter-booking-dropdown"; // Import the new FilterDropdown component
-import { sortBookings } from "@/app/components/utils/sort-booking";
+import { sortBookings } from "@/utils/sort-booking";
 import Image from "next/image";
 
 const sortOptions = [

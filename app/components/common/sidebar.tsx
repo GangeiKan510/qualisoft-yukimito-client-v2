@@ -1,6 +1,6 @@
 "use client";
 import { usePathname, useRouter } from "next/navigation";
-import { routes } from "../utils/routes/routes";
+import { routes } from "../../../utils/routes/routes";
 import { useState } from "react";
 import { useSidebar } from "../config/sidebar-context";
 import useSignOut from "../helpers/use-sign-out";

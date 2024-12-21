@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import React from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../components/helpers/config";
-import { routes } from "../components/utils/routes/routes";
+import { routes } from "../../utils/routes/routes";
 import { useUser } from "../components/config/user-context";
 import Spinner from "../components/common/spinner";
 import Header from "../components/common/header";
