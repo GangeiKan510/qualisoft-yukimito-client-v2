@@ -19,6 +19,7 @@ type FormData = {
 
 function Page() {
   const { user, updateUser, refetchMe } = useUser();
+  console.log(user);
   const [saveLabel, setSaveLabel] = useState<any>("Save");
   const [isEmailVerified, setIsEmailVerified] = useState(false);
   const [isEditing, setIsEditing] = useState({
@@ -81,14 +82,6 @@ function Page() {
       console.log("Updated User:", updatedUser);
 
       if (updatedUser && updatedUser.email === formData.email) {
-        updateUser({
-          ...user,
-          userInfo: updatedUser,
-          displayName: user?.displayName ?? null,
-          email: user?.email ?? null,
-          refreshToken: user?.refreshToken ?? "",
-          uid: user?.uid ?? "",
-        });
         toast.success("Successfully updated!");
         refetchMe();
       } else {

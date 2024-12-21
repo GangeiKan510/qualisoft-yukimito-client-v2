@@ -53,7 +53,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
           email: firebaseUser.email || "",
           refreshToken: firebaseUser.refreshToken,
           userInfo: userInfo,
-        });
+        } as any);
       } else {
         updateUser(null);
       }
