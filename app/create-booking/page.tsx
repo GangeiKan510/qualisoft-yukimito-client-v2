@@ -6,7 +6,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import toast, { Toaster } from "react-hot-toast";
 import "react-phone-number-input/style.css";
 import PhoneInput from "react-phone-number-input";
-import { createInstantBooking } from "../api/network/booking";
+import { createInstantBooking } from "../../network/network/booking";
 
 function Page() {
   const [service, setService] = useState("Home Care");
@@ -128,7 +128,7 @@ function Page() {
 
   return (
     <div className="flex flex-col gap-3 items-center justify-center h-full min-h-[80vh] px-4 pb-4">
-      <div className="w-full max-w-[90%] lg:max-w-[70%] h-auto shadow-lg rounded-[16px] bg-white relative">
+      <div className="w-full max-w-[90%] lg:max-w-[70%] h-auto shadow-lg rounded-[16px] bg-white relative mt-24">
         <Toaster />
         <div className="p-6 lg:px-6 h-auto">
           <div className="text-[20px] sm:text-[24px] text-center text-primary-dark font-bold">

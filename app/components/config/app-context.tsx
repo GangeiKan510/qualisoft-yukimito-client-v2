@@ -13,8 +13,8 @@ import {
   isSupported,
 } from "firebase/remote-config";
 import { firebaseApp } from "../helpers/config";
-import firebaseRemoteConfig from "../utils/remote/remote-config";
-import { FeatureFlags } from "../utils/types/feature-flags";
+import firebaseRemoteConfig from "../../../utils/remote/remote-config";
+import { FeatureFlags } from "../../../utils/types/feature-flags";
 
 interface AppContextProps {
   featureFlags: FeatureFlags;

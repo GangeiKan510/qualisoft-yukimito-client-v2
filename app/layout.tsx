@@ -5,7 +5,7 @@ import Footer from "./components/common/footer";
 import Header from "./components/common/header";
 import { AppProvider } from "./components/config/app-context";
 import "./globals.css";
-import { routes } from "./components/utils/routes/routes";
+import { routes } from "../utils/routes/routes";
 import { UserProvider } from "./components/config/user-context";
 import { SidebarProvider } from "./components/config/sidebar-context";
 

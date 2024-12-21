@@ -6,7 +6,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import toast, { Toaster } from "react-hot-toast";
 import { useUser } from "@/app/components/config/user-context";
 import BookingSummary from "@/app/components/modals/booking-summary";
-import { createBooking } from "@/app/api/network/booking";
+import { createBooking } from "@/network/network/booking";
 import Image from "next/image";
 
 interface Pet {

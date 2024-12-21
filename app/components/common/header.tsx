@@ -3,14 +3,16 @@
 import Image from "next/image";
 import React, { useEffect, useRef, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { routes } from "../utils/routes/routes";
+import { routes } from "../../../utils/routes/routes";
 import { auth } from "../helpers/config";
 import { signOut } from "firebase/auth";
 import Spinner from "./spinner";
 import ConfirmationModal from "./confirmation-modal";
 import { useSidebar } from "../config/sidebar-context";
+import { useUser } from "../config/user-context";
 
 function Header() {
+  const { user } = useUser();
   const pathname = usePathname();
   const router = useRouter();
   const { toggleSidebar } = useSidebar();
@@ -147,6 +149,22 @@ function Header() {
                       alt="logo-img"
                     />
                   </div>
+                  {user?.userInfo.role !== 1 && (
+                    <div
+                      className="flex gap-1 justify-end px-4 py-2 text-primary-dark cursor-pointer hover:bg-gray-100 rounded-t-lg"
+                      onClick={() => {
+                        router.replace(routes.admin);
+                      }}
+                    >
+                      Admin
+                      <Image
+                        width={16}
+                        height={16}
+                        src="/svg/admin-lock.svg"
+                        alt="logo-img"
+                      />
+                    </div>
+                  )}
                   <div
                     className="flex gap-1 justify-end px-4 py-2 text-primary cursor-pointer hover:bg-gray-100 border-t border-gray border-opacity-25"
                     onClick={() => setModalOpen(true)}

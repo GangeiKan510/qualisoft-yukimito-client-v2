@@ -1,13 +1,12 @@
-import { CreateUserData } from "@/app/components/utils/types/create-user-type";
+import { CreateUserData } from "@/utils/types/create-user-type";
 import {
   getWithFirebaseJwt,
   postWithFirebaseJwt,
 } from "../firebase/requests-with-firebase";
-import { UpdateUserData } from "@/app/components/utils/types/update-user-type";
+import { UpdateUserData } from "@/utils/types/update-user-type";
 
 export const getMe = async (email: string) => {
   try {
-
     const response = await postWithFirebaseJwt("/web/users/get-me", {
       body: { email: email },
     });

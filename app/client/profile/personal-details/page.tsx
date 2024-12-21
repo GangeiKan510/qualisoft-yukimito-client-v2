@@ -7,7 +7,7 @@ import "react-phone-number-input/style.css";
 import PhoneInput from "react-phone-number-input";
 import toast, { Toaster } from "react-hot-toast";
 import Spinner from "@/app/components/common/spinner";
-import { updateUserByEmail } from "@/app/api/network/user";
+import { updateUserByEmail } from "@/network/network/user";
 import Image from "next/image";
 
 type FormData = {
@@ -19,6 +19,7 @@ type FormData = {
 
 function Page() {
   const { user, updateUser, refetchMe } = useUser();
+  console.log(user);
   const [saveLabel, setSaveLabel] = useState<any>("Save");
   const [isEmailVerified, setIsEmailVerified] = useState(false);
   const [isEditing, setIsEditing] = useState({
@@ -81,14 +82,6 @@ function Page() {
       console.log("Updated User:", updatedUser);
 
       if (updatedUser && updatedUser.email === formData.email) {
-        updateUser({
-          ...user,
-          userInfo: updatedUser,
-          displayName: user?.displayName ?? null,
-          email: user?.email ?? null,
-          refreshToken: user?.refreshToken ?? "",
-          uid: user?.uid ?? "",
-        });
         toast.success("Successfully updated!");
         refetchMe();
       } else {

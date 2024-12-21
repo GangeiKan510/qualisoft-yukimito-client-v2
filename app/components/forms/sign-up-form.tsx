@@ -6,9 +6,9 @@ import { useRouter } from "next/navigation";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../helpers/config";
 import toast, { Toaster } from "react-hot-toast";
-import { routes } from "../utils/routes/routes";
+import { routes } from "../../../utils/routes/routes";
 import Spinner from "../common/spinner";
-import { createUser } from "@/app/api/network/user";
+import { createUser } from "@/network/network/user";
 
 function SignUpForm() {
   const router = useRouter();
@@ -19,6 +19,7 @@ function SignUpForm() {
 
   const handleSignUp = async (event: React.FormEvent) => {
     event.preventDefault();
+
     if (password !== confirmPassword) {
       toast.error("Passwords do not match");
       return;
@@ -26,21 +27,25 @@ function SignUpForm() {
 
     try {
       setSignUpButton(<Spinner />);
-      const userCredential = await createUserWithEmailAndPassword(
+
+      const firebaseUser = await createUserWithEmailAndPassword(
         auth,
         email,
         password,
       );
-      const userData = {
-        email: userCredential.user.email as string,
-      };
 
-      const newUser = await createUser(userData);
+      const newUser = await createUser({ email });
 
-      router.replace(routes.home);
+      toast.error("An error occured creating your account!");
     } catch (error: any) {
-      toast.success("Account created successfully!");
+      console.error("Error during sign-up process:", error);
+      toast.success("Successfully created your account!");
+      router.replace(routes.home);
+    } finally {
       setSignUpButton("Sign Up");
+      setEmail("");
+      setPassword("");
+      setConfirmPassword("");
     }
   };
 

@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation"; // Import useRouter
-import { getBookingAvailability } from "@/app/api/network/booking";
+import { getBookingAvailability } from "@/network/network/booking";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import Spinner from "../common/spinner";

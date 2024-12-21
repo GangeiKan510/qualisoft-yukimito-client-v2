@@ -7,7 +7,7 @@ import { auth } from "./components/helpers/config";
 import Spinner from "./components/common/spinner";
 import Typewriter from "typewriter-effect";
 import { useRouter } from "next/navigation";
-import { routes } from "./components/utils/routes/routes";
+import { routes } from "../utils/routes/routes";
 
 export default function Home() {
   const router = useRouter();

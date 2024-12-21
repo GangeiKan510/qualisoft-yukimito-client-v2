@@ -8,13 +8,13 @@ import {
   FEATURE_OAUTH_GOOGLE,
   FEATURE_OAUTH_PHONE,
   useFeatureFlags,
-} from "../utils/feature-flags";
+} from "../../../utils/feature-flags";
 import {
   EmailAuthProvider,
   GoogleAuthProvider,
   PhoneAuthProvider,
 } from "firebase/auth";
-import { routes } from "../utils/routes/routes";
+import { routes } from "../../../utils/routes/routes";
 import { useUser } from "../config/user-context";
 import { useConfig } from "../config/app-context";
 import { useRouter } from "next/navigation";

@@ -2,8 +2,8 @@
 
 import { usePathname } from "next/navigation";
 import Sidebar from "../components/common/sidebar";
-import ProtectedRoutes from "../profile/layout";
-import { routes } from "../components/utils/routes/routes";
+import ProtectedRoutes from "../client/profile/layout";
+import { routes } from "../../utils/routes/routes";
 import Header from "../components/common/header";
 
 export default function Layout({

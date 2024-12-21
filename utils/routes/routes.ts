@@ -12,11 +12,11 @@ const routes = {
   team: "/team",
 
   // Protected routes
-  profile: "/profile",
-  userCreateBooking: "/profile/create-booking",
-  userPersonalDetails: "/profile/personal-details",
-  userPets: "/profile/my-pets",
-  userBookingHistory: "/profile/booking-history",
+  profile: "/client/profile",
+  userCreateBooking: "/client/profile/create-booking",
+  userPersonalDetails: "/client/profile/personal-details",
+  userPets: "/client/profile/my-pets",
+  userBookingHistory: "/client/profile/booking-history",
 
   admin: "/admin",
   adminBookings: "/admin/bookings",
