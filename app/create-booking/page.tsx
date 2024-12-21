@@ -6,7 +6,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import toast, { Toaster } from "react-hot-toast";
 import "react-phone-number-input/style.css";
 import PhoneInput from "react-phone-number-input";
-import { createInstantBooking } from "../api/network/booking";
+import { createInstantBooking } from "../../network/network/booking";
 
 function Page() {
   const [service, setService] = useState("Home Care");

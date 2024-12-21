@@ -7,7 +7,7 @@ import "react-phone-number-input/style.css";
 import PhoneInput from "react-phone-number-input";
 import toast, { Toaster } from "react-hot-toast";
 import Spinner from "@/app/components/common/spinner";
-import { updateUserByEmail } from "@/app/api/network/user";
+import { updateUserByEmail } from "@/network/network/user";
 import Image from "next/image";
 
 type FormData = {

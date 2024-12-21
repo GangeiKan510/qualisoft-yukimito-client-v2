@@ -7,7 +7,6 @@ import { UpdateUserData } from "@/app/components/utils/types/update-user-type";
 
 export const getMe = async (email: string) => {
   try {
-
     const response = await postWithFirebaseJwt("/web/users/get-me", {
       body: { email: email },
     });

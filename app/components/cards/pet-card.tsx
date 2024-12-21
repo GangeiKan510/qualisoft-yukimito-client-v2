@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import VaccinePhoto from "../modals/vaccine-photo";
 import Image from "next/image";
 import Spinner from "../common/spinner";
-import { deletePet } from "@/app/api/network/pet";
+import { deletePet } from "@/network/network/pet";
 import ConfirmationModal from "../common/confirmation-modal";
 import { toast } from "react-hot-toast";
 import { useUser } from "../config/user-context";

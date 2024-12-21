@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { useUser } from "../config/user-context";
-import { addPet } from "@/app/api/network/pet";
+import { addPet } from "@/network/network/pet";
 import { toast } from "react-hot-toast";
 import Spinner from "../common/spinner";
 
