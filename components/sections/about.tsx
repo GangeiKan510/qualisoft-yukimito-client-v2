@@ -40,7 +40,7 @@ function About() {
         ].map((card, index) => (
           <div
             key={index}
-            className="w-full max-w-[300px] h-[350px] bg-white shadow-lg rounded-xl overflow-hidden border border-gray flex flex-col justify-between transform transition-transform duration-300 hover:scale-105 hover:shadow-2xl"
+            className="w-full max-w-[300px] h-[350px] bg-white shadow-lg rounded-xl overflow-hidden border-gray flex flex-col justify-between transform transition-transform duration-300 hover:scale-105 hover:shadow-2xl"
           >
             <div className="flex flex-col items-center justify-center py-6 bg-gray-100">
               <Image
