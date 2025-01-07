@@ -2,7 +2,7 @@ import Image from "next/image";
 
 function BoardingRequirements() {
   return (
-    <div className="px-4 lg:mx-52 border-t border-dashed border-gray">
+    <div className="px-4 lg:mx-[5%] border-t border-dashed border-gray">
       <div className="pt-10">
         <div className="flex flex-col text-center">
           <div className="font-semibold mb-2">Pet Boarding Requirements</div>

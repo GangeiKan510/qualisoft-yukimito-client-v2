@@ -2,7 +2,7 @@ import Image from "next/image";
 
 function About() {
   return (
-    <div className="px-4 lg:mx-52 border-t border-dashed border-gray">
+    <div className="px-4 lg:mx-[10%] border-t border-dashed border-gray">
       <div className="py-10  text-center">
         <div className="font-semibold text-lg lg:text-xl text-gray-700 pb-2">
           About Yukimito
