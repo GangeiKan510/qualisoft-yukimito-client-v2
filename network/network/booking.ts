@@ -1,5 +1,6 @@
 import { BookingData, RegularBookingData } from "@/utils/types/types";
 import {
+  deleteWithFirebaseJwt,
   getWithFirebaseJwt,
   postWithFirebaseJwt,
 } from "../firebase/requests-with-firebase";
@@ -58,6 +59,29 @@ export const createBooking = async (bookingData: RegularBookingData) => {
     return response;
   } catch (error) {
     console.error("Failed to create booking:", error);
+    throw error;
+  }
+};
+
+export const deleteBooking = async (bookingId: string) => {
+  try {
+    const response = await deleteWithFirebaseJwt(
+      "/web/booking/delete-booking",
+      {
+        params: { bookingId },
+        headers: {
+          "Content-Type": "application/json",
+        },
+      },
+    );
+
+    if (!response.ok) {
+      throw new Error("Failed to delete booking");
+    }
+
+    return response;
+  } catch (error) {
+    console.error("Error deleting booking:", error);
     throw error;
   }
 };
