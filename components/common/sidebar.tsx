@@ -1,13 +1,21 @@
 "use client";
 import { usePathname, useRouter } from "next/navigation";
-import { routes } from "../../../utils/routes/routes";
+import { routes } from "@/utils/routes/routes";
+import { useState } from "react";
 import { useSidebar } from "../config/sidebar-context";
+import useSignOut from "../helpers/use-sign-out";
+import { getAuth } from "firebase/auth";
 import Image from "next/image";
 
 const Sidebar = () => {
   const router = useRouter();
   const pathname = usePathname();
+
   const { isExpanded } = useSidebar();
+
+  const [showConfirmation, setShowConfirmation] = useState(false);
+  const [pendingRoute, setPendingRoute] = useState<string | null>(null);
+  const [signOut] = useSignOut(getAuth());
 
   const goTo = (route: string) => {
     // Navigate to the selected route
@@ -20,8 +28,8 @@ const Sidebar = () => {
 
   const getActiveClass = (route: string) => {
     return pathname === route
-      ? "active bg-[#FFF9F2] text-secondary font-semibold"
-      : "text-text-primary font-normal";
+      ? "active bg-[#FFF9F2] text-secondary"
+      : "text-text-primary";
   };
 
   const getIconSrc = (baseSrc: string, route: string) => {
@@ -31,7 +39,7 @@ const Sidebar = () => {
   };
 
   const buttonBaseClasses = "flex items-center w-full h-[49.5px] lg:h-[64.8px]";
-  const itemContainerBaseClasses = isExpanded ? "lg:ml-[25px]" : "ml-[20px]";
+  const itemContainerBaseClasses = isExpanded ? "ml-[25px]" : "ml-[20px]";
   const textBaseClasses = "ml-[14.4px] lg:ml-[16px] break-words";
 
   return isExpanded ? (
@@ -42,88 +50,93 @@ const Sidebar = () => {
       <div className="flex flex-col tracking-wider mt-10">
         <button
           className={`${buttonBaseClasses} ${getActiveClass(
-            routes.userCreateBooking,
+            routes.adminBookings,
           )}`}
-          onClick={() => goTo(routes.userCreateBooking)}
+          onClick={() => goTo(routes.adminBookings)}
         >
           <div className={`flex items-center ${itemContainerBaseClasses}`}>
             <span
-              className={`flex ${textBaseClasses} text-[16px] gap-2 items-center justify-center`}
+              className={`flex ${textBaseClasses} text-[20px] gap-2 items-center justify-center`}
             >
               <Image
                 width={20}
                 height={20}
                 src={getIconSrc(
                   "/svg/booking-tab-icon.svg",
-                  routes.userCreateBooking,
+                  routes.adminBookings,
                 )}
                 alt="booking-tab-icon-img"
               />
-              Create Booking
+              Bookings
             </span>
           </div>
         </button>
         <button
           className={`${buttonBaseClasses} ${getActiveClass(
-            routes.userPersonalDetails,
+            routes.adminInventory,
           )}`}
-          onClick={() => goTo(routes.userPersonalDetails)}
+          onClick={() => goTo(routes.adminInventory)}
         >
           <div className={`flex items-center ${itemContainerBaseClasses}`}>
             <span
-              className={`flex ${textBaseClasses} text-[16px] gap-2 items-center justify-center`}
+              className={`flex ${textBaseClasses} text-[20px] gap-2 items-center justify-center`}
             >
               <Image
                 width={20}
                 height={20}
                 src={getIconSrc(
-                  "/svg/personal-details.svg",
-                  routes.userPersonalDetails,
+                  "/svg/inventory-tab-icon.svg",
+                  routes.adminInventory,
                 )}
-                alt="personal-details-img"
-              />
-              Personal Details
-            </span>
-          </div>
-        </button>
-        <button
-          className={`${buttonBaseClasses} ${getActiveClass(routes.userPets)}`}
-          onClick={() => goTo(routes.userPets)}
-        >
-          <div className={`flex items-center ${itemContainerBaseClasses}`}>
-            <span
-              className={`flex ${textBaseClasses} text-[16px] gap-2 items-center justify-center`}
-            >
-              <Image
-                width={20}
-                height={20}
-                src={getIconSrc("/svg/inventory-tab-icon.svg", routes.userPets)}
                 alt="inventory-tab-icon-img"
               />
-              My Pets
+              Inventory
             </span>
           </div>
         </button>
         <button
           className={`${buttonBaseClasses} ${getActiveClass(
-            routes.userBookingHistory,
+            routes.adminPendingVaccines,
           )}`}
-          onClick={() => goTo(routes.userBookingHistory)}
+          onClick={() => goTo(routes.adminPendingVaccines)}
         >
           <div className={`flex items-center ${itemContainerBaseClasses}`}>
             <span
-              className={`flex ${textBaseClasses} text-[16px] gap-2 items-center justify-center`}
+              className={`flex ${textBaseClasses} text-[20px] gap-2 items-center justify-center`}
             >
               <Image
                 width={20}
                 height={20}
                 src={getIconSrc(
                   "/svg/pending-vaccine-tab-icon.svg",
-                  routes.userBookingHistory,
+                  routes.adminPendingVaccines,
                 )}
                 alt="vaccine-tab-icon-img"
               />
-              Bookings
+              Pending Vaccines
+            </span>
+          </div>
+        </button>
+        <button
+          className={`${buttonBaseClasses} ${getActiveClass(
+            routes.adminUsers,
+          )}`}
+          onClick={() => goTo(routes.adminUsers)}
+        >
+          <div className={`flex items-center ${itemContainerBaseClasses}`}>
+            <span
+              className={`flex ${textBaseClasses} text-[20px] gap-2 items-center justify-center`}
+            >
+              <Image
+                width={20}
+                height={20}
+                src={getIconSrc(
+                  "/svg/manage-accounts-tab.svg",
+                  routes.adminUsers,
+                )}
+                alt="admin-users-tab-icon-img"
+              />
+              Admin Users
             </span>
           </div>
         </button>

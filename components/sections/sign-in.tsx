@@ -3,18 +3,13 @@
 import React, { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import StyledFirebaseAuth from "../auth/styled-firebase-auth";
-import {
-  FEATURE_OAUTH_EMAIL,
-  FEATURE_OAUTH_GOOGLE,
-  FEATURE_OAUTH_PHONE,
-  useFeatureFlags,
-} from "../../../utils/feature-flags";
+import { FEATURE_OAUTH_EMAIL, useFeatureFlags } from "@/utils/feature-flags";
 import {
   EmailAuthProvider,
   GoogleAuthProvider,
   PhoneAuthProvider,
 } from "firebase/auth";
-import { routes } from "../../../utils/routes/routes";
+import { routes } from "@/utils/routes/routes";
 import { useUser } from "../config/user-context";
 import { useConfig } from "../config/app-context";
 import { useRouter } from "next/navigation";

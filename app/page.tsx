@@ -1,10 +1,10 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import InstantBookingForm from "./components/forms/instant-booking-form";
+import InstantBookingForm from "@/components/forms/instant-booking-form";
 import Image from "next/image";
-import { auth } from "./components/helpers/config";
-import Spinner from "./components/common/spinner";
+import { auth } from "@/components/helpers/config";
+import Spinner from "@/components/common/spinner";
 import Typewriter from "typewriter-effect";
 import { useRouter } from "next/navigation";
 import { routes } from "../utils/routes/routes";
@@ -87,7 +87,7 @@ export default function Home() {
               <div className="flex items-center justify-center mt-6">
                 <div
                   onClick={() => router.replace(routes.userCreateBooking)}
-                  className="h-[50px] text-[24px] flex items-center relative cursor-pointer bg-secondary text-white p-5 rounded-full font-semibold relative z-10 transition-transform duration-300 hover:-rotate-3"
+                  className="h-[50px] text-[24px] flex items-center cursor-pointer bg-secondary text-white p-5 rounded-full font-semibold relative z-10 transition-transform duration-300 hover:-rotate-3"
                 >
                   Book Now!
                 </div>

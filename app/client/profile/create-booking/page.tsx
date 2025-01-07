@@ -4,8 +4,8 @@ import React, { useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import toast, { Toaster } from "react-hot-toast";
-import { useUser } from "@/app/components/config/user-context";
-import BookingSummary from "@/app/components/modals/booking-summary";
+import { useUser } from "@/components/config/user-context";
+import BookingSummary from "@/components/modals/booking-summary";
 import { createBooking } from "@/network/network/booking";
 import Image from "next/image";
 

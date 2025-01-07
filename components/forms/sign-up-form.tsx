@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../helpers/config";
 import toast, { Toaster } from "react-hot-toast";
-import { routes } from "../../../utils/routes/routes";
+import { routes } from "@/utils/routes/routes";
 import Spinner from "../common/spinner";
 import { createUser } from "@/network/network/user";
 

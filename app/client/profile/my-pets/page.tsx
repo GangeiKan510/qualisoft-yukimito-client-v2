@@ -1,12 +1,12 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import PetCard from "@/app/components/cards/pet-card";
+import PetCard from "@/components/cards/pet-card";
 import toast, { Toaster } from "react-hot-toast";
-import { useUser } from "@/app/components/config/user-context";
-import Spinner from "@/app/components/common/spinner";
-import AddPetModal from "@/app/components/modals/add-pet";
-import ConfirmationModal from "@/app/components/common/confirmation-modal";
+import { useUser } from "@/components/config/user-context";
+import Spinner from "@/components/common/spinner";
+import AddPetModal from "@/components/modals/add-pet";
+import ConfirmationModal from "@/components/common/confirmation-modal";
 
 function Page() {
   const { user, refetchMe } = useUser();
