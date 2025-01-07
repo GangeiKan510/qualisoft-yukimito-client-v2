@@ -1,12 +1,18 @@
 import React, { useState } from "react";
 import CancelConfirmationModal from "../modals/cancel-booking-confirmation";
+import { deleteBooking } from "@/network/network/booking";
+import Spinner from "../common/spinner";
+import { toast } from "react-hot-toast";
+import { useUser } from "../config/user-context";
 
 const BookingHistoryTable = ({ bookings }: any) => {
+  const { refetchMe } = useUser();
   const [expandedRows, setExpandedRows] = useState(new Set());
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedBookingId, setSelectedBookingId] = useState<string | null>(
     null,
   );
+  const [loading, setLoading] = useState(false);
 
   const toggleExpandRow = (rowId: string) => {
     setExpandedRows((prevExpandedRows) => {
@@ -33,20 +39,35 @@ const BookingHistoryTable = ({ bookings }: any) => {
     setIsModalOpen(true);
   };
 
-  const handleConfirmCancel = () => {
-    console.log(`Booking with ID ${selectedBookingId} has been canceled.`);
-    setIsModalOpen(false);
-    setSelectedBookingId(null);
+  const handleConfirmCancel = async () => {
+    if (!selectedBookingId) return;
+
+    setLoading(true);
+    try {
+      await deleteBooking(selectedBookingId);
+      toast.error("Failed to cancel booking");
+    } catch (error) {
+      console.error("Failed to cancel booking:", error);
+      toast.success("Booking successfully canceled");
+    } finally {
+      setLoading(false);
+      setIsModalOpen(false);
+      setSelectedBookingId(null);
+      refetchMe();
+    }
   };
 
   return (
     <div className="w-full text-primary-dark">
-      {/* Table Header for larger screens */}
+      {/* Cancel Confirmation Modal */}
       <CancelConfirmationModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onConfirm={handleConfirmCancel}
+        loading={loading}
       />
+
+      {/* Table Header for larger screens */}
       <div className="hidden md:flex font-semibold bg-[#D2EAE7] text-primary-dark p-4 border-y border-gray-200">
         <div className="flex-1 px-1">ID</div>
         <div className="flex-1 px-1">Service</div>
@@ -55,8 +76,7 @@ const BookingHistoryTable = ({ bookings }: any) => {
         <div className="flex-1 px-1">Pets</div>
         <div className="flex-1 px-1">Status</div>
         <div className="flex-1 px-1">Total</div>
-        <div className="flex-1 px-1"></div>{" "}
-        {/* Empty header for "Cancel" column */}
+        <div className="flex-1 px-1"></div>
       </div>
 
       {/* Table Rows */}
@@ -154,8 +174,13 @@ const BookingHistoryTable = ({ bookings }: any) => {
               <button
                 onClick={() => handleCancelClick(booking.id)}
                 className="border px-3 py-1 bg-red-500 text-red rounded-full"
+                disabled={loading}
               >
-                Cancel
+                {loading && selectedBookingId === booking.id ? (
+                  <Spinner type="primary" />
+                ) : (
+                  "Cancel"
+                )}
               </button>
             </div>
           </div>

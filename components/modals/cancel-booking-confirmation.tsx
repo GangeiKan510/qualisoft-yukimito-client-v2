@@ -1,15 +1,18 @@
 import React from "react";
+import Spinner from "../common/spinner";
 
 interface CancelConfirmationModalProps {
   isOpen: boolean;
   onClose: () => void;
   onConfirm: () => void;
+  loading: boolean;
 }
 
 const CancelConfirmationModal: React.FC<CancelConfirmationModalProps> = ({
   isOpen,
   onClose,
   onConfirm,
+  loading,
 }) => {
   if (!isOpen) return null;
 
@@ -19,6 +22,7 @@ const CancelConfirmationModal: React.FC<CancelConfirmationModalProps> = ({
         <button
           onClick={onClose}
           className="absolute top-2 right-3 text-gray hover:text-[#8c8c8c]"
+          disabled={loading}
         >
           ✕
         </button>
@@ -32,14 +36,16 @@ const CancelConfirmationModal: React.FC<CancelConfirmationModalProps> = ({
             <button
               onClick={onClose}
               className="px-4 py-2 border border-gray-300 rounded-md text-black"
+              disabled={loading}
             >
               Cancel
             </button>
             <button
               onClick={onConfirm}
-              className="px-4 py-2 bg-red text-white rounded-md hover:bg-[#e44545]"
+              className="px-4 py-2 bg-red text-white rounded-md hover:bg-[#e44545] flex items-center justify-center"
+              disabled={loading}
             >
-              Confirm
+              {loading ? <Spinner /> : "Confirm"}
             </button>
           </div>
         </div>
