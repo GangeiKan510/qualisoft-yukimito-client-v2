@@ -25,8 +25,10 @@ function EditPetModal({
   const [birthDate, setBirthDate] = useState<Date | null>(null);
   const [size, setSize] = useState<"Small" | "Medium" | "Large">("Small");
   const [vaccinePhoto, setVaccinePhoto] = useState<File | null>(null);
-  const [saveLabel, setSaveLabel] = useState<any>("Edit");
+  const [saveLabel, setSaveLabel] = useState<any>("Save");
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
+  const [isPhotoLoading, setIsPhotoLoading] = useState(true);
+  const [isPhotoModalVisible, setIsPhotoModalVisible] = useState(false);
 
   useEffect(() => {
     if (petDetails) {
@@ -44,6 +46,7 @@ function EditPetModal({
 
       setSize(petDetails.size);
       setPhotoPreview(petDetails.vaccine_photo || null);
+      setIsPhotoLoading(true);
     }
   }, [petDetails]);
 
@@ -55,7 +58,6 @@ function EditPetModal({
   };
 
   const handleEditPet = async () => {
-    setSaveLabel(<Spinner />);
     const updatedPet = {
       ...petDetails,
       name: petName,
@@ -68,11 +70,21 @@ function EditPetModal({
     onUpdate(updatedPet);
   };
 
+  const handleImageLoad = () => {
+    setIsPhotoLoading(false);
+  };
+
+  const handleExpandPhoto = () => {
+    setIsPhotoModalVisible(true);
+  };
+
   if (!isVisible) return null;
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 text-primary-dark">
+      {/* Main Modal */}
       <div className="relative bg-white p-6 rounded shadow-lg w-full max-w-3xl mx-4 sm:mx-auto flex gap-6">
+        {/* Left section: Form inputs */}
         <div className="flex-1 flex flex-col gap-4">
           <h2 className="text-primary-dark text-[24px] font-semibold mb-4 text-center sm:text-left">
             Edit Pet
@@ -116,7 +128,7 @@ function EditPetModal({
             onChange={handleFileChange}
             className="w-full"
           />
-          <div className="flex justify-end gap-2 mt-4">
+          <div className="flex justify-center gap-2 mt-4">
             <button
               onClick={onClose}
               type="button"
@@ -134,16 +146,28 @@ function EditPetModal({
           </div>
         </div>
 
+        {/* Right section: Vaccine photo preview */}
         <div className="flex-1">
           <h2 className="text-primary-dark text-[20px] font-semibold mb-4 text-center sm:text-left">
             Vaccine Photo Preview
           </h2>
           {photoPreview ? (
-            <img
-              src={photoPreview}
-              alt="Vaccine Photo"
-              className="w-full h-[300px] object-cover rounded border border-gray"
-            />
+            <div className="relative w-full h-[300px]">
+              {isPhotoLoading && (
+                <div className="absolute inset-0 flex items-center justify-center bg-gray-200">
+                  <Spinner type="primary" />
+                </div>
+              )}
+              <img
+                src={photoPreview}
+                alt="Vaccine Photo"
+                className={`w-full h-full object-cover rounded border border-gray ${
+                  isPhotoLoading ? "opacity-0" : "opacity-100"
+                }`}
+                onLoad={handleImageLoad}
+                onClick={handleExpandPhoto}
+              />
+            </div>
           ) : (
             <div className="w-full h-[300px] flex items-center justify-center border border-gray rounded text-gray-500">
               No photo uploaded
@@ -151,6 +175,20 @@ function EditPetModal({
           )}
         </div>
       </div>
+
+      {/* Full-screen photo modal */}
+      {isPhotoModalVisible && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-80 z-50 flex items-center justify-center"
+          onClick={() => setIsPhotoModalVisible(false)}
+        >
+          <img
+            src={photoPreview!}
+            alt="Expanded Vaccine Photo"
+            className="max-w-[90%] max-h-[90%] rounded"
+          />
+        </div>
+      )}
     </div>
   );
 }
