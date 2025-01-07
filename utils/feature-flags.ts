@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useConfig } from "../app/components/config/app-context";
+import { useConfig } from "@/components/config/app-context";
 import { FeatureFlags } from "./types/feature-flags";
 
 export const FEATURE_OAUTH_GOOGLE = "feature_oauth_google";
