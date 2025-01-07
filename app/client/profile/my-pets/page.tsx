@@ -7,6 +7,7 @@ import { useUser } from "@/components/config/user-context";
 import Spinner from "@/components/common/spinner";
 import AddPetModal from "@/components/modals/add-pet";
 import ConfirmationModal from "@/components/common/confirmation-modal";
+import EditPetModal from "@/components/modals/edit-pet";
 
 function Page() {
   const { user, refetchMe } = useUser();
@@ -14,6 +15,8 @@ function Page() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isModalVisible, setModalVisible] = useState(false);
+  const [isEditModalVisible, setEditModalVisible] = useState(false);
+  const [selectedPet, setSelectedPet] = useState<any | null>(null);
   const [isConfirmationModalVisible, setConfirmationModalVisible] =
     useState(false);
   const [petToDelete, setPetToDelete] = useState<string | null>(null);
@@ -27,6 +30,24 @@ function Page() {
       setLoading(false);
     }
   }, [user]);
+
+  const handleEditPet = (pet: any) => {
+    setSelectedPet(pet);
+    setEditModalVisible(true);
+  };
+
+  const handleUpdatePet = async (updatedPet: any) => {
+    try {
+      setPets((prevPets) =>
+        prevPets.map((pet) => (pet.id === updatedPet.id ? updatedPet : pet)),
+      );
+      toast.success("Pet updated successfully!");
+      refetchMe();
+      setEditModalVisible(false);
+    } catch (error) {
+      toast.error("Failed to update pet.");
+    }
+  };
 
   const handleDeletePet = (petId: string) => {
     setPetToDelete(petId);
@@ -77,7 +98,7 @@ function Page() {
               breed={pet.breed}
               vaccineStatus={pet.vaccine_photo ? "approved" : "pending"}
               vaccinePhotoUrl={pet.vaccine_photo}
-              onEdit={() => console.log("Edit clicked")}
+              onEdit={() => handleEditPet(pet)}
               petId={pet.id}
             />
           ))}
@@ -88,6 +109,13 @@ function Page() {
       <AddPetModal
         isVisible={isModalVisible}
         onClose={() => setModalVisible(false)}
+      />
+
+      <EditPetModal
+        isVisible={isEditModalVisible}
+        onClose={() => setEditModalVisible(false)}
+        petDetails={selectedPet}
+        onUpdate={handleUpdatePet}
       />
 
       {/* Confirmation Modal */}
