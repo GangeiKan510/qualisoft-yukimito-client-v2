@@ -1,10 +1,10 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import Sidebar from "../components/common/sidebar";
+import Sidebar from "@/components/common/sidebar";
 import ProtectedRoutes from "../client/profile/layout";
 import { routes } from "../../utils/routes/routes";
-import Header from "../components/common/header";
+import Header from "@/components/common/header";
 
 export default function Layout({
   children,
