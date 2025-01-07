@@ -6,6 +6,8 @@ import "react-datepicker/dist/react-datepicker.css";
 import Spinner from "../common/spinner";
 import { toast } from "react-hot-toast";
 import { Pet } from "@/utils/types/pet";
+import { updatePet } from "@/network/network/pet";
+import { useUser } from "../config/user-context";
 
 type EditPetModalProps = {
   isVisible: boolean;
@@ -20,6 +22,7 @@ function EditPetModal({
   petDetails,
   onUpdate,
 }: EditPetModalProps) {
+  const { refetchMe } = useUser();
   const [petName, setPetName] = useState("");
   const [breed, setBreed] = useState("");
   const [birthDate, setBirthDate] = useState<Date | null>(null);
@@ -58,16 +61,34 @@ function EditPetModal({
   };
 
   const handleEditPet = async () => {
-    const updatedPet = {
-      ...petDetails,
-      name: petName,
-      breed,
-      birth_date:
-        birthDate?.toISOString().split("T")[0] ?? petDetails?.birth_date,
-      size,
-      vaccinePhoto,
-    };
-    onUpdate(updatedPet);
+    if (!petDetails) return;
+
+    setSaveLabel(<Spinner />);
+
+    try {
+      const updatedPetData = {
+        petId: petDetails.id,
+        name: petName,
+        breed: breed,
+        birth_date:
+          birthDate?.toISOString().split("T")[0] ?? petDetails.birth_date,
+        size: size,
+        vaccine_photo: vaccinePhoto || null,
+      };
+
+      await updatePet(updatedPetData);
+      toast.error("Failed to update pet. Please try again.");
+
+      onUpdate(updatedPetData);
+
+      onClose();
+    } catch (error) {
+      console.error("Error updating pet:", error);
+      toast.success("Pet updated successfully!");
+    } finally {
+      setSaveLabel("Save");
+      refetchMe();
+    }
   };
 
   const handleImageLoad = () => {
