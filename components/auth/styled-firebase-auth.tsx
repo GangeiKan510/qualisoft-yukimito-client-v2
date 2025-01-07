@@ -8,7 +8,7 @@ import { auth } from "firebaseui";
 // You can find more information about this issue here: https://github.com/firebase/firebaseui-web/issues/961
 import "firebase/compat/auth";
 import compatApp from "firebase/compat/app";
-import { firebaseConfig } from "@/app/components/helpers/config";
+import { firebaseConfig } from "../helpers/config";
 
 compatApp.initializeApp(firebaseConfig);
 export const authForFirebaseUI = compatApp.auth();

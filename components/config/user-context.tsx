@@ -8,7 +8,7 @@ import React, {
   useState,
 } from "react";
 import { auth } from "../helpers/config";
-import { UserDetails } from "../../../utils/types/user";
+import { UserDetails } from "@/utils/types/user";
 import { getMe } from "@/network/network/user";
 import { useConfig } from "./app-context";
 

@@ -2,7 +2,7 @@ import React from "react";
 
 function PricingTable() {
   return (
-    <div className="px-4 lg:mx-52 border-t border-dashed">
+    <div className="px-4 lg:mx-[10%] border-t border-dashed border-gray">
       <div className="overflow-x-auto py-10">
         <div className="flex flex-col text-center">
           <div className="font-semibold mb-2">Our Rates and Services</div>
@@ -92,19 +92,19 @@ function PricingTable() {
             <tr>
               <td
                 colSpan={2}
-                className="border border-black p-2 text-center text-sm"
+                className="border border-black p-2 text-center text-sm text-red"
               >
                 P50/hour fee for late check out or pick up
               </td>
               <td
                 colSpan={2}
-                className="border border-black p-2 text-center text-sm"
+                className="border border-black p-2 text-center text-sm text-yellow-400"
               >
                 After 9 pm, Home Care rate is applied, No more late fees
               </td>
               <td
                 colSpan={1}
-                className="border border-black p-2 text-center text-sm"
+                className="border border-black p-2 text-center text-sm text-orange-400"
               >
                 XXL size pets, see staff for pricing
               </td>
@@ -112,9 +112,9 @@ function PricingTable() {
             <tr>
               <td
                 colSpan={5}
-                className="border border-black p-2 text-center text-sm"
+                className="border border-black p-2 text-center text-sm text-gray"
               >
-                Rate is subject to change without prior notice
+                (Rate is subject to change without prior notice)
               </td>
             </tr>
           </tfoot>

@@ -1,12 +1,12 @@
 "use client";
 
-import { auth } from "@/app/components/helpers/config";
+import { auth } from "@/components/helpers/config";
 import { useEffect, useState } from "react";
-import { useUser } from "@/app/components/config/user-context";
+import { useUser } from "@/components/config/user-context";
 import "react-phone-number-input/style.css";
 import PhoneInput from "react-phone-number-input";
 import toast, { Toaster } from "react-hot-toast";
-import Spinner from "@/app/components/common/spinner";
+import Spinner from "@/components/common/spinner";
 import { updateUserByEmail } from "@/network/network/user";
 import Image from "next/image";
 

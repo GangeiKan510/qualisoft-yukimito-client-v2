@@ -4,8 +4,8 @@ export interface Pet {
   name: string;
   breed: string;
   birth_date: string;
-  size: string;
-  vaccine_photo: string;
+  size: "Small" | "Medium" | "Large";
+  vaccine_photo: string | null;
   createdAt: string;
   updatedAt: string;
   userId: string;

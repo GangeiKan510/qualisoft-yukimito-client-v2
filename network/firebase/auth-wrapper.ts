@@ -1,6 +1,6 @@
 "use client";
 
-import { auth } from "@/app/components/helpers/config";
+import { auth } from "@/components/helpers/config";
 
 const withAuthorization = (fetch: typeof window.fetch) => {
   return async (url: string, options: RequestInit = {}): Promise<Response> => {

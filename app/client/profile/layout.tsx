@@ -4,12 +4,12 @@ import { useEffect, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import React from "react";
 import { onAuthStateChanged } from "firebase/auth";
-import { auth } from "../../components/helpers/config";
+import { auth } from "@/components/helpers/config";
 import { routes } from "../../../utils/routes/routes";
-import { useUser } from "../../components/config/user-context";
-import Spinner from "../../components/common/spinner";
-import Header from "../../components/common/header";
-import Sidebar from "../../components/common/user-sidebar";
+import { useUser } from "@/components/config/user-context";
+import Spinner from "@/components/common/spinner";
+import Header from "@/components/common/header";
+import Sidebar from "@/components/common/user-sidebar";
 
 const ProtectedRoutes = ({
   children,
