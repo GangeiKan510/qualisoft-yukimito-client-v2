@@ -141,7 +141,7 @@ function Header() {
                       router.replace(routes.userPersonalDetails);
                     }}
                   >
-                    My Profile
+                    Dashboard
                     <Image
                       width={16}
                       height={16}

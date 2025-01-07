@@ -92,19 +92,19 @@ function PricingTable() {
             <tr>
               <td
                 colSpan={2}
-                className="border border-black p-2 text-center text-sm"
+                className="border border-black p-2 text-center text-sm text-red"
               >
                 P50/hour fee for late check out or pick up
               </td>
               <td
                 colSpan={2}
-                className="border border-black p-2 text-center text-sm"
+                className="border border-black p-2 text-center text-sm text-yellow-400"
               >
                 After 9 pm, Home Care rate is applied, No more late fees
               </td>
               <td
                 colSpan={1}
-                className="border border-black p-2 text-center text-sm"
+                className="border border-black p-2 text-center text-sm text-orange-400"
               >
                 XXL size pets, see staff for pricing
               </td>
@@ -112,9 +112,9 @@ function PricingTable() {
             <tr>
               <td
                 colSpan={5}
-                className="border border-black p-2 text-center text-sm"
+                className="border border-black p-2 text-center text-sm text-gray"
               >
-                Rate is subject to change without prior notice
+                (Rate is subject to change without prior notice)
               </td>
             </tr>
           </tfoot>
