@@ -2,7 +2,7 @@ import Image from "next/image";
 
 function BoardingRequirements() {
   return (
-    <div className="px-4 lg:mx-52 border-t border-dashed">
+    <div className="px-4 lg:mx-52 border-t border-dashed border-gray">
       <div className="pt-10">
         <div className="flex flex-col text-center">
           <div className="font-semibold mb-2">Pet Boarding Requirements</div>
@@ -40,7 +40,7 @@ function BoardingRequirements() {
           ].map((card, index) => (
             <div
               key={index}
-              className="w-full max-w-[300px] h-[325px] bg-white shadow-lg rounded-xl overflow-hidden border border-gray-200 flex flex-col justify-between"
+              className="w-full max-w-[300px] h-[325px] bg-white shadow-lg rounded-xl overflow-hidden border border-gray flex flex-col justify-between transform transition-transform duration-300 hover:scale-105 hover:shadow-2xl"
             >
               <div className="flex flex-col items-center justify-center py-6 bg-gray-100">
                 <Image

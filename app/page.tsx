@@ -8,6 +8,9 @@ import Spinner from "@/components/common/spinner";
 import Typewriter from "typewriter-effect";
 import { useRouter } from "next/navigation";
 import { routes } from "../utils/routes/routes";
+import About from "@/components/sections/about";
+import BoardingRequirements from "@/components/sections/boarding-requirements";
+import PricingTable from "@/components/sections/pricing-table";
 
 export default function Home() {
   const router = useRouter();
@@ -47,7 +50,7 @@ export default function Home() {
   }
 
   return (
-    <div className="mt-10 pt-[70px]">
+    <div className="flex flex-col gap-32 mt-10 pt-[70px]">
       <div className="w-[90%] flex flex-col lg:flex-row h-auto lg:h-[577px] bg-primary mx-auto rounded-[16px] shadow-lg">
         <div className="w-full lg:w-[50%] p-6 lg:p-10">
           <div className="text-[32px] sm:text-[48px] lg:text-[64px] text-white leading-tight lg:leading-none mb-6 lg:mb-10 font-bold">
@@ -97,6 +100,15 @@ export default function Home() {
             <InstantBookingForm />
           )}
         </div>
+      </div>
+      <div>
+        <About />
+      </div>
+      <div>
+        <BoardingRequirements />
+      </div>
+      <div>
+        <PricingTable />
       </div>
     </div>
   );
