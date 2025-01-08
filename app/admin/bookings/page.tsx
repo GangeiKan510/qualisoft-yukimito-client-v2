@@ -1,12 +1,19 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { getAllBookings } from "@/network/network/admin/booking";
+import {
+  getAllBookings,
+  acceptBooking,
+  rejectBooking,
+  deleteBooking,
+} from "@/network/network/admin/booking";
 import { Pet } from "@/utils/types/pet";
 import Spinner from "@/components/common/spinner";
+import { toast } from "react-hot-toast";
 
 function Page() {
   const [bookings, setBookings] = useState<any[]>([]);
+  const [loading, setLoading] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchBookings = async () => {
@@ -23,6 +30,30 @@ function Page() {
 
     fetchBookings();
   }, []);
+
+  const handleAction = async (
+    action: "accept" | "reject" | "delete",
+    bookingId: string,
+  ) => {
+    setLoading(bookingId);
+    try {
+      if (action === "accept") {
+        await acceptBooking(bookingId);
+      } else if (action === "reject") {
+        await rejectBooking(bookingId);
+      } else if (action === "delete") {
+        await deleteBooking(bookingId);
+      }
+
+      setBookings((prevBookings) =>
+        prevBookings.filter((b) => b.id !== bookingId),
+      );
+    } catch (error) {
+      console.error(`Failed to ${action} booking:`, error);
+    } finally {
+      setLoading(null);
+    }
+  };
 
   if (!bookings.length) {
     return (
@@ -74,6 +105,35 @@ function Page() {
                   ),
                 )}
               </ul>
+
+              <div className="mt-4 flex space-x-4">
+                <button
+                  onClick={() => handleAction("accept", booking.id)}
+                  disabled={loading === booking.id}
+                  className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 disabled:opacity-50"
+                >
+                  {loading === booking.id && "Accepting..."}
+                  {loading !== booking.id && "Accept"}
+                </button>
+
+                <button
+                  onClick={() => handleAction("reject", booking.id)}
+                  disabled={loading === booking.id}
+                  className="px-4 py-2 bg-yellow-600 text-white rounded hover:bg-yellow-700 disabled:opacity-50"
+                >
+                  {loading === booking.id && "Rejecting..."}
+                  {loading !== booking.id && "Reject"}
+                </button>
+
+                <button
+                  onClick={() => handleAction("delete", booking.id)}
+                  disabled={loading === booking.id}
+                  className="px-4 py-2 bg-red text-white rounded hover:bg-red-700 disabled:opacity-50"
+                >
+                  {loading === booking.id && "Deleting..."}
+                  {loading !== booking.id && "Delete"}
+                </button>
+              </div>
             </li>
           ))}
         </ul>
