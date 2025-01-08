@@ -9,7 +9,7 @@ import {
 } from "@/network/network/admin/booking";
 import { Pet } from "@/utils/types/pet";
 import Spinner from "@/components/common/spinner";
-import { toast } from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 import { useQuery } from "@tanstack/react-query";
 
 function Page() {
@@ -98,6 +98,8 @@ function Page() {
 
   return (
     <div className="w-full flex flex-col px-8">
+      <Toaster />
+
       <div className="w-full flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold text-primary-dark">All Bookings</h1>
         <div className="flex items-center space-x-4">
