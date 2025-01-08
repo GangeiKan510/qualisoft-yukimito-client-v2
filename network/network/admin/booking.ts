@@ -8,12 +8,7 @@ export const getAllBookings = async () => {
   try {
     const response = await getWithFirebaseJwt("/web/admin/booking/bookings");
 
-    if (!response.ok) {
-      throw new Error("Failed to fetch bookings");
-    }
-
-    const data = await response.json();
-    return data;
+    return response;
   } catch (error) {
     console.error("Error fetching bookings:", error);
     throw error;
@@ -71,9 +66,8 @@ export const rejectBooking = async (bookingId: string) => {
 export const deleteBooking = async (bookingId: string) => {
   try {
     const response = await deleteWithFirebaseJwt(
-      "/web/admin/booking/delete-booking",
+      `/web/admin/booking/delete-booking?bookingId=${bookingId}`,
       {
-        params: { bookingId },
         headers: {
           "Content-Type": "application/json",
         },

@@ -14,7 +14,7 @@ export default function Layout({
   return (
     <ProtectedRoutes>
       <Header />
-      <main className="flex">
+      <main className="w-full flex">
         <Sidebar />
         {children}
       </main>
