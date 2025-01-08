@@ -37,7 +37,7 @@ function Page() {
         ...bookings.instantBookings,
       ];
       setFilteredBookings(allBookings);
-      toast.error("Bookings fetched successfully.");
+      toast.success("Bookings fetched successfully.");
     }
   }, [bookings, isSuccess]);
 
