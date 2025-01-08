@@ -25,6 +25,7 @@ function Page() {
         setBookings(allBookings);
       } catch (error) {
         console.error("Error fetching bookings:", error);
+        toast.error("Failed to fetch bookings.");
       }
     };
 
@@ -39,10 +40,13 @@ function Page() {
     try {
       if (action === "accept") {
         await acceptBooking(bookingId);
+        toast.success("Booking accepted successfully.");
       } else if (action === "reject") {
         await rejectBooking(bookingId);
+        toast.success("Booking rejected successfully.");
       } else if (action === "delete") {
         await deleteBooking(bookingId);
+        toast.success("Booking deleted successfully.");
       }
 
       setBookings((prevBookings) =>
@@ -50,6 +54,7 @@ function Page() {
       );
     } catch (error) {
       console.error(`Failed to ${action} booking:`, error);
+      toast.error(`Failed to ${action} booking. Please try again.`);
     } finally {
       setLoading(null);
     }
@@ -72,7 +77,7 @@ function Page() {
       <div className="w-full">
         <ul>
           {bookings.map((booking) => (
-            <li key={booking.id} className="mb-4 p-4 border rounded-lg">
+            <li key={booking.id} className="w-full mb-4 p-4 border rounded-lg">
               <p>
                 <strong>Owner:</strong> {booking.pet_owner_name}
               </p>
@@ -106,13 +111,13 @@ function Page() {
                 )}
               </ul>
 
-              <div className="mt-4 flex space-x-4">
+              <div className="w-full mt-4 flex justify-end space-x-4">
                 <button
                   onClick={() => handleAction("accept", booking.id)}
                   disabled={loading === booking.id}
                   className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 disabled:opacity-50"
                 >
-                  {loading === booking.id && "Accepting..."}
+                  {loading === booking.id && <Spinner />}
                   {loading !== booking.id && "Accept"}
                 </button>
 
@@ -121,7 +126,7 @@ function Page() {
                   disabled={loading === booking.id}
                   className="px-4 py-2 bg-yellow-600 text-white rounded hover:bg-yellow-700 disabled:opacity-50"
                 >
-                  {loading === booking.id && "Rejecting..."}
+                  {loading === booking.id && <Spinner />}
                   {loading !== booking.id && "Reject"}
                 </button>
 
@@ -130,7 +135,7 @@ function Page() {
                   disabled={loading === booking.id}
                   className="px-4 py-2 bg-red text-white rounded hover:bg-red-700 disabled:opacity-50"
                 >
-                  {loading === booking.id && "Deleting..."}
+                  {loading === booking.id && <Spinner />}
                   {loading !== booking.id && "Delete"}
                 </button>
               </div>
