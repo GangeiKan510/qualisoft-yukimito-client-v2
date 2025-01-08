@@ -14,7 +14,8 @@ import { toast } from "react-hot-toast";
 function Page() {
   const [bookings, setBookings] = useState<any[]>([]);
   const [filteredBookings, setFilteredBookings] = useState<any[]>([]);
-  const [loading, setLoading] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [actionLoading, setActionLoading] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
@@ -29,6 +30,8 @@ function Page() {
       } catch (error) {
         console.error("Error fetching bookings:", error);
         toast.error("Failed to fetch bookings.");
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -39,7 +42,7 @@ function Page() {
     action: "accept" | "reject" | "delete",
     bookingId: string,
   ) => {
-    setLoading(bookingId);
+    setActionLoading(bookingId);
     try {
       if (action === "accept") {
         await acceptBooking(bookingId);
@@ -59,21 +62,23 @@ function Page() {
       console.error(`Failed to ${action} booking:`, error);
       toast.error(`Failed to ${action} booking. Please try again.`);
     } finally {
-      setLoading(null);
+      setActionLoading(null);
     }
   };
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     const term = event.target.value.toLowerCase();
     setSearchTerm(term);
+
     setFilteredBookings(
-      bookings.filter((booking) =>
-        booking.pet_owner_name.toLowerCase().includes(term),
-      ),
+      bookings.filter((booking) => {
+        const bookingString = JSON.stringify(booking).toLowerCase();
+        return bookingString.includes(term);
+      }),
     );
   };
 
-  if (!filteredBookings.length) {
+  if (loading) {
     return (
       <div className="flex flex-1 items-center justify-center">
         <Spinner type="primary" />
@@ -90,7 +95,7 @@ function Page() {
             type="text"
             value={searchTerm}
             onChange={handleSearch}
-            placeholder="Search by owner"
+            placeholder="Search anything..."
             className="px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-primary"
           />
           <button
@@ -103,73 +108,80 @@ function Page() {
       </div>
 
       <div className="w-full">
-        <ul>
-          {filteredBookings.map((booking) => (
-            <li key={booking.id} className="w-full mb-4 p-4 border rounded-lg">
-              <p>
-                <strong>Owner:</strong> {booking.pet_owner_name}
-              </p>
-              <p>
-                <strong>Service:</strong> {booking.service}
-              </p>
-              <p>
-                <strong>Status:</strong> {booking.status}
-              </p>
-              <p>
-                <strong>Total Bill:</strong> ${booking.total_bill}
-              </p>
-              <p>
-                <strong>Check-in:</strong>{" "}
-                {new Date(booking.check_in_date).toLocaleString()}
-              </p>
-              <p>
-                <strong>Check-out:</strong>{" "}
-                {new Date(booking.check_out_date).toLocaleString()}
-              </p>
-              <p>
-                <strong>Pets:</strong>
-              </p>
-              <ul>
-                {(booking.pets || booking.raw_pet_data).map(
-                  (pet: Pet, index: number) => (
-                    <li key={pet.id || index}>
-                      - {pet.name} ({pet.breed}, {pet.size})
-                    </li>
-                  ),
-                )}
-              </ul>
+        {filteredBookings.length ? (
+          <ul>
+            {filteredBookings.map((booking) => (
+              <li
+                key={booking.id}
+                className="w-full mb-4 p-4 border rounded-lg"
+              >
+                <p>
+                  <strong>Owner:</strong> {booking.pet_owner_name}
+                </p>
+                <p>
+                  <strong>Service:</strong> {booking.service}
+                </p>
+                <p>
+                  <strong>Status:</strong> {booking.status}
+                </p>
+                <p>
+                  <strong>Total Bill:</strong> ${booking.total_bill}
+                </p>
+                <p>
+                  <strong>Check-in:</strong>{" "}
+                  {new Date(booking.check_in_date).toLocaleString()}
+                </p>
+                <p>
+                  <strong>Check-out:</strong>{" "}
+                  {new Date(booking.check_out_date).toLocaleString()}
+                </p>
+                <p>
+                  <strong>Pets:</strong>
+                </p>
+                <ul>
+                  {(booking.pets || booking.raw_pet_data).map(
+                    (pet: Pet, index: number) => (
+                      <li key={pet.id || index}>
+                        - {pet.name} ({pet.breed}, {pet.size})
+                      </li>
+                    ),
+                  )}
+                </ul>
 
-              <div className="w-full mt-4 flex justify-end space-x-4">
-                <button
-                  onClick={() => handleAction("accept", booking.id)}
-                  disabled={loading === booking.id}
-                  className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 disabled:opacity-50"
-                >
-                  {loading === booking.id && <Spinner />}
-                  {loading !== booking.id && "Accept"}
-                </button>
+                <div className="w-full mt-4 flex justify-end space-x-4">
+                  <button
+                    onClick={() => handleAction("accept", booking.id)}
+                    disabled={actionLoading === booking.id}
+                    className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 disabled:opacity-50"
+                  >
+                    {actionLoading === booking.id && <Spinner />}
+                    {actionLoading !== booking.id && "Accept"}
+                  </button>
 
-                <button
-                  onClick={() => handleAction("reject", booking.id)}
-                  disabled={loading === booking.id}
-                  className="px-4 py-2 bg-yellow-600 text-white rounded hover:bg-yellow-700 disabled:opacity-50"
-                >
-                  {loading === booking.id && <Spinner />}
-                  {loading !== booking.id && "Reject"}
-                </button>
+                  <button
+                    onClick={() => handleAction("reject", booking.id)}
+                    disabled={actionLoading === booking.id}
+                    className="px-4 py-2 bg-yellow-600 text-white rounded hover:bg-yellow-700 disabled:opacity-50"
+                  >
+                    {actionLoading === booking.id && <Spinner />}
+                    {actionLoading !== booking.id && "Reject"}
+                  </button>
 
-                <button
-                  onClick={() => handleAction("delete", booking.id)}
-                  disabled={loading === booking.id}
-                  className="px-4 py-2 bg-red text-white rounded hover:bg-[#d63a3a] disabled:opacity-50"
-                >
-                  {loading === booking.id && <Spinner />}
-                  {loading !== booking.id && "Delete"}
-                </button>
-              </div>
-            </li>
-          ))}
-        </ul>
+                  <button
+                    onClick={() => handleAction("delete", booking.id)}
+                    disabled={actionLoading === booking.id}
+                    className="px-4 py-2 bg-red text-white rounded hover:bg-[#d63a3a] disabled:opacity-50"
+                  >
+                    {actionLoading === booking.id && <Spinner />}
+                    {actionLoading !== booking.id && "Delete"}
+                  </button>
+                </div>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <div className="text-center text-gray-500">No results found.</div>
+        )}
       </div>
     </div>
   );
