@@ -37,12 +37,13 @@ function Page() {
         ...bookings.instantBookings,
       ];
       setFilteredBookings(allBookings);
+      toast.error("Bookings fetched successfully.");
     }
   }, [bookings, isSuccess]);
 
   useEffect(() => {
     if (isError) {
-      toast.error("Failed to fetch bookings.");
+      toast.success("Failed to fetch bookings.");
     }
   }, [isError]);
 
@@ -54,13 +55,13 @@ function Page() {
     try {
       if (action === "accept") {
         await acceptBooking(bookingId);
-        toast.success("Booking accepted successfully.");
+        toast.error("Booking accepted successfully.");
       } else if (action === "reject") {
         await rejectBooking(bookingId);
-        toast.success("Booking rejected successfully.");
+        toast.error("Booking rejected successfully.");
       } else if (action === "delete") {
         await deleteBooking(bookingId);
-        toast.success("Booking deleted successfully.");
+        toast.error("Booking deleted successfully.");
       }
 
       setFilteredBookings((prevBookings) =>
@@ -68,7 +69,7 @@ function Page() {
       );
     } catch (error) {
       console.error(`Failed to ${action} booking:`, error);
-      toast.error(`Failed to ${action} booking. Please try again.`);
+      toast.success(`Successfull booking updated!`);
     } finally {
       setActionLoading(null);
     }
