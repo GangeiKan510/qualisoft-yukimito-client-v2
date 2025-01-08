@@ -13,7 +13,9 @@ import { toast } from "react-hot-toast";
 
 function Page() {
   const [bookings, setBookings] = useState<any[]>([]);
+  const [filteredBookings, setFilteredBookings] = useState<any[]>([]);
   const [loading, setLoading] = useState<string | null>(null);
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     const fetchBookings = async () => {
@@ -23,6 +25,7 @@ function Page() {
 
         const allBookings = [...data.regularBookings, ...data.instantBookings];
         setBookings(allBookings);
+        setFilteredBookings(allBookings);
       } catch (error) {
         console.error("Error fetching bookings:", error);
         toast.error("Failed to fetch bookings.");
@@ -49,7 +52,7 @@ function Page() {
         toast.success("Booking deleted successfully.");
       }
 
-      setBookings((prevBookings) =>
+      setFilteredBookings((prevBookings) =>
         prevBookings.filter((b) => b.id !== bookingId),
       );
     } catch (error) {
@@ -60,7 +63,17 @@ function Page() {
     }
   };
 
-  if (!bookings.length) {
+  const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const term = event.target.value.toLowerCase();
+    setSearchTerm(term);
+    setFilteredBookings(
+      bookings.filter((booking) =>
+        booking.pet_owner_name.toLowerCase().includes(term),
+      ),
+    );
+  };
+
+  if (!filteredBookings.length) {
     return (
       <div className="flex flex-1 items-center justify-center">
         <Spinner type="primary" />
@@ -70,13 +83,28 @@ function Page() {
 
   return (
     <div className="w-full flex flex-col px-8">
-      <h1 className="text-2xl font-bold mb-6 text-primary-dark">
-        All Bookings
-      </h1>
+      <div className="w-full flex items-center justify-between mb-6">
+        <h1 className="text-2xl font-bold text-primary-dark">All Bookings</h1>
+        <div className="flex items-center space-x-4">
+          <input
+            type="text"
+            value={searchTerm}
+            onChange={handleSearch}
+            placeholder="Search by owner"
+            className="px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-primary"
+          />
+          <button
+            className="p-2 text-sm text-gray-600 rounded hover:bg-gray-100"
+            onClick={() => toast("Filter & Sort feature coming soon!")}
+          >
+            Filter & Sort
+          </button>
+        </div>
+      </div>
 
       <div className="w-full">
         <ul>
-          {bookings.map((booking) => (
+          {filteredBookings.map((booking) => (
             <li key={booking.id} className="w-full mb-4 p-4 border rounded-lg">
               <p>
                 <strong>Owner:</strong> {booking.pet_owner_name}
@@ -133,7 +161,7 @@ function Page() {
                 <button
                   onClick={() => handleAction("delete", booking.id)}
                   disabled={loading === booking.id}
-                  className="px-4 py-2 bg-red text-white rounded hover:bg-red-700 disabled:opacity-50"
+                  className="px-4 py-2 bg-red text-white rounded hover:bg-[#d63a3a] disabled:opacity-50"
                 >
                   {loading === booking.id && <Spinner />}
                   {loading !== booking.id && "Delete"}
