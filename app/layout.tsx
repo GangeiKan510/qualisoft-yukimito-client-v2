@@ -8,6 +8,11 @@ import "./globals.css";
 import { routes } from "../utils/routes/routes";
 import { UserProvider } from "@/components/config/user-context";
 import { SidebarProvider } from "@/components/config/sidebar-context";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import React from "react";
+
+// Create a QueryClient instance
+const queryClient = new QueryClient();
 
 export default function RootLayout({
   children,
@@ -38,16 +43,17 @@ export default function RootLayout({
         />
       </head>
       <body className="font-sans">
-        <AppProvider>
-          <SidebarProvider>
-            <UserProvider>
-              {routesWithHeader.includes(pathname) && <Header />}
-              <div>{children}</div>
-              {/* Conditionally render the footer */}
-              {routesWithFooter.includes(pathname) && <Footer />}
-            </UserProvider>
-          </SidebarProvider>
-        </AppProvider>
+        <QueryClientProvider client={queryClient}>
+          <AppProvider>
+            <SidebarProvider>
+              <UserProvider>
+                {routesWithHeader.includes(pathname) && <Header />}
+                <div>{children}</div>
+                {routesWithFooter.includes(pathname) && <Footer />}
+              </UserProvider>
+            </SidebarProvider>
+          </AppProvider>
+        </QueryClientProvider>
       </body>
     </html>
   );

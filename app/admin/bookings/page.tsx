@@ -1,42 +1,50 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
-  getAllBookings,
   acceptBooking,
   rejectBooking,
   deleteBooking,
+  getAllBookings,
 } from "@/network/network/admin/booking";
 import { Pet } from "@/utils/types/pet";
 import Spinner from "@/components/common/spinner";
 import { toast } from "react-hot-toast";
+import { useQuery } from "@tanstack/react-query";
 
 function Page() {
-  const [bookings, setBookings] = useState<any[]>([]);
   const [filteredBookings, setFilteredBookings] = useState<any[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
   const [actionLoading, setActionLoading] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
 
+  const {
+    data: bookings = { regularBookings: [], instantBookings: [] },
+    isLoading,
+    isError,
+    isSuccess,
+    refetch,
+  } = useQuery({
+    queryKey: ["bookings"],
+    queryFn: getAllBookings,
+    retry: 2,
+    refetchOnWindowFocus: false,
+  });
+
   useEffect(() => {
-    const fetchBookings = async () => {
-      try {
-        const data = await getAllBookings();
-        console.log("Fetched bookings:", data);
+    if (isSuccess) {
+      const allBookings = [
+        ...bookings.regularBookings,
+        ...bookings.instantBookings,
+      ];
+      setFilteredBookings(allBookings);
+    }
+  }, [bookings, isSuccess]);
 
-        const allBookings = [...data.regularBookings, ...data.instantBookings];
-        setBookings(allBookings);
-        setFilteredBookings(allBookings);
-      } catch (error) {
-        console.error("Error fetching bookings:", error);
-        toast.error("Failed to fetch bookings.");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchBookings();
-  }, []);
+  useEffect(() => {
+    if (isError) {
+      toast.error("Failed to fetch bookings.");
+    }
+  }, [isError]);
 
   const handleAction = async (
     action: "accept" | "reject" | "delete",
@@ -71,14 +79,16 @@ function Page() {
     setSearchTerm(term);
 
     setFilteredBookings(
-      bookings.filter((booking) => {
-        const bookingString = JSON.stringify(booking).toLowerCase();
-        return bookingString.includes(term);
-      }),
+      bookings.regularBookings
+        .concat(bookings.instantBookings)
+        .filter((booking: any) => {
+          const bookingString = JSON.stringify(booking).toLowerCase();
+          return bookingString.includes(term);
+        }),
     );
   };
 
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="flex flex-1 items-center justify-center">
         <Spinner type="primary" />

@@ -13,6 +13,7 @@
     "check": "prettier --check \"src/**/*.{js,jsx,ts,tsx,json,css,scss,md}\""
   },
   "dependencies": {
+    "@tanstack/react-query": "^5.63.0",
     "autoprefixer": "^10.4.20",
     "clsx": "^2.1.1",
     "deepmerge": "^4.3.1",
