@@ -163,7 +163,15 @@ const BookingHistoryTable = ({ bookings }: any) => {
               </div>
             </div>
             <div className="hidden md:flex flex-1 px-1">
-              <div className="inline-block px-3 py-1 border rounded-full border-secondary text-secondary">
+              <div
+                className={`inline-block px-3 py-1 border rounded-full text-sm font-medium ${
+                  booking.status === "accepted"
+                    ? "bg-green-100 text-green-600 border-green-400"
+                    : booking.status === "rejected"
+                    ? "bg-[#ffd2d2] text-red border-red-400"
+                    : "bg-yellow-100 text-yellow-600 border-yellow-400"
+                }`}
+              >
                 {booking.status || "pending"}
               </div>
             </div>
