@@ -71,12 +71,7 @@ export const getAllVaccines = async () => {
       "/web/admin/vaccine/all-vaccines",
     );
 
-    if (!response.ok) {
-      throw new Error("Failed to fetch vaccines");
-    }
-
-    const data = await response.json();
-    return data;
+    return response;
   } catch (error) {
     console.error("Error fetching vaccines:", error);
     throw error;
