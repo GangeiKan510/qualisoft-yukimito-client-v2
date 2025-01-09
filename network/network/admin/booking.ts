@@ -26,13 +26,7 @@ export const acceptBooking = async (bookingId: string) => {
         },
       },
     );
-
-    if (!response.ok) {
-      throw new Error("Failed to accept booking");
-    }
-
-    const data = await response.json();
-    return data;
+    return response;
   } catch (error) {
     console.error("Error accepting booking:", error);
     throw error;
@@ -50,13 +44,7 @@ export const rejectBooking = async (bookingId: string) => {
         },
       },
     );
-
-    if (!response.ok) {
-      throw new Error("Failed to reject booking");
-    }
-
-    const data = await response.json();
-    return data;
+    return response;
   } catch (error) {
     console.error("Error rejecting booking:", error);
     throw error;
@@ -66,20 +54,16 @@ export const rejectBooking = async (bookingId: string) => {
 export const deleteBooking = async (bookingId: string) => {
   try {
     const response = await deleteWithFirebaseJwt(
-      `/web/admin/booking/delete-booking?bookingId=${bookingId}`,
+      `/web/admin/booking/delete-booking`,
       {
+        params: { bookingId: bookingId },
         headers: {
           "Content-Type": "application/json",
         },
       },
     );
 
-    if (!response.ok) {
-      throw new Error("Failed to delete booking");
-    }
-
-    const data = await response.json();
-    return data;
+    return response;
   } catch (error) {
     console.error("Error deleting booking:", error);
     throw error;

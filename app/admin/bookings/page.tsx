@@ -43,7 +43,7 @@ function Page() {
 
   useEffect(() => {
     if (isError) {
-      toast.success("Failed to fetch bookings.");
+      toast.error("Failed to fetch bookings.");
     }
   }, [isError]);
 
@@ -55,23 +55,25 @@ function Page() {
     try {
       if (action === "accept") {
         await acceptBooking(bookingId);
-        toast.error("Booking accepted successfully.");
+        toast.success("Booking accepted successfully.");
       } else if (action === "reject") {
         await rejectBooking(bookingId);
-        toast.error("Booking rejected successfully.");
+        toast.success("Booking rejected successfully.");
       } else if (action === "delete") {
         await deleteBooking(bookingId);
-        toast.error("Booking deleted successfully.");
+        toast.success("Booking deleted successfully.");
       }
 
       setFilteredBookings((prevBookings) =>
         prevBookings.filter((b) => b.id !== bookingId),
       );
     } catch (error) {
+      console.log(error);
       console.error(`Failed to ${action} booking:`, error);
-      toast.success(`Successfull booking updated!`);
+      toast.error(`Failed to ${action} booking.`);
     } finally {
       setActionLoading(null);
+      refetch();
     }
   };
 
@@ -82,10 +84,9 @@ function Page() {
     setFilteredBookings(
       bookings.regularBookings
         .concat(bookings.instantBookings)
-        .filter((booking: any) => {
-          const bookingString = JSON.stringify(booking).toLowerCase();
-          return bookingString.includes(term);
-        }),
+        .filter((booking: any) =>
+          JSON.stringify(booking).toLowerCase().includes(term),
+        ),
     );
   };
 
@@ -98,17 +99,17 @@ function Page() {
   }
 
   return (
-    <div className="w-full flex flex-col px-8">
+    <div className="w-full flex flex-col px-8 py-4">
       <Toaster />
 
       <div className="w-full flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold text-primary-dark">All Bookings</h1>
+        <h1 className="text-3xl font-bold text-primary-dark">All Bookings</h1>
         <div className="flex items-center space-x-4">
           <input
             type="text"
             value={searchTerm}
             onChange={handleSearch}
-            placeholder="Search anything..."
+            placeholder="Search bookings..."
             className="px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-primary"
           />
           <button
@@ -120,80 +121,99 @@ function Page() {
         </div>
       </div>
 
-      <div className="w-full">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {filteredBookings.length ? (
-          <ul>
-            {filteredBookings.map((booking) => (
-              <li
-                key={booking.id}
-                className="w-full mb-4 p-4 border rounded-lg"
-              >
-                <p>
-                  <strong>Owner:</strong> {booking.pet_owner_name}
+          filteredBookings.map((booking) => (
+            <div
+              key={booking.id}
+              className="p-6 bg-white rounded-lg shadow-md border hover:shadow-lg transition"
+            >
+              <div className="mb-4">
+                <h2 className="text-xl font-semibold text-gray-800 mb-1">
+                  {booking.pet_owner_name}
+                </h2>
+                <p className="text-sm text-gray-500">{booking.service}</p>
+              </div>
+
+              <div className="mb-4">
+                <p className="text-sm text-gray-600">
+                  <strong>Check-in:</strong>{" "}
+                  {new Date(booking.check_in_date).toLocaleDateString()}
                 </p>
-                <p>
-                  <strong>Service:</strong> {booking.service}
+                <p className="text-sm text-gray-600">
+                  <strong>Check-out:</strong>{" "}
+                  {new Date(booking.check_out_date).toLocaleDateString()}
                 </p>
-                <p>
-                  <strong>Status:</strong> {booking.status}
-                </p>
-                <p>
+              </div>
+
+              <div className="mb-4">
+                <p className="text-sm text-gray-600 font-medium">
                   <strong>Total Bill:</strong> ₱{booking.total_bill}
                 </p>
-                <p>
-                  <strong>Check-in:</strong>{" "}
-                  {new Date(booking.check_in_date).toLocaleString()}
-                </p>
-                <p>
-                  <strong>Check-out:</strong>{" "}
-                  {new Date(booking.check_out_date).toLocaleString()}
-                </p>
-                <p>
-                  <strong>Pets:</strong>
-                </p>
-                <ul>
-                  {(booking.pets || booking.raw_pet_data).map(
-                    (pet: Pet, index: number) => (
-                      <li key={pet.id || index}>
-                        - {pet.name} ({pet.breed}, {pet.size})
-                      </li>
-                    ),
-                  )}
-                </ul>
+              </div>
 
-                <div className="w-full mt-4 flex justify-end space-x-4">
-                  <button
-                    onClick={() => handleAction("accept", booking.id)}
-                    disabled={actionLoading === booking.id}
-                    className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 disabled:opacity-50"
-                  >
-                    {actionLoading === booking.id && <Spinner />}
-                    {actionLoading !== booking.id && "Accept"}
-                  </button>
+              <div className="flex flex-wrap gap-2 mb-4">
+                {(booking.pets || booking.raw_pet_data).map(
+                  (pet: Pet, index: number) => (
+                    <span
+                      key={pet.id || index}
+                      className="px-2 py-1 bg-primary text-white rounded-full text-xs font-medium"
+                    >
+                      {pet.name} ({pet.breed})
+                    </span>
+                  ),
+                )}
+              </div>
 
-                  <button
-                    onClick={() => handleAction("reject", booking.id)}
-                    disabled={actionLoading === booking.id}
-                    className="px-4 py-2 bg-yellow-600 text-white rounded hover:bg-yellow-700 disabled:opacity-50"
-                  >
-                    {actionLoading === booking.id && <Spinner />}
-                    {actionLoading !== booking.id && "Reject"}
-                  </button>
+              <div
+                className={`inline-block px-3 py-1 rounded-full text-sm font-medium ${
+                  booking.status === "accepted"
+                    ? "bg-green-100 text-green-600"
+                    : booking.status === "rejected"
+                    ? "bg-[#ffdada] text-red"
+                    : "bg-yellow-100 text-yellow-600"
+                }`}
+              >
+                {booking.status || "Pending"}
+              </div>
 
-                  <button
-                    onClick={() => handleAction("delete", booking.id)}
-                    disabled={actionLoading === booking.id}
-                    className="px-4 py-2 bg-red text-white rounded hover:bg-[#d63a3a] disabled:opacity-50"
-                  >
-                    {actionLoading === booking.id && <Spinner />}
-                    {actionLoading !== booking.id && "Delete"}
-                  </button>
-                </div>
-              </li>
-            ))}
-          </ul>
+              <div className="mt-4 flex justify-end space-x-4">
+                {/* Show Accept and Reject buttons only if status is pending */}
+                {booking.status === "pending" && (
+                  <>
+                    <button
+                      onClick={() => handleAction("accept", booking.id)}
+                      disabled={actionLoading === booking.id}
+                      className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 disabled:opacity-50"
+                    >
+                      {actionLoading === booking.id ? <Spinner /> : "Accept"}
+                    </button>
+
+                    <button
+                      onClick={() => handleAction("reject", booking.id)}
+                      disabled={actionLoading === booking.id}
+                      className="px-4 py-2 bg-yellow-600 text-white rounded hover:bg-yellow-700 disabled:opacity-50"
+                    >
+                      {actionLoading === booking.id ? <Spinner /> : "Reject"}
+                    </button>
+                  </>
+                )}
+
+                {/* Show Delete button for all statuses */}
+                <button
+                  onClick={() => handleAction("delete", booking.id)}
+                  disabled={actionLoading === booking.id}
+                  className="px-4 py-2 bg-red text-white rounded hover:bg-[#d63a3a] disabled:opacity-50"
+                >
+                  {actionLoading === booking.id ? <Spinner /> : "Delete"}
+                </button>
+              </div>
+            </div>
+          ))
         ) : (
-          <div className="text-center text-gray-500">No results found.</div>
+          <div className="text-center text-gray-500 col-span-full">
+            No results found.
+          </div>
         )}
       </div>
     </div>
