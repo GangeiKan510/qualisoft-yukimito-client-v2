@@ -20,7 +20,10 @@ const AddAdminModal: React.FC<AddAdminModalProps> = ({
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
   ) => {
     const { name, value } = e.target;
-    setAdminData((prev) => ({ ...prev, [name]: value }));
+    setAdminData((prev) => ({
+      ...prev,
+      [name]: name === "role" ? Number(value) : value,
+    }));
   };
 
   const handleSubmit = () => {

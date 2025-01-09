@@ -4,19 +4,24 @@ import React, { useState, useEffect } from "react";
 import Spinner from "@/components/common/spinner";
 import toast, { Toaster } from "react-hot-toast";
 import { useQuery } from "@tanstack/react-query";
-import { getUsersWithNonDefaultRole } from "@/network/network/admin/user";
+import {
+  getUsersWithNonDefaultRole,
+  modifyUserRole,
+} from "@/network/network/admin/user";
 import AddAdminModal from "@/components/modals/add-admin-modal";
 
 function Page() {
   const [filteredUsers, setFilteredUsers] = useState<any[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const {
     data: users = [],
     isLoading,
     isError,
     isSuccess,
+    refetch,
   } = useQuery({
     queryKey: ["non-default-role-users"],
     queryFn: getUsersWithNonDefaultRole,
@@ -47,10 +52,19 @@ function Page() {
     setFilteredUsers(filtered);
   };
 
-  const handleAddAdmin = (adminData: { email: string; role: number }) => {
-    console.log("Adding admin:", adminData);
-    toast.success(`Admin account for ${adminData.email} added successfully!`);
-    setIsModalOpen(false);
+  const handleAddAdmin = async (adminData: { email: string; role: number }) => {
+    setLoading(true);
+    try {
+      await modifyUserRole(adminData.email, adminData.role as number);
+      toast.success(`Role updated for ${adminData.email}`);
+      refetch();
+    } catch (error: any) {
+      console.error("Error modifying user role:", error);
+      toast.error("Failed to modify user role.");
+    } finally {
+      setLoading(false);
+      setIsModalOpen(false);
+    }
   };
 
   if (isLoading) {
@@ -124,15 +138,6 @@ function Page() {
               <div className="flex justify-end space-x-4">
                 <button
                   onClick={() =>
-                    toast(`Modify role feature for ${user.email} coming soon!`)
-                  }
-                  className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
-                >
-                  Modify Role
-                </button>
-
-                <button
-                  onClick={() =>
                     toast(`Delete user feature for ${user.email} coming soon!`)
                   }
                   className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 disabled:opacity-50"
@@ -153,6 +158,7 @@ function Page() {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onConfirm={handleAddAdmin}
+        loading={loading}
       />
     </div>
   );
