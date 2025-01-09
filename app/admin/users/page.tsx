@@ -1,23 +1,64 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Spinner from "@/components/common/spinner";
 import toast, { Toaster } from "react-hot-toast";
+import { useQuery } from "@tanstack/react-query";
+import { getUsersWithNonDefaultRole } from "@/network/network/admin/user";
 
 function Page() {
+  const [filteredUsers, setFilteredUsers] = useState<any[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
+
+  const {
+    data: users = [],
+    isLoading,
+    isError,
+    isSuccess,
+  } = useQuery({
+    queryKey: ["non-default-role-users"],
+    queryFn: getUsersWithNonDefaultRole,
+    retry: 2,
+    refetchOnWindowFocus: false,
+  });
+
+  useEffect(() => {
+    if (isSuccess) {
+      setFilteredUsers(users);
+      toast.success("Users fetched successfully.");
+    }
+  }, [users, isSuccess]);
+
+  useEffect(() => {
+    if (isError) {
+      toast.error("Failed to fetch users.");
+    }
+  }, [isError]);
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     const term = event.target.value.toLowerCase();
     setSearchTerm(term);
+
+    const filtered = users.filter((user: any) =>
+      JSON.stringify(user).toLowerCase().includes(term),
+    );
+    setFilteredUsers(filtered);
   };
 
+  if (isLoading) {
+    return (
+      <div className="flex flex-1 items-center justify-center">
+        <Spinner type="primary" />
+      </div>
+    );
+  }
+
   return (
-    <div className="w-full flex flex-col px-8">
+    <div className="w-full flex flex-col px-8 py-6">
       <Toaster />
 
       <div className="w-full flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold text-primary-dark">
+        <h1 className="text-3xl font-bold text-primary-dark">
           User Management
         </h1>
         <div className="flex items-center space-x-4">
@@ -25,20 +66,73 @@ function Page() {
             type="text"
             value={searchTerm}
             onChange={handleSearch}
-            placeholder="Search users..."
+            placeholder="Search users by name, email, or phone..."
             className="px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-primary"
           />
-          <button
-            className="p-2 text-sm text-gray-600 rounded hover:bg-gray-100"
-            onClick={() => toast("Filter & Sort feature coming soon!")}
-          >
-            Filter & Sort
-          </button>
         </div>
       </div>
 
-      <div className="w-full text-center text-gray-500">
-        <Spinner type="primary" />
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {filteredUsers.length ? (
+          filteredUsers.map((user) => (
+            <div
+              key={user.id}
+              className="p-6 bg-white rounded-lg shadow-md border hover:shadow-lg transition"
+            >
+              <div className="mb-4 flex items-center gap-4">
+                <div className="w-12 h-12 flex items-center justify-center bg-primary-dark text-white rounded-full text-xl font-semibold">
+                  {user.name ? user.name.charAt(0).toUpperCase() : "N"}
+                </div>
+                <div>
+                  <h2 className="text-xl font-semibold text-gray-800">
+                    {user.name || "No Name Provided"}
+                  </h2>
+                  <p className="text-sm text-gray-500">{user.email}</p>
+                </div>
+              </div>
+
+              <div className="mb-4">
+                <p className="text-sm text-gray-600">
+                  <strong>Phone:</strong> {user.phone || "N/A"}
+                </p>
+                <p className="text-sm text-gray-600">
+                  <strong>Address:</strong> {user.address || "N/A"}
+                </p>
+                <p className="text-sm text-gray-600">
+                  <strong>Role:</strong> {user.role}
+                </p>
+                <p className="text-sm text-gray-600">
+                  <strong>Created At:</strong>{" "}
+                  {new Date(user.createdAt).toLocaleDateString()}
+                </p>
+              </div>
+
+              <div className="flex justify-end space-x-4">
+                <button
+                  onClick={() =>
+                    toast(`Modify role feature for ${user.email} coming soon!`)
+                  }
+                  className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
+                >
+                  Modify Role
+                </button>
+
+                <button
+                  onClick={() =>
+                    toast(`Delete user feature for ${user.email} coming soon!`)
+                  }
+                  className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 disabled:opacity-50"
+                >
+                  Delete User
+                </button>
+              </div>
+            </div>
+          ))
+        ) : (
+          <div className="text-center text-gray-500 col-span-full">
+            No users found.
+          </div>
+        )}
       </div>
     </div>
   );
