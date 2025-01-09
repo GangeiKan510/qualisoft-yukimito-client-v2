@@ -5,10 +5,12 @@ import Spinner from "@/components/common/spinner";
 import toast, { Toaster } from "react-hot-toast";
 import { useQuery } from "@tanstack/react-query";
 import { getUsersWithNonDefaultRole } from "@/network/network/admin/user";
+import AddAdminModal from "@/components/modals/add-admin-modal";
 
 function Page() {
   const [filteredUsers, setFilteredUsers] = useState<any[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const {
     data: users = [],
@@ -45,6 +47,12 @@ function Page() {
     setFilteredUsers(filtered);
   };
 
+  const handleAddAdmin = (adminData: { email: string; role: number }) => {
+    console.log("Adding admin:", adminData);
+    toast.success(`Admin account for ${adminData.email} added successfully!`);
+    setIsModalOpen(false);
+  };
+
   if (isLoading) {
     return (
       <div className="flex flex-1 items-center justify-center">
@@ -69,6 +77,12 @@ function Page() {
             placeholder="Search users by name, email, or phone..."
             className="px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-primary"
           />
+          <button
+            onClick={() => setIsModalOpen(true)}
+            className="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600"
+          >
+            Add Admin Account
+          </button>
         </div>
       </div>
 
@@ -134,6 +148,12 @@ function Page() {
           </div>
         )}
       </div>
+
+      <AddAdminModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onConfirm={handleAddAdmin}
+      />
     </div>
   );
 }
