@@ -12,13 +12,16 @@ import DeleteConfirmationModal from "@/components/modals/delete-confirmation-mod
 import CreateVaccineModal from "@/components/modals/create-vaccine";
 import toast, { Toaster } from "react-hot-toast";
 import { useQuery } from "@tanstack/react-query";
+import UpdateVaccineModal from "@/components/modals/update-vaccine";
 
 function VaccineManagement() {
   const [vaccines, setVaccines] = useState<any[]>([]);
-  const [updateLoading, setUpdateLoading] = useState<string | null>(null);
+  const [updateLoading, setUpdateLoading] = useState<boolean>(false);
   const [deleteLoading, setDeleteLoading] = useState<boolean>(false);
   const [deleteVaccineId, setDeleteVaccineId] = useState<string | null>(null);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState<boolean>(false);
+  const [isUpdateModalOpen, setIsUpdateModalOpen] = useState<boolean>(false);
+  const [selectedVaccine, setSelectedVaccine] = useState<any | null>(null);
   const [createLoading, setCreateLoading] = useState<boolean>(false);
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -64,22 +67,38 @@ function VaccineManagement() {
     }
   };
 
-  const handleUpdateVaccine = async (vaccineId: string) => {
-    setUpdateLoading(vaccineId);
+  const handleUpdateVaccine = async (vaccineData: {
+    id: string;
+    name: string;
+    manufacturer: string;
+    batch_number: string;
+    expiry_date: string;
+    date_administered: string;
+  }) => {
+    setUpdateLoading(true);
     try {
-      await updateVaccine({
-        id: vaccineId,
-        name: "Updated Vaccine",
-        manufacturer: "Updated Manufacturer",
-      });
-      refetch();
+      const formattedData = {
+        ...vaccineData,
+        expiry_date: new Date(vaccineData.expiry_date).toISOString(),
+        date_administered: new Date(
+          vaccineData.date_administered,
+        ).toISOString(),
+      };
+
+      await updateVaccine(formattedData);
       toast.success("Vaccine updated successfully.");
+      setIsUpdateModalOpen(false);
+      refetch();
     } catch (error) {
       console.error("Error updating vaccine:", error);
-      toast.error("Failed to update vaccine.");
     } finally {
-      setUpdateLoading(null);
+      setUpdateLoading(false);
     }
+  };
+
+  const handleOpenUpdateModal = (vaccine: any) => {
+    setSelectedVaccine(vaccine);
+    setIsUpdateModalOpen(true);
   };
 
   const handleConfirmDelete = async () => {
@@ -185,7 +204,7 @@ function VaccineManagement() {
                 </p>
                 <div className="w-full mt-4 flex justify-end space-x-4">
                   <button
-                    onClick={() => handleUpdateVaccine(vaccine.id)}
+                    onClick={() => handleOpenUpdateModal(vaccine)}
                     disabled={updateLoading === vaccine.id}
                     className="px-4 py-2 bg-orange-500 text-white rounded hover:bg-yellow-700 disabled:opacity-50"
                   >
@@ -219,6 +238,14 @@ function VaccineManagement() {
         onClose={() => setIsCreateModalOpen(false)}
         onConfirm={handleCreateVaccine}
         loading={createLoading}
+      />
+
+      <UpdateVaccineModal
+        isOpen={isUpdateModalOpen}
+        onClose={() => setIsUpdateModalOpen(false)}
+        onConfirm={handleUpdateVaccine}
+        initialData={selectedVaccine}
+        loading={updateLoading}
       />
     </div>
   );

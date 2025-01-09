@@ -48,12 +48,7 @@ export const updateVaccine = async (vaccineData: {
       },
     );
 
-    if (!response.ok) {
-      throw new Error("Failed to update vaccine");
-    }
-
-    const data = await response.json();
-    return data;
+    return response;
   } catch (error) {
     console.error("Error updating vaccine:", error);
     throw error;
