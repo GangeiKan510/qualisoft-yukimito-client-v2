@@ -127,7 +127,11 @@ const InventoryPage: React.FC = () => {
         <AddItemModal onClose={handleCloseModal} onSuccess={refetch} />
       )}
       {isEditModalOpen && currentItem && (
-        <EditItemModal item={currentItem} onClose={handleCloseEditModal} />
+        <EditItemModal
+          item={currentItem}
+          onClose={handleCloseEditModal}
+          onSuccess={refetch}
+        />
       )}
     </div>
   );
