@@ -22,12 +22,7 @@ export const createVaccine = async (vaccineData: {
       },
     );
 
-    if (!response.ok) {
-      throw new Error("Failed to create vaccine");
-    }
-
-    const data = await response.json();
-    return data;
+    return response;
   } catch (error) {
     console.error("Error creating vaccine:", error);
     throw error;

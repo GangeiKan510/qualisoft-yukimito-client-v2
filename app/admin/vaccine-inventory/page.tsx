@@ -49,12 +49,11 @@ function VaccineManagement() {
       });
       setVaccines((prev) => [...prev, newVaccine]);
       toast.success("Vaccine created successfully.");
+      refetch();
     } catch (error) {
       console.error("Error creating vaccine:", error);
       toast.error("Failed to create vaccine.");
     }
-
-    refetch();
   };
 
   const handleUpdateVaccine = async (vaccineId: string) => {
