@@ -5,6 +5,7 @@ import InventoryTable from "@/components/tables/inventory-table";
 import InventoryFilters from "@/components/common/inventory-filters";
 import AddItemModal from "@/components/modals/add-item-modal";
 import EditItemModal from "@/components/modals/edit-item-modal";
+import DeleteConfirmationModal from "@/components/modals/delete-confirmation-modal";
 import { getAllProducts, deleteProduct } from "@/network/network/admin/product";
 import { useQuery } from "@tanstack/react-query";
 import Spinner from "@/components/common/spinner";
@@ -13,7 +14,9 @@ import toast, { Toaster } from "react-hot-toast";
 const InventoryPage: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [currentItem, setCurrentItem] = useState<any | null>(null);
+  const [deleteProductId, setDeleteProductId] = useState<string | null>(null);
   const [filteredProducts, setFilteredProducts] = useState<any[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [actionLoading, setActionLoading] = useState<string | null>(null);
@@ -63,12 +66,22 @@ const InventoryPage: React.FC = () => {
 
   const handleCloseEditModal = () => setIsEditModalOpen(false);
 
-  const handleDeleteProduct = async (productId: string) => {
-    setActionLoading(productId);
+  const handleOpenDeleteModal = (productId: string) => {
+    setDeleteProductId(productId);
+    setIsDeleteModalOpen(true);
+  };
+
+  const handleCloseDeleteModal = () => setIsDeleteModalOpen(false);
+
+  const handleConfirmDelete = async () => {
+    if (!deleteProductId) return;
+
+    setActionLoading(deleteProductId);
     try {
-      await deleteProduct(productId);
+      await deleteProduct(deleteProductId);
       toast.success("Product deleted successfully.");
       refetch();
+      handleCloseDeleteModal();
     } catch (error) {
       console.error("Error deleting product:", error);
       toast.error("Failed to delete product.");
@@ -112,7 +125,7 @@ const InventoryPage: React.FC = () => {
           <InventoryTable
             items={filteredProducts}
             onEdit={handleOpenEditModal}
-            onDelete={handleDeleteProduct}
+            onDelete={handleOpenDeleteModal}
             actionLoading={actionLoading}
           />
         ) : (
@@ -131,6 +144,14 @@ const InventoryPage: React.FC = () => {
           item={currentItem}
           onClose={handleCloseEditModal}
           onSuccess={refetch}
+        />
+      )}
+      {isDeleteModalOpen && (
+        <DeleteConfirmationModal
+          isOpen={isDeleteModalOpen}
+          onClose={handleCloseDeleteModal}
+          onConfirm={handleConfirmDelete}
+          loading={actionLoading === deleteProductId}
         />
       )}
     </div>
