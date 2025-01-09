@@ -1,10 +1,10 @@
 "use client";
 
-import React, { useState } from 'react';
-import InventoryTable from '@/components/tables/inventory-table';
-import InventoryFilters from './components/inventory-filters';
-import AddItemModal from '../../../components/modals/add-item-modal';
-import EditItemModal from '../../../components/modals/edit-item-modal';
+import React, { useState } from "react";
+import InventoryTable from "@/components/tables/inventory-table";
+import InventoryFilters from "../../../components/common/inventory-filters";
+import AddItemModal from "../../../components/modals/add-item-modal";
+import EditItemModal from "../../../components/modals/edit-item-modal";
 
 const InventoryPage: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -38,7 +38,7 @@ const InventoryPage: React.FC = () => {
         </div>
       </div>
       <div className="bg-white rounded-xl shadow-md p-6">
-        <InventoryTable onEdit={handleOpenEditModal}/>
+        <InventoryTable onEdit={handleOpenEditModal} />
       </div>
       {isModalOpen && <AddItemModal onClose={handleCloseModal} />}
       {isEditModalOpen && (
