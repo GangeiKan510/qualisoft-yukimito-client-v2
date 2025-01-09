@@ -8,13 +8,15 @@ import {
   deleteVaccine,
 } from "@/network/network/admin/vaccine";
 import Spinner from "@/components/common/spinner";
+import DeleteConfirmationModal from "@/components/modals/delete-confirmation-modal";
 import toast, { Toaster } from "react-hot-toast";
 import { useQuery } from "@tanstack/react-query";
 
 function VaccineManagement() {
   const [vaccines, setVaccines] = useState<any[]>([]);
   const [updateLoading, setUpdateLoading] = useState<string | null>(null);
-  const [deleteLoading, setDeleteLoading] = useState<string | null>(null);
+  const [deleteLoading, setDeleteLoading] = useState<boolean>(false);
+  const [deleteVaccineId, setDeleteVaccineId] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
 
   const { data, isLoading, isError, refetch } = useQuery({
@@ -73,19 +75,32 @@ function VaccineManagement() {
     }
   };
 
-  const handleDeleteVaccine = async (vaccineId: string) => {
-    setDeleteLoading(vaccineId);
+  const handleConfirmDelete = async () => {
+    if (!deleteVaccineId) return;
+
+    setDeleteLoading(true);
     try {
-      await deleteVaccine(vaccineId);
-      setVaccines((prev) => prev.filter((vaccine) => vaccine.id !== vaccineId));
+      await deleteVaccine(deleteVaccineId);
+      setVaccines((prev) =>
+        prev.filter((vaccine) => vaccine.id !== deleteVaccineId),
+      );
       toast.success("Vaccine deleted successfully.");
+      setDeleteVaccineId(null);
     } catch (error) {
       console.error("Error deleting vaccine:", error);
       toast.error("Failed to delete vaccine.");
     } finally {
-      setDeleteLoading(null);
+      setDeleteLoading(false);
       refetch();
     }
+  };
+
+  const handleOpenDeleteModal = (vaccineId: string) => {
+    setDeleteVaccineId(vaccineId);
+  };
+
+  const handleCloseDeleteModal = () => {
+    setDeleteVaccineId(null);
   };
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -171,12 +186,10 @@ function VaccineManagement() {
                     {updateLoading !== vaccine.id && "Update"}
                   </button>
                   <button
-                    onClick={() => handleDeleteVaccine(vaccine.id)}
-                    disabled={deleteLoading === vaccine.id}
+                    onClick={() => handleOpenDeleteModal(vaccine.id)}
                     className="px-4 py-2 bg-red text-white rounded hover:bg-[#da3d3d] disabled:opacity-50"
                   >
-                    {deleteLoading === vaccine.id && <Spinner />}
-                    {deleteLoading !== vaccine.id && "Delete"}
+                    Delete
                   </button>
                 </div>
               </li>
@@ -186,6 +199,13 @@ function VaccineManagement() {
           <div className="text-center text-gray-500">No vaccines found.</div>
         )}
       </div>
+
+      <DeleteConfirmationModal
+        isOpen={!!deleteVaccineId}
+        onClose={handleCloseDeleteModal}
+        onConfirm={handleConfirmDelete}
+        loading={deleteLoading}
+      />
     </div>
   );
 }

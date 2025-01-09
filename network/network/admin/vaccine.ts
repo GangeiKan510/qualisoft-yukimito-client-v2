@@ -85,10 +85,6 @@ export const deleteVaccine = async (vaccineId: string) => {
       },
     );
 
-    if (!response.ok) {
-      throw new Error("Failed to delete vaccine");
-    }
-
     return response;
   } catch (error) {
     console.error("Error deleting vaccine:", error);
