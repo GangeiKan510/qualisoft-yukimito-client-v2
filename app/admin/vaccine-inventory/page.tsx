@@ -13,7 +13,8 @@ import { useQuery } from "@tanstack/react-query";
 
 function VaccineManagement() {
   const [vaccines, setVaccines] = useState<any[]>([]);
-  const [actionLoading, setActionLoading] = useState<string | null>(null);
+  const [updateLoading, setUpdateLoading] = useState<string | null>(null);
+  const [deleteLoading, setDeleteLoading] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
 
   const { data, isLoading, isError, refetch } = useQuery({
@@ -22,8 +23,6 @@ function VaccineManagement() {
     retry: 2,
     refetchOnWindowFocus: false,
   });
-
-  console.log("Vaccines", data);
 
   useEffect(() => {
     if (data) {
@@ -57,7 +56,7 @@ function VaccineManagement() {
   };
 
   const handleUpdateVaccine = async (vaccineId: string) => {
-    setActionLoading(vaccineId);
+    setUpdateLoading(vaccineId);
     try {
       await updateVaccine({
         id: vaccineId,
@@ -70,14 +69,12 @@ function VaccineManagement() {
       console.error("Error updating vaccine:", error);
       toast.error("Failed to update vaccine.");
     } finally {
-      setActionLoading(null);
-
-      refetch();
+      setUpdateLoading(null);
     }
   };
 
   const handleDeleteVaccine = async (vaccineId: string) => {
-    setActionLoading(vaccineId);
+    setDeleteLoading(vaccineId);
     try {
       await deleteVaccine(vaccineId);
       setVaccines((prev) => prev.filter((vaccine) => vaccine.id !== vaccineId));
@@ -86,7 +83,7 @@ function VaccineManagement() {
       console.error("Error deleting vaccine:", error);
       toast.error("Failed to delete vaccine.");
     } finally {
-      setActionLoading(null);
+      setDeleteLoading(null);
       refetch();
     }
   };
@@ -167,19 +164,19 @@ function VaccineManagement() {
                 <div className="w-full mt-4 flex justify-end space-x-4">
                   <button
                     onClick={() => handleUpdateVaccine(vaccine.id)}
-                    disabled={actionLoading === vaccine.id}
+                    disabled={updateLoading === vaccine.id}
                     className="px-4 py-2 bg-yellow-600 text-white rounded hover:bg-yellow-700 disabled:opacity-50"
                   >
-                    {actionLoading === vaccine.id && <Spinner />}
-                    {actionLoading !== vaccine.id && "Update"}
+                    {updateLoading === vaccine.id && <Spinner />}
+                    {updateLoading !== vaccine.id && "Update"}
                   </button>
                   <button
                     onClick={() => handleDeleteVaccine(vaccine.id)}
-                    disabled={actionLoading === vaccine.id}
-                    className="px-4 py-2 bg-red text-white rounded hover:bg-red disabled:opacity-50"
+                    disabled={deleteLoading === vaccine.id}
+                    className="px-4 py-2 bg-red text-white rounded hover:bg-[#da3d3d] disabled:opacity-50"
                   >
-                    {actionLoading === vaccine.id && <Spinner />}
-                    {actionLoading !== vaccine.id && "Delete"}
+                    {deleteLoading === vaccine.id && <Spinner />}
+                    {deleteLoading !== vaccine.id && "Delete"}
                   </button>
                 </div>
               </li>
