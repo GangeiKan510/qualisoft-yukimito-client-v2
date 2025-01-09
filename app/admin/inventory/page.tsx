@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import InventoryTable from "@/components/tables/inventory-table";
 import InventoryFilters from "@/components/common/inventory-filters";
 import AddItemModal from "@/components/modals/add-item-modal";
@@ -14,6 +14,8 @@ const InventoryPage: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [currentItem, setCurrentItem] = useState<any | null>(null);
+  const [filteredProducts, setFilteredProducts] = useState<any[]>([]);
+  const [searchTerm, setSearchTerm] = useState("");
 
   const {
     data: products = [],
@@ -26,6 +28,29 @@ const InventoryPage: React.FC = () => {
     retry: 2,
     refetchOnWindowFocus: false,
   });
+
+  useEffect(() => {
+    if (products.length) {
+      setFilteredProducts(products);
+      toast.success("Products fetched successfully.");
+    }
+  }, [products]);
+
+  useEffect(() => {
+    if (isError) {
+      toast.error("Failed to fetch products.");
+    }
+  }, [isError]);
+
+  const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const term = event.target.value.toLowerCase();
+    setSearchTerm(term);
+
+    const filtered = products.filter((product: any) =>
+      JSON.stringify(product).toLowerCase().includes(term),
+    );
+    setFilteredProducts(filtered);
+  };
 
   const handleOpenModal = () => setIsModalOpen(true);
   const handleCloseModal = () => setIsModalOpen(false);
@@ -45,38 +70,42 @@ const InventoryPage: React.FC = () => {
     );
   }
 
-  if (isError) {
-    toast.error("Failed to fetch products.");
-    return (
-      <div className="text-center text-red-500">Error loading products.</div>
-    );
-  }
-
   return (
-    <div className="p-8 bg-gray-100 min-h-screen">
+    <div className="w-full flex flex-col px-8">
       <Toaster />
-      <h1 className="text-3xl font-bold text-gray-800 mb-6">Inventory</h1>
-      <div className="flex flex-wrap justify-between items-center gap-4 mb-4">
-        <InventoryFilters />
-        <div className="flex flex-wrap gap-4 mb-6">
+      <div className="w-full flex items-center justify-between mb-6">
+        <h1 className="text-2xl font-bold text-primary-dark">Inventory</h1>
+        <div className="flex items-center space-x-4">
+          <input
+            type="text"
+            value={searchTerm}
+            onChange={handleSearch}
+            placeholder="Search products..."
+            className="px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-primary"
+          />
           <button
-            className="bg-green-500 hover:bg-green-600 text-white font-semibold rounded-md px-6 py-3 shadow-sm transition"
+            className="p-2 text-sm bg-green-500 text-white rounded hover:bg-green-600"
             onClick={handleOpenModal}
           >
             + Add Item
           </button>
         </div>
       </div>
-      <div className="bg-white rounded-xl shadow-md p-6">
-        {products.length > 0 ? (
-          <InventoryTable items={products} onEdit={handleOpenEditModal} />
+
+      <div className="w-full bg-white rounded-xl shadow-md p-6">
+        {filteredProducts.length > 0 ? (
+          <InventoryTable
+            items={filteredProducts}
+            onEdit={handleOpenEditModal}
+          />
         ) : (
           <div className="text-center text-gray-500 py-8">
-            No products available. Click <strong>+ Add Item</strong> to create a
-            new product.
+            No products found. Click <strong>+ Add Item</strong> to create a new
+            product.
           </div>
         )}
       </div>
+
       {isModalOpen && (
         <AddItemModal onClose={handleCloseModal} onSuccess={refetch} />
       )}
