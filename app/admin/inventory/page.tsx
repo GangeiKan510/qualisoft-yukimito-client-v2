@@ -3,13 +3,25 @@
 import React, { useState } from 'react';
 import InventoryTable from '@/components/tables/inventory-table';
 import InventoryFilters from './components/inventory-filters';
-import AddItemModal from './components/add-item-modal';
+import AddItemModal from '../../../components/modals/add-item-modal';
+import EditItemModal from '../../../components/modals/edit-item-modal';
 
 const InventoryPage: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [currentItem, setCurrentItem] = useState(null);
 
   const handleOpenModal = () => setIsModalOpen(true);
   const handleCloseModal = () => setIsModalOpen(false);
+
+  const handleOpenEditModal = (item: React.SetStateAction<null>) => {
+    setCurrentItem(item);
+    setIsEditModalOpen(true);
+  };
+
+  const handleCloseEditModal = () => {
+    setIsEditModalOpen(false);
+  };
 
   return (
     <div className="p-8 bg-gray-100 min-h-screen">
@@ -26,9 +38,12 @@ const InventoryPage: React.FC = () => {
         </div>
       </div>
       <div className="bg-white rounded-xl shadow-md p-6">
-        <InventoryTable />
+        <InventoryTable onEdit={handleOpenEditModal}/>
       </div>
       {isModalOpen && <AddItemModal onClose={handleCloseModal} />}
+      {isEditModalOpen && (
+        <EditItemModal item={currentItem} onClose={handleCloseEditModal} />
+      )}
     </div>
   );
 };

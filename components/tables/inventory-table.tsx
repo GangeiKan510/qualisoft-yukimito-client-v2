@@ -1,6 +1,10 @@
 import React from 'react';
 
-const InventoryTable: React.FC = () => {
+interface InventoryTableProps {
+    onEdit: (item: any) => void;
+  }
+
+const InventoryTable: React.FC<InventoryTableProps> = ({ onEdit }) => {
   const inventoryItems = [
     { id: 1, name: 'Dog Food - Large Pack', category: 'Food', quantity: 50, status: 'In Stock' },
     { id: 2, name: 'Cat Litter', category: 'Supplies', quantity: 10, status: 'Low Stock' },
@@ -47,7 +51,7 @@ const InventoryTable: React.FC = () => {
                 {item.status}
               </td>
               <td className="p-4">
-                <button className="text-blue-500 hover:underline mr-3">Edit</button>
+                <button className="text-blue-500 hover:underline mr-3" onClick={() => onEdit(item)}>Edit</button>
               </td>
             </tr>
           ))}
