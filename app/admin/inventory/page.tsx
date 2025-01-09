@@ -5,7 +5,7 @@ import InventoryTable from "@/components/tables/inventory-table";
 import InventoryFilters from "@/components/common/inventory-filters";
 import AddItemModal from "@/components/modals/add-item-modal";
 import EditItemModal from "@/components/modals/edit-item-modal";
-import { getAllProducts } from "@/network/network/admin/product";
+import { getAllProducts, deleteProduct } from "@/network/network/admin/product";
 import { useQuery } from "@tanstack/react-query";
 import Spinner from "@/components/common/spinner";
 import toast, { Toaster } from "react-hot-toast";
@@ -16,6 +16,7 @@ const InventoryPage: React.FC = () => {
   const [currentItem, setCurrentItem] = useState<any | null>(null);
   const [filteredProducts, setFilteredProducts] = useState<any[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [actionLoading, setActionLoading] = useState<string | null>(null);
 
   const {
     data: products = [],
@@ -62,6 +63,20 @@ const InventoryPage: React.FC = () => {
 
   const handleCloseEditModal = () => setIsEditModalOpen(false);
 
+  const handleDeleteProduct = async (productId: string) => {
+    setActionLoading(productId);
+    try {
+      await deleteProduct(productId);
+      toast.success("Product deleted successfully.");
+      refetch();
+    } catch (error) {
+      console.error("Error deleting product:", error);
+      toast.error("Failed to delete product.");
+    } finally {
+      setActionLoading(null);
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="flex flex-1 items-center justify-center">
@@ -97,6 +112,8 @@ const InventoryPage: React.FC = () => {
           <InventoryTable
             items={filteredProducts}
             onEdit={handleOpenEditModal}
+            onDelete={handleDeleteProduct}
+            actionLoading={actionLoading}
           />
         ) : (
           <div className="text-center text-gray-500 py-8">

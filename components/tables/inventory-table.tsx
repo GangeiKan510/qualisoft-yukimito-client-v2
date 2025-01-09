@@ -1,15 +1,29 @@
 import React from "react";
+import Spinner from "@/components/common/spinner";
 
 interface InventoryTableProps {
   items: any[];
   onEdit: (item: any) => void;
+  onDelete: (id: string) => void;
+  actionLoading: string | null;
 }
 
-const InventoryTable: React.FC<InventoryTableProps> = ({ items, onEdit }) => {
+const InventoryTable: React.FC<InventoryTableProps> = ({
+  items,
+  onEdit,
+  onDelete,
+  actionLoading,
+}) => {
   const getStatusStyles = (quantity: number) => {
     if (quantity > 20) return "text-green-600 bg-green-100";
     if (quantity > 0) return "text-yellow-600 bg-yellow-100";
     return "text-red-600 bg-red-100";
+  };
+
+  const getStatusText = (quantity: number) => {
+    if (quantity > 15) return "In Stock";
+    if (quantity > 0) return "Low Stock";
+    return "Out of Stock";
   };
 
   return (
@@ -42,18 +56,21 @@ const InventoryTable: React.FC<InventoryTableProps> = ({ items, onEdit }) => {
                   item.quantity,
                 )}`}
               >
-                {item.quantity > 20
-                  ? "In Stock"
-                  : item.quantity > 0
-                  ? "Low Stock"
-                  : "Out of Stock"}
+                {getStatusText(item.quantity)}
               </td>
-              <td className="p-4">
+              <td className="p-4 flex gap-4">
                 <button
-                  className="text-blue-500 hover:underline mr-3"
+                  className="text-blue-500 hover:underline"
                   onClick={() => onEdit(item)}
                 >
                   Edit
+                </button>
+                <button
+                  className="text-red hover:underline"
+                  onClick={() => onDelete(item.id)}
+                  disabled={actionLoading === item.id}
+                >
+                  {actionLoading === item.id ? <Spinner /> : "Delete"}
                 </button>
               </td>
             </tr>
