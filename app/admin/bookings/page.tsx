@@ -138,7 +138,7 @@ function Page() {
                   <strong>Status:</strong> {booking.status}
                 </p>
                 <p>
-                  <strong>Total Bill:</strong> ${booking.total_bill}
+                  <strong>Total Bill:</strong> ₱{booking.total_bill}
                 </p>
                 <p>
                   <strong>Check-in:</strong>{" "}
