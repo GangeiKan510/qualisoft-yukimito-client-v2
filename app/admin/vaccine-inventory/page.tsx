@@ -9,6 +9,7 @@ import {
 } from "@/network/network/admin/vaccine";
 import Spinner from "@/components/common/spinner";
 import DeleteConfirmationModal from "@/components/modals/delete-confirmation-modal";
+import CreateVaccineModal from "@/components/modals/create-vaccine";
 import toast, { Toaster } from "react-hot-toast";
 import { useQuery } from "@tanstack/react-query";
 
@@ -17,6 +18,8 @@ function VaccineManagement() {
   const [updateLoading, setUpdateLoading] = useState<string | null>(null);
   const [deleteLoading, setDeleteLoading] = useState<boolean>(false);
   const [deleteVaccineId, setDeleteVaccineId] = useState<string | null>(null);
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState<boolean>(false);
+  const [createLoading, setCreateLoading] = useState<boolean>(false);
   const [searchTerm, setSearchTerm] = useState("");
 
   const { data, isLoading, isError, refetch } = useQuery({
@@ -39,21 +42,25 @@ function VaccineManagement() {
     }
   }, [isError]);
 
-  const handleCreateVaccine = async () => {
+  const handleCreateVaccine = async (vaccineData: {
+    name: string;
+    manufacturer: string;
+    batch_number: string;
+    expiry_date: string;
+    date_administered: string;
+  }) => {
+    setCreateLoading(true);
     try {
-      const newVaccine = await createVaccine({
-        name: "New Vaccine",
-        manufacturer: "Manufacturer X",
-        batch_number: "12345",
-        expiry_date: new Date().toISOString(),
-        date_administered: new Date().toISOString(),
-      });
+      const newVaccine = await createVaccine(vaccineData);
       setVaccines((prev) => [...prev, newVaccine]);
       toast.success("Vaccine created successfully.");
+      setIsCreateModalOpen(false);
       refetch();
     } catch (error) {
       console.error("Error creating vaccine:", error);
       toast.error("Failed to create vaccine.");
+    } finally {
+      setCreateLoading(false);
     }
   };
 
@@ -143,8 +150,8 @@ function VaccineManagement() {
             Filter & Sort
           </button>
           <button
-            className="p-2 text-sm bg-blue-600 text-white rounded hover:bg-blue-700"
-            onClick={handleCreateVaccine}
+            className="p-2 text-sm bg-green-500 text-white rounded hover:bg-green-600"
+            onClick={() => setIsCreateModalOpen(true)}
           >
             Add Vaccine
           </button>
@@ -180,7 +187,7 @@ function VaccineManagement() {
                   <button
                     onClick={() => handleUpdateVaccine(vaccine.id)}
                     disabled={updateLoading === vaccine.id}
-                    className="px-4 py-2 bg-yellow-600 text-white rounded hover:bg-yellow-700 disabled:opacity-50"
+                    className="px-4 py-2 bg-orange-500 text-white rounded hover:bg-yellow-700 disabled:opacity-50"
                   >
                     {updateLoading === vaccine.id && <Spinner />}
                     {updateLoading !== vaccine.id && "Update"}
@@ -205,6 +212,13 @@ function VaccineManagement() {
         onClose={handleCloseDeleteModal}
         onConfirm={handleConfirmDelete}
         loading={deleteLoading}
+      />
+
+      <CreateVaccineModal
+        isOpen={isCreateModalOpen}
+        onClose={() => setIsCreateModalOpen(false)}
+        onConfirm={handleCreateVaccine}
+        loading={createLoading}
       />
     </div>
   );
