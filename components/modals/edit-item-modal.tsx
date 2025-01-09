@@ -44,16 +44,6 @@ const EditItemModal: React.FC<EditItemModalProps> = ({ item, onClose }) => {
             className="w-full p-2 border rounded"
             placeholder="Quantity"
           />
-          <select
-            name="status"
-            value={status}
-            onChange={(e) => setStatus(e.target.value)}
-            className="w-full p-2 border rounded"
-          >
-            <option value="In Stock">In Stock</option>
-            <option value="Low Stock">Low Stock</option>
-            <option value="Out of Stock">Out of Stock</option>
-          </select>
         </div>
         <div className="mt-6 flex justify-end gap-4">
           <button

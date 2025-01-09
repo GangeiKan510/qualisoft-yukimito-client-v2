@@ -1,27 +1,15 @@
-import React from 'react';
+import React from "react";
 
 interface InventoryTableProps {
-    onEdit: (item: any) => void;
-  }
+  items: any[];
+  onEdit: (item: any) => void;
+}
 
-const InventoryTable: React.FC<InventoryTableProps> = ({ onEdit }) => {
-  const inventoryItems = [
-    { id: 1, name: 'Dog Food - Large Pack', category: 'Food', quantity: 50, status: 'In Stock' },
-    { id: 2, name: 'Cat Litter', category: 'Supplies', quantity: 10, status: 'Low Stock' },
-    { id: 3, name: 'Tick and Flea Shampoo', category: 'Medicine', quantity: 0, status: 'Out of Stock' },
-  ];
-
-  const getStatusStyles = (status: string) => {
-    switch (status) {
-      case 'In Stock':
-        return 'text-green-600 bg-green-100';
-      case 'Low Stock':
-        return 'text-yellow-600 bg-yellow-100';
-      case 'Out of Stock':
-        return 'text-red-600 bg-red-100';
-      default:
-        return '';
-    }
+const InventoryTable: React.FC<InventoryTableProps> = ({ items, onEdit }) => {
+  const getStatusStyles = (quantity: number) => {
+    if (quantity > 20) return "text-green-600 bg-green-100";
+    if (quantity > 0) return "text-yellow-600 bg-yellow-100";
+    return "text-red-600 bg-red-100";
   };
 
   return (
@@ -38,20 +26,35 @@ const InventoryTable: React.FC<InventoryTableProps> = ({ onEdit }) => {
           </tr>
         </thead>
         <tbody>
-          {inventoryItems.map((item, index) => (
+          {items.map((item, index) => (
             <tr
               key={item.id}
-              className={`border-t ${index % 2 === 0 ? 'bg-gray-50' : 'bg-white'} hover:bg-blue-50 transition`}
+              className={`border-t ${
+                index % 2 === 0 ? "bg-gray-50" : "bg-white"
+              } hover:bg-blue-50 transition`}
             >
               <td className="p-4 text-gray-800">{item.id}</td>
               <td className="p-4 text-gray-800">{item.name}</td>
               <td className="p-4 text-gray-800">{item.category}</td>
               <td className="p-4 text-gray-800">{item.quantity}</td>
-              <td className={`p-4 font-semibold rounded ${getStatusStyles(item.status)}`}>
-                {item.status}
+              <td
+                className={`p-4 font-semibold rounded ${getStatusStyles(
+                  item.quantity,
+                )}`}
+              >
+                {item.quantity > 20
+                  ? "In Stock"
+                  : item.quantity > 0
+                  ? "Low Stock"
+                  : "Out of Stock"}
               </td>
               <td className="p-4">
-                <button className="text-blue-500 hover:underline mr-3" onClick={() => onEdit(item)}>Edit</button>
+                <button
+                  className="text-blue-500 hover:underline mr-3"
+                  onClick={() => onEdit(item)}
+                >
+                  Edit
+                </button>
               </td>
             </tr>
           ))}
