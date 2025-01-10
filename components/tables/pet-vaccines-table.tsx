@@ -1,14 +1,51 @@
 import React, { useState } from "react";
+import Spinner from "@/components/common/spinner";
+import VerifyVaccineModal from "@/components/modals/verify-vaccine-modal";
+import { markPetAsVaccinated } from "@/network/network/admin/pet";
+import { toast } from "react-hot-toast";
 
 interface PetVaccinesTableProps {
   pets: any[];
+  refetch: () => void;
 }
 
-const PetVaccinesTable: React.FC<PetVaccinesTableProps> = ({ pets }) => {
+const PetVaccinesTable: React.FC<PetVaccinesTableProps> = ({
+  pets,
+  refetch,
+}) => {
   const [expandedImage, setExpandedImage] = useState<string | null>(null);
+  const [selectedPet, setSelectedPet] = useState<any | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [actionLoading, setActionLoading] = useState<boolean>(false);
+  const [imageLoading, setImageLoading] = useState<boolean>(false);
 
   const handleToggleImage = (imageUrl: string | null) => {
     setExpandedImage(imageUrl);
+    if (imageUrl) setImageLoading(true);
+  };
+
+  const handleImageLoad = () => setImageLoading(false);
+
+  const openModal = (pet: any) => {
+    setSelectedPet(pet);
+    setIsModalOpen(true);
+  };
+
+  const handleVerifyVaccine = async () => {
+    if (!selectedPet) return;
+
+    setActionLoading(true);
+    try {
+      await markPetAsVaccinated(selectedPet.id);
+      toast.success(`Pet ${selectedPet.name} marked as vaccinated.`);
+      refetch();
+    } catch (error) {
+      console.error("Error marking pet as vaccinated:", error);
+      toast.error("Failed to mark pet as vaccinated.");
+    } finally {
+      setActionLoading(false);
+      setIsModalOpen(false);
+    }
   };
 
   return (
@@ -71,8 +108,8 @@ const PetVaccinesTable: React.FC<PetVaccinesTableProps> = ({ pets }) => {
               <td className="p-4 flex gap-4">
                 {!pet.is_vaccinated && (
                   <button
+                    onClick={() => openModal(pet)}
                     className="text-green-500 hover:underline"
-                    onClick={() => alert(`Verifying vaccine for ${pet.name}`)}
                   >
                     Verify Vaccine
                   </button>
@@ -83,16 +120,29 @@ const PetVaccinesTable: React.FC<PetVaccinesTableProps> = ({ pets }) => {
         </tbody>
       </table>
 
+      <VerifyVaccineModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onConfirm={handleVerifyVaccine}
+        loading={actionLoading}
+      />
+
       {expandedImage && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70"
           onClick={() => handleToggleImage(null)}
         >
+          {imageLoading && (
+            <div className="absolute">
+              <Spinner />
+            </div>
+          )}
           <div className="relative">
             <img
               src={expandedImage}
               alt="Vaccine"
               className="max-w-full max-h-full rounded-lg shadow-lg"
+              onLoad={handleImageLoad}
             />
             <button
               onClick={() => handleToggleImage(null)}
