@@ -113,7 +113,7 @@ const Sidebar = () => {
                 )}
                 alt="vaccine-tab-icon-img"
               />
-              Pet Vaccines
+              Pets
             </span>
           </div>
         </button>
@@ -159,7 +159,7 @@ const Sidebar = () => {
                 )}
                 alt="admin-users-tab-icon-img"
               />
-              Customers
+              Pet Owners
             </span>
           </div>
         </button>
