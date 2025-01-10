@@ -36,21 +36,18 @@ export const modifyUserRole = async (email: string, newRole: number) => {
   }
 };
 
-export const deleteUser = async (userId: string) => {
+export const deleteUserAccount = async (userId: string) => {
   try {
-    const response = await deleteWithFirebaseJwt(
-      "/web/admin/user/delete-user",
-      {
-        params: { id: userId },
-        headers: {
-          "Content-Type": "application/json",
-        },
+    const response = await deleteWithFirebaseJwt("/web/users/delete-user", {
+      params: { userId },
+      headers: {
+        "Content-Type": "application/json",
       },
-    );
+    });
 
     return response;
   } catch (error) {
-    console.error("Error deleting user:", error);
+    console.error("Failed to delete user account:", error);
     throw error;
   }
 };

@@ -7,13 +7,18 @@ import { useQuery } from "@tanstack/react-query";
 import {
   getUsersWithNonDefaultRole,
   modifyUserRole,
+  deleteUserAccount,
 } from "@/network/network/admin/user";
 import AddAdminModal from "@/components/modals/add-admin-modal";
+import DeleteAccountModal from "@/components/modals/delete-account-modal-confirmation";
 
 function Page() {
   const [filteredUsers, setFilteredUsers] = useState<any[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [selectedUser, setSelectedUser] = useState<any>(null);
+  const [confirmationEmail, setConfirmationEmail] = useState("");
   const [loading, setLoading] = useState(false);
 
   const {
@@ -67,6 +72,29 @@ function Page() {
     }
   };
 
+  const handleOpenDeleteModal = (user: any) => {
+    setSelectedUser(user);
+    setConfirmationEmail("");
+    setIsDeleteModalOpen(true);
+  };
+
+  const handleDeleteUser = async () => {
+    if (!selectedUser) return;
+
+    setLoading(true);
+    try {
+      await deleteUserAccount(selectedUser.id);
+      toast.success(`User ${selectedUser.email} deleted successfully.`);
+      refetch();
+    } catch (error: any) {
+      console.error("Error deleting user account:", error);
+      toast.error("Failed to delete user account.");
+    } finally {
+      setLoading(false);
+      setIsDeleteModalOpen(false);
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="flex flex-1 items-center justify-center">
@@ -95,7 +123,7 @@ function Page() {
             onClick={() => setIsModalOpen(true)}
             className="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600"
           >
-            Add Admin
+            Add | Edit Admin
           </button>
         </div>
       </div>
@@ -135,6 +163,15 @@ function Page() {
                     {new Date(user.createdAt).toLocaleDateString()}
                   </p>
                 </div>
+
+                <div className="flex justify-start">
+                  <button
+                    onClick={() => handleOpenDeleteModal(user)}
+                    className="text-red rounded-md hover:underline"
+                  >
+                    Delete
+                  </button>
+                </div>
               </div>
             ))}
           </div>
@@ -148,6 +185,16 @@ function Page() {
         onClose={() => setIsModalOpen(false)}
         onConfirm={handleAddAdmin}
         loading={loading}
+      />
+
+      <DeleteAccountModal
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        onConfirm={handleDeleteUser}
+        loading={loading}
+        email={selectedUser?.email || ""}
+        confirmationEmail={confirmationEmail}
+        setConfirmationEmail={setConfirmationEmail}
       />
     </div>
   );

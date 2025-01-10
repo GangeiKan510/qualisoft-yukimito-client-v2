@@ -44,7 +44,7 @@ const AddAdminModal: React.FC<AddAdminModalProps> = ({
         </button>
         <div className="flex flex-col text-center mt-3">
           <div className="text-lg font-semibold text-black">
-            Add Admin Account
+            Add | Edit Admin Account
           </div>
           <div className="mt-4 space-y-4">
             <input
