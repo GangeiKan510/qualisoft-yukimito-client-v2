@@ -96,29 +96,6 @@ const Sidebar = () => {
         </button>
         <button
           className={`${buttonBaseClasses} ${getActiveClass(
-            routes.adminPendingVaccines,
-          )}`}
-          onClick={() => goTo(routes.adminPendingVaccines)}
-        >
-          <div className={`flex items-center ${itemContainerBaseClasses}`}>
-            <span
-              className={`flex ${textBaseClasses} text-[20px] gap-2 items-center justify-center`}
-            >
-              <Image
-                width={20}
-                height={20}
-                src={getIconSrc(
-                  "/svg/vaccine-inventory.svg",
-                  routes.adminPendingVaccines,
-                )}
-                alt="vaccine-tab-icon-img"
-              />
-              Pets
-            </span>
-          </div>
-        </button>
-        <button
-          className={`${buttonBaseClasses} ${getActiveClass(
             routes.adminVaccineInventory,
           )}`}
           onClick={() => goTo(routes.adminVaccineInventory)}
@@ -142,6 +119,29 @@ const Sidebar = () => {
         </button>
         <button
           className={`${buttonBaseClasses} ${getActiveClass(
+            routes.adminPendingVaccines,
+          )}`}
+          onClick={() => goTo(routes.adminPendingVaccines)}
+        >
+          <div className={`flex items-center ${itemContainerBaseClasses}`}>
+            <span
+              className={`flex ${textBaseClasses} text-[20px] gap-2 items-center justify-center`}
+            >
+              <Image
+                width={20}
+                height={20}
+                src={getIconSrc(
+                  "/svg/vaccine-inventory.svg",
+                  routes.adminPendingVaccines,
+                )}
+                alt="vaccine-tab-icon-img"
+              />
+              Pets
+            </span>
+          </div>
+        </button>
+        <button
+          className={`${buttonBaseClasses} ${getActiveClass(
             routes.adminCustomers,
           )}`}
           onClick={() => goTo(routes.adminCustomers)}
@@ -159,7 +159,7 @@ const Sidebar = () => {
                 )}
                 alt="admin-users-tab-icon-img"
               />
-              Pet Owners
+              Users
             </span>
           </div>
         </button>

@@ -176,7 +176,7 @@ function VaccineManagement() {
             className="p-2 text-sm bg-green-500 text-white rounded hover:bg-green-600"
             onClick={() => setIsCreateModalOpen(true)}
           >
-            Add Vaccine
+            + Add Vaccine
           </button>
         </div>
       </div>
