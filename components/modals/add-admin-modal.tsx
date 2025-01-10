@@ -14,7 +14,7 @@ const AddAdminModal: React.FC<AddAdminModalProps> = ({
   onConfirm,
   loading = false,
 }) => {
-  const [adminData, setAdminData] = useState({ email: "", role: 2 });
+  const [adminData, setAdminData] = useState({ email: "", role: 1 });
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
@@ -28,6 +28,7 @@ const AddAdminModal: React.FC<AddAdminModalProps> = ({
 
   const handleSubmit = () => {
     onConfirm(adminData);
+    setAdminData({ email: "", role: 1 });
   };
 
   if (!isOpen) return null;
@@ -63,8 +64,9 @@ const AddAdminModal: React.FC<AddAdminModalProps> = ({
               className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring"
               disabled={loading}
             >
-              <option value={2}>Admin (Role 2)</option>
-              <option value={1}>User (Role 1)</option>
+              <option value={3}>Super Admin</option>
+              <option value={2}>Admin</option>
+              <option value={1}>Pet Owner</option>
             </select>
           </div>
           <div className="flex justify-center gap-4 mt-6">

@@ -121,7 +121,7 @@ function Page() {
           />
           <button
             onClick={() => setIsModalOpen(true)}
-            className="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600"
+            className="p-2 text-sm bg-green-500 text-white rounded hover:bg-green-600"
           >
             Add | Edit Admin
           </button>
