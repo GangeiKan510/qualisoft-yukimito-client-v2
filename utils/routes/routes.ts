@@ -18,7 +18,7 @@ const routes = {
   userPets: "/client/profile/my-pets",
   userBookingHistory: "/client/profile/booking-history",
 
-  admin: "/admin",
+  admin: "/admin/bookings",
   adminBookings: "/admin/bookings",
   adminInventory: "/admin/inventory",
   adminPendingVaccines: "/admin/pending-vaccines",
