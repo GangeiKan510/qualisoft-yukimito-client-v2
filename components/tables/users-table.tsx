@@ -1,5 +1,8 @@
 import React, { useState } from "react";
 import ViewBookingsModal from "@/components/modals/view-bookings-modal";
+import DeleteAccountModal from "@/components/modals/delete-account-modal-confirmation";
+import { deleteUserAccount } from "@/network/network/admin/user";
+import toast from "react-hot-toast";
 
 interface UsersTableProps {
   users: any[];
@@ -7,9 +10,35 @@ interface UsersTableProps {
 
 const UsersTable: React.FC<UsersTableProps> = ({ users }) => {
   const [selectedUser, setSelectedUser] = useState<any | null>(null);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [confirmationEmail, setConfirmationEmail] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [userToDelete, setUserToDelete] = useState<any | null>(null);
 
   const handleViewBookings = (user: any) => {
     setSelectedUser(user);
+  };
+
+  const handleDeleteClick = (user: any) => {
+    setUserToDelete(user);
+    setIsDeleteModalOpen(true);
+    setConfirmationEmail("");
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (!userToDelete) return;
+
+    setLoading(true);
+    try {
+      await deleteUserAccount(userToDelete.id);
+      toast.success(`User ${userToDelete.email} deleted successfully.`);
+      setIsDeleteModalOpen(false);
+    } catch (error) {
+      console.error("Failed to delete user account:", error);
+      toast.error("Failed to delete user account.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -52,7 +81,12 @@ const UsersTable: React.FC<UsersTableProps> = ({ users }) => {
               </td>
               <td className="p-4">
                 <div className="flex gap-2">
-                  <button className="text-red hover:underline">Delete</button>
+                  <button
+                    onClick={() => handleDeleteClick(user)}
+                    className="text-red hover:underline"
+                  >
+                    Delete
+                  </button>
                 </div>
               </td>
             </tr>
@@ -64,6 +98,18 @@ const UsersTable: React.FC<UsersTableProps> = ({ users }) => {
         <ViewBookingsModal
           user={selectedUser}
           onClose={() => setSelectedUser(null)}
+        />
+      )}
+
+      {userToDelete && (
+        <DeleteAccountModal
+          isOpen={isDeleteModalOpen}
+          onClose={() => setIsDeleteModalOpen(false)}
+          onConfirm={handleDeleteConfirm}
+          loading={loading}
+          email={userToDelete.email}
+          confirmationEmail={confirmationEmail}
+          setConfirmationEmail={setConfirmationEmail}
         />
       )}
     </div>
