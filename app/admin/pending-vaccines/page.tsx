@@ -12,6 +12,7 @@ function Page() {
     isLoading,
     isError,
     isSuccess,
+    refetch,
   } = useQuery({
     queryKey: ["pets"],
     queryFn: getAllPets,
@@ -56,7 +57,7 @@ function Page() {
       </header>
 
       <main className="w-full bg-white rounded-xl shadow-md p-6">
-        <PetVaccinesTable pets={pets} />
+        <PetVaccinesTable pets={pets} refetch={refetch} />
       </main>
     </div>
   );

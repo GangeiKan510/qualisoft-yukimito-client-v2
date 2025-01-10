@@ -36,15 +36,17 @@ const PetVaccinesTable: React.FC<PetVaccinesTableProps> = ({
 
     setActionLoading(true);
     try {
-      await markPetAsVaccinated(selectedPet.id);
-      toast.success(`Pet ${selectedPet.name} marked as vaccinated.`);
-      refetch();
+      const pet = await markPetAsVaccinated(selectedPet.id);
+      if (pet) {
+        toast.success(`Pet ${selectedPet.name} marked as vaccinated.`);
+      }
     } catch (error) {
       console.error("Error marking pet as vaccinated:", error);
       toast.error("Failed to mark pet as vaccinated.");
     } finally {
       setActionLoading(false);
       setIsModalOpen(false);
+      refetch();
     }
   };
 
