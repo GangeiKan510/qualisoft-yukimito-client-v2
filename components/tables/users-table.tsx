@@ -1,10 +1,17 @@
-import React from "react";
+import React, { useState } from "react";
+import ViewBookingsModal from "@/components/modals/view-bookings-modal";
 
 interface UsersTableProps {
   users: any[];
 }
 
 const UsersTable: React.FC<UsersTableProps> = ({ users }) => {
+  const [selectedUser, setSelectedUser] = useState<any | null>(null);
+
+  const handleViewBookings = (user: any) => {
+    setSelectedUser(user);
+  };
+
   return (
     <div className="overflow-x-auto">
       <table className="w-full border-collapse bg-white rounded-xl shadow-lg overflow-hidden">
@@ -32,8 +39,13 @@ const UsersTable: React.FC<UsersTableProps> = ({ users }) => {
               <td className="p-4">{user.phone || "N/A"}</td>
               <td className="p-4">{user.address || "N/A"}</td>
               <td className="p-4">
-                {user.bookings.length} Booking
-                {user.bookings.length !== 1 && "s"}
+                <button
+                  onClick={() => handleViewBookings(user)}
+                  className="text-blue-600 hover:underline"
+                >
+                  {user.bookings.length} Booking
+                  {user.bookings.length !== 1 && "s"}
+                </button>
               </td>
               <td className="p-4">
                 {user.pets.length} Pet{user.pets.length !== 1 && "s"}
@@ -47,6 +59,13 @@ const UsersTable: React.FC<UsersTableProps> = ({ users }) => {
           ))}
         </tbody>
       </table>
+
+      {selectedUser && (
+        <ViewBookingsModal
+          user={selectedUser}
+          onClose={() => setSelectedUser(null)}
+        />
+      )}
     </div>
   );
 };

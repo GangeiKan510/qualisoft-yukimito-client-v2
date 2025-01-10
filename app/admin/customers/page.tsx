@@ -68,9 +68,6 @@ function Page() {
             placeholder="Search customers..."
             className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
-          <button className="p-2 text-sm bg-green-500 text-white rounded hover:bg-green-600">
-            Add Customer
-          </button>
         </div>
       </header>
 

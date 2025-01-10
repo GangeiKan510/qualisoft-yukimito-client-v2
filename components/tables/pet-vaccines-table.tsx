@@ -65,7 +65,9 @@ const PetVaccinesTable: React.FC<PetVaccinesTableProps> = ({
               Vaccination Status
             </th>
             <th className="p-4 font-semibold text-gray-600">Vaccine Photo</th>
-            <th className="p-4 font-semibold text-gray-600">Actions</th>
+            <th className="p-4 font-semibold text-gray-600 text-white">
+              Actions
+            </th>
           </tr>
         </thead>
         <tbody>
