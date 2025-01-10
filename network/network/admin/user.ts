@@ -36,6 +36,18 @@ export const modifyUserRole = async (email: string, newRole: number) => {
   }
 };
 
+export const getAllUsersWithDetails = async () => {
+  try {
+    const response = await getWithFirebaseJwt(
+      "/web/admin/user/get-all-users-with-details",
+    );
+    return response;
+  } catch (error) {
+    console.error("Error fetching all users with details:", error);
+    throw error;
+  }
+};
+
 export const deleteUserAccount = async (userId: string) => {
   try {
     const response = await deleteWithFirebaseJwt("/web/users/delete-user", {

@@ -45,7 +45,7 @@ const AddAdminModal: React.FC<AddAdminModalProps> = ({
         </button>
         <div className="flex flex-col text-center mt-3">
           <div className="text-lg font-semibold text-black">
-            Add | Edit Admin Account
+            Set Privileges by Account Email
           </div>
           <div className="mt-4 space-y-4">
             <input
@@ -53,7 +53,7 @@ const AddAdminModal: React.FC<AddAdminModalProps> = ({
               name="email"
               value={adminData.email}
               onChange={handleChange}
-              placeholder="Admin Email"
+              placeholder="Enter Email"
               className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring"
               disabled={loading}
             />
