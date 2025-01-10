@@ -98,11 +98,11 @@ function Page() {
   }
 
   return (
-    <div className="w-full flex flex-col px-8 py-4">
+    <div className="w-full flex flex-col px-8">
       <Toaster />
 
       <div className="w-full flex items-center justify-between mb-6">
-        <h1 className="text-3xl font-bold text-primary-dark">All Bookings</h1>
+        <h1 className="text-2xl font-bold text-primary-dark">All Bookings</h1>
         <div className="flex items-center space-x-4">
           <input
             type="text"
@@ -111,24 +111,19 @@ function Page() {
             placeholder="Search bookings..."
             className="px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-primary"
           />
-          <button
-            className="p-2 text-sm text-gray-600 rounded hover:bg-gray-100"
-            onClick={() => toast("Filter & Sort feature coming soon!")}
-          >
-            Filter & Sort
-          </button>
         </div>
       </div>
-
-      {filteredBookings.length ? (
-        <BookingsTable
-          bookings={filteredBookings}
-          onAction={handleAction}
-          actionLoading={actionLoading}
-        />
-      ) : (
-        <div className="text-center text-gray-500">No results found.</div>
-      )}
+      <div className="w-full bg-white rounded-xl shadow-md p-6">
+        {filteredBookings.length ? (
+          <BookingsTable
+            bookings={filteredBookings}
+            onAction={handleAction}
+            actionLoading={actionLoading}
+          />
+        ) : (
+          <div className="text-center text-gray-500">No results found.</div>
+        )}
+      </div>
     </div>
   );
 }

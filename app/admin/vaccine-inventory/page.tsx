@@ -163,12 +163,6 @@ function VaccineManagement() {
             className="px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-primary"
           />
           <button
-            className="p-2 text-sm text-gray-600 rounded hover:bg-gray-100"
-            onClick={() => toast("Filter & Sort feature coming soon!")}
-          >
-            Filter & Sort
-          </button>
-          <button
             className="p-2 text-sm bg-green-500 text-white rounded hover:bg-green-600"
             onClick={() => setIsCreateModalOpen(true)}
           >

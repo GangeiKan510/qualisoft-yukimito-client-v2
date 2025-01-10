@@ -15,8 +15,8 @@ const InventoryTable: React.FC<InventoryTableProps> = ({
   actionLoading,
 }) => {
   const getStatusStyles = (quantity: number) => {
-    if (quantity > 20) return "text-green-600 bg-green-100";
-    if (quantity > 0) return "text-yellow-600 bg-yellow-100";
+    if (quantity > 20) return "text-green-600 ";
+    if (quantity > 0) return "text-yellow-600 ";
     return "text-red-600 bg-red-100";
   };
 
@@ -63,7 +63,7 @@ const InventoryTable: React.FC<InventoryTableProps> = ({
               <td className="p-4 text-gray-800">{item.quantity}</td>
               <td className={`p-4`}>
                 <div
-                  className={`font-semibold rounded px-2 text-center ${getStatusStyles(
+                  className={`rounded px-2 text-center ${getStatusStyles(
                     item.quantity,
                   )}`}
                 >

@@ -25,7 +25,7 @@ const BookingsTable: React.FC<BookingsTableProps> = ({
 
   return (
     <div className="overflow-x-auto">
-      <table className="w-full border-collapse bg-white rounded-xl shadow-sm overflow-hidden">
+      <table className="w-full border-collapse bg-white rounded-xl border shadow-lg overflow-hidden">
         <thead>
           <tr className="bg-gray-50 text-left">
             <th className="p-4 font-semibold text-gray-600">Booking ID</th>
