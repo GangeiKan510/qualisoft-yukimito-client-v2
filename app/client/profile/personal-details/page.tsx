@@ -7,9 +7,11 @@ import "react-phone-number-input/style.css";
 import PhoneInput from "react-phone-number-input";
 import toast, { Toaster } from "react-hot-toast";
 import Spinner from "@/components/common/spinner";
-import { updateUserByEmail } from "@/network/network/user";
+import { updateUserByEmail, deleteUserAccount } from "@/network/network/user";
 import Image from "next/image";
 import DeleteAccountModal from "@/components/modals/delete-account-modal-confirmation";
+import { useRouter } from "next/navigation";
+import { routes } from "@/utils/routes/routes";
 
 type FormData = {
   name: string;
@@ -19,6 +21,7 @@ type FormData = {
 };
 
 function Page() {
+  const router = useRouter();
   const { user, updateUser, refetchMe } = useUser();
   const [saveLabel, setSaveLabel] = useState<any>("Save");
   const [isEmailVerified, setIsEmailVerified] = useState(false);
@@ -103,8 +106,16 @@ function Page() {
   const handleDeleteAccount = async () => {
     setDeleteLoading(true);
     try {
+      if (confirmationEmail !== formData.email) {
+        toast.error("Email confirmation does not match.");
+        return;
+      }
+
+      await deleteUserAccount(user?.userInfo.id as string);
       toast.success("Account deleted successfully.");
-      auth.signOut();
+
+      await auth.signOut();
+      router.push(routes.login);
     } catch (error) {
       console.error("Failed to delete account:", error);
       toast.error("Failed to delete account.");
