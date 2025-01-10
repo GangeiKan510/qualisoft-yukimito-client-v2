@@ -4,6 +4,7 @@ import React, { useEffect } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import { getAllPets } from "@/network/network/admin/pet";
 import { useQuery } from "@tanstack/react-query";
+import PetVaccinesTable from "@/components/tables/pet-vaccines-table";
 
 function Page() {
   const {
@@ -47,43 +48,15 @@ function Page() {
         <div className="flex items-center gap-4">
           <input
             type="text"
-            placeholder="Search vaccines..."
+            placeholder="Search pets..."
             className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
           <button className="btn btn-primary">Search</button>
         </div>
       </header>
 
-      <main className="w-full">
-        <ul className="space-y-4">
-          {pets.map((pet: any) => (
-            <li
-              key={pet.id}
-              className="w-full p-4 bg-white shadow-md rounded-lg flex items-start"
-            >
-              <div className="flex-1">
-                <p className="text-gray-700">
-                  <strong>Pet Owner:</strong> {pet.User?.name || "Unknown"}
-                </p>
-                <p className="text-gray-700">
-                  <strong>Pet Name:</strong> {pet.name}
-                </p>
-                <p className="text-gray-700">
-                  <strong>Breed:</strong> {pet.breed}
-                </p>
-                <p className="text-gray-700">
-                  <strong>Birth Date:</strong>{" "}
-                  {new Date(pet.birth_date).toLocaleDateString()}
-                </p>
-                <div className="flex justify-end mt-4 space-x-3">
-                  <button className="px-4 py-2 bg-orange-500 text-white rounded hover:bg-yellow-700 disabled:opacity-50">
-                    Verify Vaccine
-                  </button>
-                </div>
-              </div>
-            </li>
-          ))}
-        </ul>
+      <main className="w-full bg-white rounded-xl shadow-md p-6">
+        <PetVaccinesTable pets={pets} />
       </main>
     </div>
   );
