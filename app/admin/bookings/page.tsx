@@ -11,11 +11,15 @@ import Spinner from "@/components/common/spinner";
 import toast, { Toaster } from "react-hot-toast";
 import { useQuery } from "@tanstack/react-query";
 import BookingsTable from "@/components/tables/all-bookings-table";
+import DeleteBookingConfirmationModal from "@/components/modals/delete-booking-confirmation-modal";
 
 function Page() {
   const [filteredBookings, setFilteredBookings] = useState<any[]>([]);
   const [actionLoading, setActionLoading] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [selectedBookingId, setSelectedBookingId] = useState<string>("");
+  const [confirmationInput, setConfirmationInput] = useState<string>("");
 
   const {
     data: bookings = { regularBookings: [], instantBookings: [] },
@@ -89,6 +93,30 @@ function Page() {
     );
   };
 
+  const handleDeleteClick = (bookingId: string) => {
+    setSelectedBookingId(bookingId);
+    setConfirmationInput("");
+    setIsDeleteModalOpen(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    setActionLoading(selectedBookingId);
+    try {
+      await deleteBooking(selectedBookingId);
+      toast.success("Booking deleted successfully.");
+      setFilteredBookings((prev) =>
+        prev.filter((booking) => booking.id !== selectedBookingId),
+      );
+      setIsDeleteModalOpen(false);
+    } catch (error) {
+      console.error("Failed to delete booking:", error);
+      toast.error("Failed to delete booking.");
+    } finally {
+      setActionLoading(null);
+      refetch();
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="flex flex-1 items-center justify-center">
@@ -119,11 +147,22 @@ function Page() {
             bookings={filteredBookings}
             onAction={handleAction}
             actionLoading={actionLoading}
+            onDeleteClick={handleDeleteClick}
           />
         ) : (
           <div className="text-center text-gray-500">No results found.</div>
         )}
       </div>
+
+      <DeleteBookingConfirmationModal
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        onConfirm={handleConfirmDelete}
+        loading={!!actionLoading}
+        bookingId={selectedBookingId}
+        confirmationInput={confirmationInput}
+        setConfirmationInput={setConfirmationInput}
+      />
     </div>
   );
 }

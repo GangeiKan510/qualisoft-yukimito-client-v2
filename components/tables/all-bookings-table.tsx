@@ -5,12 +5,14 @@ interface BookingsTableProps {
   bookings: any[];
   onAction: (action: "accept" | "reject" | "delete", id: string) => void;
   actionLoading: string | null;
+  onDeleteClick: (id: string) => void;
 }
 
 const BookingsTable: React.FC<BookingsTableProps> = ({
   bookings,
   onAction,
   actionLoading,
+  onDeleteClick,
 }) => {
   const getStatusStyles = (status: string) => {
     switch (status) {
@@ -100,7 +102,7 @@ const BookingsTable: React.FC<BookingsTableProps> = ({
                     </>
                   )}
                   <button
-                    onClick={() => onAction("delete", booking.id)}
+                    onClick={() => onDeleteClick(booking.id)}
                     disabled={actionLoading === booking.id}
                     className="text-red hover:underline disabled:opacity-50"
                   >
