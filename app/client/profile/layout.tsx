@@ -46,10 +46,10 @@ const ProtectedRoutes = ({
 
   return (
     <>
-      <main className="flex">
+      <main className="flex w-full">
         <Header />
         <Sidebar />
-        <div className="lg:ms-[25%] mx-auto mt-[50px] pt-[50px]">
+        <div className="lg:ms-[20%] w-full px-8 mt-[50px] pt-[50px]">
           {children}
         </div>
       </main>

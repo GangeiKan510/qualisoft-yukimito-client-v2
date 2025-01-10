@@ -113,6 +113,16 @@ function Header() {
           YUKIMITO: Pet Hotel and Boarding Services
         </span>
       </div>
+      {user?.userInfo.role !== 1 &&
+        pathname !== routes.home &&
+        !pathname.includes("client") && (
+          <div
+            className="ml-6 text-primary-dark underline underline-offset-4 font-semibold cursor-pointer hover:text-primary"
+            onClick={() => router.replace(routes.userPersonalDetails)}
+          >
+            Back to Dashboard
+          </div>
+        )}
       {routesWithHeaderNav.includes(pathname) && (
         <div className="flex items-center gap-2 sm:gap-3 lg:gap-3 text-sm sm:text-base lg:text-lg font-semibold">
           {loadingUser ? (
