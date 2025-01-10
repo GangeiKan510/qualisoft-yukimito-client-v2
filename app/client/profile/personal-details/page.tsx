@@ -9,6 +9,7 @@ import toast, { Toaster } from "react-hot-toast";
 import Spinner from "@/components/common/spinner";
 import { updateUserByEmail } from "@/network/network/user";
 import Image from "next/image";
+import DeleteAccountModal from "@/components/modals/delete-account-modal-confirmation";
 
 type FormData = {
   name: string;
@@ -19,7 +20,6 @@ type FormData = {
 
 function Page() {
   const { user, updateUser, refetchMe } = useUser();
-  console.log(user);
   const [saveLabel, setSaveLabel] = useState<any>("Save");
   const [isEmailVerified, setIsEmailVerified] = useState(false);
   const [isEditing, setIsEditing] = useState({
@@ -34,6 +34,10 @@ function Page() {
     phone: "",
     address: "",
   });
+
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [deleteLoading, setDeleteLoading] = useState(false);
+  const [confirmationEmail, setConfirmationEmail] = useState("");
 
   useEffect(() => {
     if (user?.userInfo) {
@@ -93,6 +97,20 @@ function Page() {
       toast.success("Successfully updated!");
     } finally {
       setSaveLabel("Save");
+    }
+  };
+
+  const handleDeleteAccount = async () => {
+    setDeleteLoading(true);
+    try {
+      toast.success("Account deleted successfully.");
+      auth.signOut();
+    } catch (error) {
+      console.error("Failed to delete account:", error);
+      toast.error("Failed to delete account.");
+    } finally {
+      setDeleteLoading(false);
+      setIsDeleteModalOpen(false);
     }
   };
 
@@ -248,8 +266,23 @@ function Page() {
         >
           {saveLabel}
         </button>
+        <button
+          onClick={() => setIsDeleteModalOpen(true)}
+          className="h-[40px] border border-red bg-red text-white px-8 rounded-full flex items-center justify-center hover:bg-[#e44545]"
+        >
+          Delete Account
+        </button>
       </div>
-      {/* TODO: Change Password */}
+
+      <DeleteAccountModal
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        onConfirm={handleDeleteAccount}
+        loading={deleteLoading}
+        email={formData.email}
+        confirmationEmail={confirmationEmail}
+        setConfirmationEmail={setConfirmationEmail}
+      />
     </div>
   );
 }
