@@ -56,7 +56,7 @@ export const deleteBooking = async (bookingId: string) => {
     const response = await deleteWithFirebaseJwt(
       `/web/admin/booking/delete-booking`,
       {
-        params: { bookingId: bookingId },
+        params: { bookingId },
         headers: {
           "Content-Type": "application/json",
         },

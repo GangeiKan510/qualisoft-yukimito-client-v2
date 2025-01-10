@@ -1,5 +1,6 @@
 import { CreateUserData } from "@/utils/types/create-user-type";
 import {
+  deleteWithFirebaseJwt,
   getWithFirebaseJwt,
   postWithFirebaseJwt,
 } from "../firebase/requests-with-firebase";
@@ -54,6 +55,22 @@ export const updateUserByEmail = async (userData: UpdateUserData) => {
     return updatedUser;
   } catch (error) {
     console.error("Failed to update user details:", error);
+    throw error;
+  }
+};
+
+export const deleteUserAccount = async (userId: string) => {
+  try {
+    const response = await deleteWithFirebaseJwt("/web/users/delete-user", {
+      params: { userId },
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    return response;
+  } catch (error) {
+    console.error("Failed to delete user account:", error);
     throw error;
   }
 };

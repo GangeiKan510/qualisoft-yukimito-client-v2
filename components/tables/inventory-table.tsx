@@ -15,8 +15,8 @@ const InventoryTable: React.FC<InventoryTableProps> = ({
   actionLoading,
 }) => {
   const getStatusStyles = (quantity: number) => {
-    if (quantity > 20) return "text-green-600 bg-green-100";
-    if (quantity > 0) return "text-yellow-600 bg-yellow-100";
+    if (quantity > 20) return "text-green-600 ";
+    if (quantity > 0) return "text-yellow-600 ";
     return "text-red-600 bg-red-100";
   };
 
@@ -32,11 +32,21 @@ const InventoryTable: React.FC<InventoryTableProps> = ({
         <thead>
           <tr className="bg-gray-50 text-left">
             <th className="p-4 font-semibold text-gray-600">Item ID</th>
-            <th className="p-4 font-semibold text-gray-600">Item Name</th>
-            <th className="p-4 font-semibold text-gray-600">Category</th>
-            <th className="p-4 font-semibold text-gray-600">Quantity</th>
-            <th className="p-4 font-semibold text-gray-600">Status</th>
-            <th className="p-4 font-semibold text-gray-600">Actions</th>
+            <th className="text-center p-4 font-semibold text-gray-600">
+              Item Name
+            </th>
+            <th className="text-center p-4 font-semibold text-gray-600">
+              Category
+            </th>
+            <th className="text-center p-4 font-semibold text-gray-600">
+              Quantity
+            </th>
+            <th className="text-center p-4 font-semibold text-gray-600">
+              Status
+            </th>
+            <th className="text-center p-4 font-semibold text-gray-600">
+              Actions
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -51,12 +61,14 @@ const InventoryTable: React.FC<InventoryTableProps> = ({
               <td className="p-4 text-gray-800">{item.name}</td>
               <td className="p-4 text-gray-800">{item.category}</td>
               <td className="p-4 text-gray-800">{item.quantity}</td>
-              <td
-                className={`p-4 font-semibold rounded ${getStatusStyles(
-                  item.quantity,
-                )}`}
-              >
-                {getStatusText(item.quantity)}
+              <td className={`p-4`}>
+                <div
+                  className={`rounded px-2 text-center ${getStatusStyles(
+                    item.quantity,
+                  )}`}
+                >
+                  {getStatusText(item.quantity)}
+                </div>
               </td>
               <td className="p-4 flex gap-4">
                 <button

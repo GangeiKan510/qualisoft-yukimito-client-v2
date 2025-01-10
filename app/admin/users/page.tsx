@@ -7,13 +7,18 @@ import { useQuery } from "@tanstack/react-query";
 import {
   getUsersWithNonDefaultRole,
   modifyUserRole,
+  deleteUserAccount,
 } from "@/network/network/admin/user";
 import AddAdminModal from "@/components/modals/add-admin-modal";
+import DeleteAccountModal from "@/components/modals/delete-account-modal-confirmation";
 
 function Page() {
   const [filteredUsers, setFilteredUsers] = useState<any[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [selectedUser, setSelectedUser] = useState<any>(null);
+  const [confirmationEmail, setConfirmationEmail] = useState("");
   const [loading, setLoading] = useState(false);
 
   const {
@@ -67,6 +72,29 @@ function Page() {
     }
   };
 
+  const handleOpenDeleteModal = (user: any) => {
+    setSelectedUser(user);
+    setConfirmationEmail("");
+    setIsDeleteModalOpen(true);
+  };
+
+  const handleDeleteUser = async () => {
+    if (!selectedUser) return;
+
+    setLoading(true);
+    try {
+      await deleteUserAccount(selectedUser.id);
+      toast.success(`User ${selectedUser.email} deleted successfully.`);
+      refetch();
+    } catch (error: any) {
+      console.error("Error deleting user account:", error);
+      toast.error("Failed to delete user account.");
+    } finally {
+      setLoading(false);
+      setIsDeleteModalOpen(false);
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="flex flex-1 items-center justify-center">
@@ -76,11 +104,11 @@ function Page() {
   }
 
   return (
-    <div className="w-full flex flex-col px-8 py-6">
+    <div className="w-full flex flex-col px-8">
       <Toaster />
 
       <div className="w-full flex items-center justify-between mb-6">
-        <h1 className="text-3xl font-bold text-primary-dark">
+        <h1 className="text-2xl font-bold text-primary-dark">
           User Management
         </h1>
         <div className="flex items-center space-x-4">
@@ -88,69 +116,67 @@ function Page() {
             type="text"
             value={searchTerm}
             onChange={handleSearch}
-            placeholder="Search users by name, email, or phone..."
+            placeholder="Search users..."
             className="px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-primary"
           />
           <button
             onClick={() => setIsModalOpen(true)}
-            className="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600"
+            className="p-2 text-sm bg-green-500 text-white rounded hover:bg-green-600"
           >
-            Add Admin Account
+            Add | Edit Admin
           </button>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="w-full bg-white rounded-xl shadow-md p-6">
         {filteredUsers.length ? (
-          filteredUsers.map((user) => (
-            <div
-              key={user.id}
-              className="p-6 bg-white rounded-lg shadow-md border hover:shadow-lg transition"
-            >
-              <div className="mb-4 flex items-center gap-4">
-                <div className="w-12 h-12 flex items-center justify-center bg-primary-dark text-white rounded-full text-xl font-semibold">
-                  {user.name ? user.name.charAt(0).toUpperCase() : "N"}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredUsers.map((user) => (
+              <div
+                key={user.id}
+                className="p-6 bg-white rounded-lg shadow-md border hover:shadow-lg transition"
+              >
+                <div className="mb-4 flex items-center gap-4">
+                  <div className="w-12 h-12 flex items-center justify-center bg-primary-dark text-white rounded-full text-xl font-semibold">
+                    {user.name ? user.name.charAt(0).toUpperCase() : "N"}
+                  </div>
+                  <div>
+                    <h2 className="text-xl font-semibold text-gray-800">
+                      {user.name || "No Name Provided"}
+                    </h2>
+                    <p className="text-sm text-gray-500">{user.email}</p>
+                  </div>
                 </div>
-                <div>
-                  <h2 className="text-xl font-semibold text-gray-800">
-                    {user.name || "No Name Provided"}
-                  </h2>
-                  <p className="text-sm text-gray-500">{user.email}</p>
+
+                <div className="mb-4">
+                  <p className="text-sm text-gray-600">
+                    <strong>Phone:</strong> {user.phone || "N/A"}
+                  </p>
+                  <p className="text-sm text-gray-600">
+                    <strong>Address:</strong> {user.address || "N/A"}
+                  </p>
+                  <p className="text-sm text-gray-600">
+                    <strong>Role:</strong> {user.role}
+                  </p>
+                  <p className="text-sm text-gray-600">
+                    <strong>Created At:</strong>{" "}
+                    {new Date(user.createdAt).toLocaleDateString()}
+                  </p>
+                </div>
+
+                <div className="flex justify-start">
+                  <button
+                    onClick={() => handleOpenDeleteModal(user)}
+                    className="text-red rounded-md hover:underline"
+                  >
+                    Delete
+                  </button>
                 </div>
               </div>
-
-              <div className="mb-4">
-                <p className="text-sm text-gray-600">
-                  <strong>Phone:</strong> {user.phone || "N/A"}
-                </p>
-                <p className="text-sm text-gray-600">
-                  <strong>Address:</strong> {user.address || "N/A"}
-                </p>
-                <p className="text-sm text-gray-600">
-                  <strong>Role:</strong> {user.role}
-                </p>
-                <p className="text-sm text-gray-600">
-                  <strong>Created At:</strong>{" "}
-                  {new Date(user.createdAt).toLocaleDateString()}
-                </p>
-              </div>
-
-              <div className="flex justify-end space-x-4">
-                <button
-                  onClick={() =>
-                    toast(`Delete user feature for ${user.email} coming soon!`)
-                  }
-                  className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 disabled:opacity-50"
-                >
-                  Delete User
-                </button>
-              </div>
-            </div>
-          ))
-        ) : (
-          <div className="text-center text-gray-500 col-span-full">
-            No users found.
+            ))}
           </div>
+        ) : (
+          <div className="text-center text-gray-500">No users found.</div>
         )}
       </div>
 
@@ -159,6 +185,16 @@ function Page() {
         onClose={() => setIsModalOpen(false)}
         onConfirm={handleAddAdmin}
         loading={loading}
+      />
+
+      <DeleteAccountModal
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        onConfirm={handleDeleteUser}
+        loading={loading}
+        email={selectedUser?.email || ""}
+        confirmationEmail={confirmationEmail}
+        setConfirmationEmail={setConfirmationEmail}
       />
     </div>
   );

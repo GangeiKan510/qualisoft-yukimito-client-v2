@@ -7,8 +7,11 @@ import "react-phone-number-input/style.css";
 import PhoneInput from "react-phone-number-input";
 import toast, { Toaster } from "react-hot-toast";
 import Spinner from "@/components/common/spinner";
-import { updateUserByEmail } from "@/network/network/user";
+import { updateUserByEmail, deleteUserAccount } from "@/network/network/user";
 import Image from "next/image";
+import DeleteAccountModal from "@/components/modals/delete-account-modal-confirmation";
+import { useRouter } from "next/navigation";
+import { routes } from "@/utils/routes/routes";
 
 type FormData = {
   name: string;
@@ -18,8 +21,8 @@ type FormData = {
 };
 
 function Page() {
+  const router = useRouter();
   const { user, updateUser, refetchMe } = useUser();
-  console.log(user);
   const [saveLabel, setSaveLabel] = useState<any>("Save");
   const [isEmailVerified, setIsEmailVerified] = useState(false);
   const [isEditing, setIsEditing] = useState({
@@ -34,6 +37,10 @@ function Page() {
     phone: "",
     address: "",
   });
+
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [deleteLoading, setDeleteLoading] = useState(false);
+  const [confirmationEmail, setConfirmationEmail] = useState("");
 
   useEffect(() => {
     if (user?.userInfo) {
@@ -93,6 +100,28 @@ function Page() {
       toast.success("Successfully updated!");
     } finally {
       setSaveLabel("Save");
+    }
+  };
+
+  const handleDeleteAccount = async () => {
+    setDeleteLoading(true);
+    try {
+      if (confirmationEmail !== formData.email) {
+        toast.error("Email confirmation does not match.");
+        return;
+      }
+
+      await deleteUserAccount(user?.userInfo.id as string);
+      toast.success("Account deleted successfully.");
+
+      await auth.signOut();
+      router.push(routes.login);
+    } catch (error) {
+      console.error("Failed to delete account:", error);
+      toast.error("Failed to delete account.");
+    } finally {
+      setDeleteLoading(false);
+      setIsDeleteModalOpen(false);
     }
   };
 
@@ -241,7 +270,13 @@ function Page() {
           </div>
         </div>
       </div>
-      <div className="w-full lg:w-[950px] h-auto md:h-[103px] flex items-center justify-end">
+      <div className="w-full lg:w-[950px] h-auto md:h-[103px] flex items-center justify-between">
+        <button
+          onClick={() => setIsDeleteModalOpen(true)}
+          className="h-[40px] border border-red bg-red text-white px-8 rounded-full flex items-center justify-center hover:bg-[#e44545]"
+        >
+          Delete Account
+        </button>
         <button
           onClick={handleSave}
           className="h-[40px] border border-primary-dark bg-primary-dark text-white px-8 rounded-full flex items-center justify-center"
@@ -249,7 +284,16 @@ function Page() {
           {saveLabel}
         </button>
       </div>
-      {/* TODO: Change Password */}
+
+      <DeleteAccountModal
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        onConfirm={handleDeleteAccount}
+        loading={deleteLoading}
+        email={formData.email}
+        confirmationEmail={confirmationEmail}
+        setConfirmationEmail={setConfirmationEmail}
+      />
     </div>
   );
 }

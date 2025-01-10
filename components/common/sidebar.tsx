@@ -3,11 +3,13 @@ import { usePathname, useRouter } from "next/navigation";
 import { routes } from "@/utils/routes/routes";
 import { useState } from "react";
 import { useSidebar } from "../config/sidebar-context";
+import { useUser } from "../config/user-context";
 import useSignOut from "../helpers/use-sign-out";
 import { getAuth } from "firebase/auth";
 import Image from "next/image";
 
 const Sidebar = () => {
+  const { user } = useUser();
   const router = useRouter();
   const pathname = usePathname();
 
@@ -96,29 +98,6 @@ const Sidebar = () => {
         </button>
         <button
           className={`${buttonBaseClasses} ${getActiveClass(
-            routes.adminPendingVaccines,
-          )}`}
-          onClick={() => goTo(routes.adminPendingVaccines)}
-        >
-          <div className={`flex items-center ${itemContainerBaseClasses}`}>
-            <span
-              className={`flex ${textBaseClasses} text-[20px] gap-2 items-center justify-center`}
-            >
-              <Image
-                width={20}
-                height={20}
-                src={getIconSrc(
-                  "/svg/vaccine-inventory.svg",
-                  routes.adminPendingVaccines,
-                )}
-                alt="vaccine-tab-icon-img"
-              />
-              Pet Vaccines
-            </span>
-          </div>
-        </button>
-        <button
-          className={`${buttonBaseClasses} ${getActiveClass(
             routes.adminVaccineInventory,
           )}`}
           onClick={() => goTo(routes.adminVaccineInventory)}
@@ -142,9 +121,9 @@ const Sidebar = () => {
         </button>
         <button
           className={`${buttonBaseClasses} ${getActiveClass(
-            routes.adminCustomers,
+            routes.adminPendingVaccines,
           )}`}
-          onClick={() => goTo(routes.adminCustomers)}
+          onClick={() => goTo(routes.adminPendingVaccines)}
         >
           <div className={`flex items-center ${itemContainerBaseClasses}`}>
             <span
@@ -154,38 +133,67 @@ const Sidebar = () => {
                 width={20}
                 height={20}
                 src={getIconSrc(
-                  "/svg/manage-customers-tab.svg",
-                  routes.adminCustomers,
+                  "/svg/vaccine-inventory.svg",
+                  routes.adminPendingVaccines,
                 )}
-                alt="admin-users-tab-icon-img"
+                alt="vaccine-tab-icon-img"
               />
-              Customers
+              Pets
             </span>
           </div>
         </button>
-        <button
-          className={`${buttonBaseClasses} ${getActiveClass(
-            routes.adminUsers,
-          )}`}
-          onClick={() => goTo(routes.adminUsers)}
-        >
-          <div className={`flex items-center ${itemContainerBaseClasses}`}>
-            <span
-              className={`flex ${textBaseClasses} text-[20px] gap-2 items-center justify-center`}
+
+        {user?.userInfo.role === 3 && (
+          <>
+            {" "}
+            <button
+              className={`${buttonBaseClasses} ${getActiveClass(
+                routes.adminCustomers,
+              )}`}
+              onClick={() => goTo(routes.adminCustomers)}
             >
-              <Image
-                width={20}
-                height={20}
-                src={getIconSrc(
-                  "/svg/manage-accounts-tab.svg",
-                  routes.adminUsers,
-                )}
-                alt="admin-users-tab-icon-img"
-              />
-              Admin Users
-            </span>
-          </div>
-        </button>
+              <div className={`flex items-center ${itemContainerBaseClasses}`}>
+                <span
+                  className={`flex ${textBaseClasses} text-[20px] gap-2 items-center justify-center`}
+                >
+                  <Image
+                    width={20}
+                    height={20}
+                    src={getIconSrc(
+                      "/svg/manage-customers-tab.svg",
+                      routes.adminCustomers,
+                    )}
+                    alt="admin-users-tab-icon-img"
+                  />
+                  Users
+                </span>
+              </div>
+            </button>
+            <button
+              className={`${buttonBaseClasses} ${getActiveClass(
+                routes.adminUsers,
+              )}`}
+              onClick={() => goTo(routes.adminUsers)}
+            >
+              <div className={`flex items-center ${itemContainerBaseClasses}`}>
+                <span
+                  className={`flex ${textBaseClasses} text-[20px] gap-2 items-center justify-center`}
+                >
+                  <Image
+                    width={20}
+                    height={20}
+                    src={getIconSrc(
+                      "/svg/manage-accounts-tab.svg",
+                      routes.adminUsers,
+                    )}
+                    alt="admin-users-tab-icon-img"
+                  />
+                  Admin Users
+                </span>
+              </div>
+            </button>
+          </>
+        )}
       </div>
     </aside>
   ) : null;

@@ -13,10 +13,11 @@ import CreateVaccineModal from "@/components/modals/create-vaccine";
 import toast, { Toaster } from "react-hot-toast";
 import { useQuery } from "@tanstack/react-query";
 import UpdateVaccineModal from "@/components/modals/update-vaccine";
+import VaccinesTable from "@/components/tables/vaccines-table";
 
 function VaccineManagement() {
   const [vaccines, setVaccines] = useState<any[]>([]);
-  const [updateLoading, setUpdateLoading] = useState<boolean>(false);
+  const [updateLoading, setUpdateLoading] = useState<string | null>(null);
   const [deleteLoading, setDeleteLoading] = useState<boolean>(false);
   const [deleteVaccineId, setDeleteVaccineId] = useState<string | null>(null);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState<boolean>(false);
@@ -54,7 +55,15 @@ function VaccineManagement() {
   }) => {
     setCreateLoading(true);
     try {
-      const newVaccine = await createVaccine(vaccineData);
+      const formattedData = {
+        ...vaccineData,
+        expiry_date: new Date(vaccineData.expiry_date).toISOString(),
+        date_administered: new Date(
+          vaccineData.date_administered,
+        ).toISOString(),
+      };
+
+      const newVaccine = await createVaccine(formattedData);
       setVaccines((prev) => [...prev, newVaccine]);
       toast.success("Vaccine created successfully.");
       setIsCreateModalOpen(false);
@@ -75,7 +84,7 @@ function VaccineManagement() {
     expiry_date: string;
     date_administered: string;
   }) => {
-    setUpdateLoading(true);
+    setUpdateLoading(vaccineData.id);
     try {
       const formattedData = {
         ...vaccineData,
@@ -91,8 +100,9 @@ function VaccineManagement() {
       refetch();
     } catch (error) {
       console.error("Error updating vaccine:", error);
+      toast.error("Failed to update vaccine.");
     } finally {
-      setUpdateLoading(false);
+      setUpdateLoading(null);
     }
   };
 
@@ -163,64 +173,22 @@ function VaccineManagement() {
             className="px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-primary"
           />
           <button
-            className="p-2 text-sm text-gray-600 rounded hover:bg-gray-100"
-            onClick={() => toast("Filter & Sort feature coming soon!")}
-          >
-            Filter & Sort
-          </button>
-          <button
             className="p-2 text-sm bg-green-500 text-white rounded hover:bg-green-600"
             onClick={() => setIsCreateModalOpen(true)}
           >
-            Add Vaccine
+            + Add Vaccine
           </button>
         </div>
       </div>
 
-      <div className="w-full">
+      <div className="w-full bg-white rounded-xl shadow-md p-6">
         {vaccines.length ? (
-          <ul>
-            {vaccines.map((vaccine) => (
-              <li
-                key={vaccine.id}
-                className="w-full mb-4 p-4 border rounded-lg"
-              >
-                <p>
-                  <strong>Name:</strong> {vaccine.name}
-                </p>
-                <p>
-                  <strong>Manufacturer:</strong> {vaccine.manufacturer}
-                </p>
-                <p>
-                  <strong>Batch Number:</strong> {vaccine.batch_number}
-                </p>
-                <p>
-                  <strong>Expiry Date:</strong>{" "}
-                  {new Date(vaccine.expiry_date).toLocaleDateString()}
-                </p>
-                <p>
-                  <strong>Date Administered:</strong>{" "}
-                  {new Date(vaccine.date_administered).toLocaleDateString()}
-                </p>
-                <div className="w-full mt-4 flex justify-end space-x-4">
-                  <button
-                    onClick={() => handleOpenUpdateModal(vaccine)}
-                    disabled={updateLoading === vaccine.id}
-                    className="px-4 py-2 bg-orange-500 text-white rounded hover:bg-yellow-700 disabled:opacity-50"
-                  >
-                    {updateLoading === vaccine.id && <Spinner />}
-                    {updateLoading !== vaccine.id && "Update"}
-                  </button>
-                  <button
-                    onClick={() => handleOpenDeleteModal(vaccine.id)}
-                    className="px-4 py-2 bg-red text-white rounded hover:bg-[#da3d3d] disabled:opacity-50"
-                  >
-                    Delete
-                  </button>
-                </div>
-              </li>
-            ))}
-          </ul>
+          <VaccinesTable
+            vaccines={vaccines}
+            onUpdate={handleOpenUpdateModal}
+            onDelete={handleOpenDeleteModal}
+            actionLoading={updateLoading}
+          />
         ) : (
           <div className="text-center text-gray-500">No vaccines found.</div>
         )}
@@ -245,7 +213,7 @@ function VaccineManagement() {
         onClose={() => setIsUpdateModalOpen(false)}
         onConfirm={handleUpdateVaccine}
         initialData={selectedVaccine}
-        loading={updateLoading}
+        loading={!!updateLoading}
       />
     </div>
   );
