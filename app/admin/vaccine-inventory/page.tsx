@@ -181,7 +181,7 @@ function VaccineManagement() {
         </div>
       </div>
 
-      <div className="w-full">
+      <div className="w-full bg-white rounded-xl shadow-md p-6">
         {vaccines.length ? (
           <VaccinesTable
             vaccines={vaccines}
