@@ -39,7 +39,7 @@ export const modifyUserRole = async (email: string, newRole: number) => {
 export const getAllUsersWithDetails = async () => {
   try {
     const response = await getWithFirebaseJwt(
-      "/web/admin/user/get-all-users-with-details",
+      "/web/admin/user/get-all-users",
     );
     return response;
   } catch (error) {
