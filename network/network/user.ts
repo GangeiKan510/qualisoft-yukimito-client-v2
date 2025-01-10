@@ -57,3 +57,21 @@ export const updateUserByEmail = async (userData: UpdateUserData) => {
     throw error;
   }
 };
+
+export const deleteUserAccount = async (userId: string) => {
+  try {
+    const response = await postWithFirebaseJwt("/web/users/delete-user", {
+      body: { userId },
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to delete user account");
+    }
+
+    const result = await response.json();
+    return result;
+  } catch (error) {
+    console.error("Failed to delete user account:", error);
+    throw error;
+  }
+};

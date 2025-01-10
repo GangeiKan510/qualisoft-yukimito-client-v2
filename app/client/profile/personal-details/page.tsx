@@ -259,18 +259,18 @@ function Page() {
           </div>
         </div>
       </div>
-      <div className="w-full lg:w-[950px] h-auto md:h-[103px] flex items-center justify-end">
-        <button
-          onClick={handleSave}
-          className="h-[40px] border border-primary-dark bg-primary-dark text-white px-8 rounded-full flex items-center justify-center"
-        >
-          {saveLabel}
-        </button>
+      <div className="w-full lg:w-[950px] h-auto md:h-[103px] flex items-center justify-between">
         <button
           onClick={() => setIsDeleteModalOpen(true)}
           className="h-[40px] border border-red bg-red text-white px-8 rounded-full flex items-center justify-center hover:bg-[#e44545]"
         >
           Delete Account
+        </button>
+        <button
+          onClick={handleSave}
+          className="h-[40px] border border-primary-dark bg-primary-dark text-white px-8 rounded-full flex items-center justify-center"
+        >
+          {saveLabel}
         </button>
       </div>
 
