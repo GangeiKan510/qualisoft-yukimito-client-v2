@@ -25,17 +25,31 @@ const BookingsTable: React.FC<BookingsTableProps> = ({
 
   return (
     <div className="overflow-x-auto">
-      <table className="w-full border-collapse bg-white rounded-xl border shadow-lg overflow-hidden">
+      <table className="w-full border-collapse bg-white rounded-xl shadow-lg overflow-hidden">
         <thead>
           <tr className="bg-gray-50 text-left">
             <th className="p-4 font-semibold text-gray-600">Booking ID</th>
-            <th className="p-4 font-semibold text-gray-600">Owner Name</th>
-            <th className="p-4 font-semibold text-gray-600">Service</th>
-            <th className="p-4 font-semibold text-gray-600">Check-in</th>
-            <th className="p-4 font-semibold text-gray-600">Check-out</th>
-            <th className="p-4 font-semibold text-gray-600">Total Bill</th>
-            <th className="p-4 font-semibold text-gray-600">Status</th>
-            <th className="p-4 font-semibold text-gray-600">Actions</th>
+            <th className="text-center p-4 font-semibold text-gray-600">
+              Owner Name
+            </th>
+            <th className="text-center p-4 font-semibold text-gray-600">
+              Service
+            </th>
+            <th className="text-center p-4 font-semibold text-gray-600">
+              Check-in
+            </th>
+            <th className="text-center p-4 font-semibold text-gray-600">
+              Check-out
+            </th>
+            <th className="text-center p-4 font-semibold text-gray-600">
+              Total Bill
+            </th>
+            <th className="text-center p-4 font-semibold text-gray-600">
+              Status
+            </th>
+            <th className="text-center p-4 font-semibold text-gray-600">
+              Actions
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -65,32 +79,34 @@ const BookingsTable: React.FC<BookingsTableProps> = ({
                   {booking.status || "Pending"}
                 </span>
               </td>
-              <td className="p-4 flex gap-4">
-                {booking.status === "pending" && (
-                  <>
-                    <button
-                      onClick={() => onAction("accept", booking.id)}
-                      disabled={actionLoading === booking.id}
-                      className="text-green-600 hover:underline disabled:opacity-50"
-                    >
-                      {actionLoading === booking.id ? <Spinner /> : "Accept"}
-                    </button>
-                    <button
-                      onClick={() => onAction("reject", booking.id)}
-                      disabled={actionLoading === booking.id}
-                      className="text-yellow-600 hover:underline disabled:opacity-50"
-                    >
-                      {actionLoading === booking.id ? <Spinner /> : "Reject"}
-                    </button>
-                  </>
-                )}
-                <button
-                  onClick={() => onAction("delete", booking.id)}
-                  disabled={actionLoading === booking.id}
-                  className="flex items-center text-red hover:underline disabled:opacity-50"
-                >
-                  {actionLoading === booking.id ? <Spinner /> : "Delete"}
-                </button>
+              <td className="p-10 flex items-center justify-center">
+                <div className="flex gap-4 items-center">
+                  {booking.status === "pending" && (
+                    <>
+                      <button
+                        onClick={() => onAction("accept", booking.id)}
+                        disabled={actionLoading === booking.id}
+                        className="text-green-600 hover:underline disabled:opacity-50"
+                      >
+                        {actionLoading === booking.id ? <Spinner /> : "Accept"}
+                      </button>
+                      <button
+                        onClick={() => onAction("reject", booking.id)}
+                        disabled={actionLoading === booking.id}
+                        className="text-yellow-600 hover:underline disabled:opacity-50"
+                      >
+                        {actionLoading === booking.id ? <Spinner /> : "Reject"}
+                      </button>
+                    </>
+                  )}
+                  <button
+                    onClick={() => onAction("delete", booking.id)}
+                    disabled={actionLoading === booking.id}
+                    className="text-red hover:underline disabled:opacity-50"
+                  >
+                    {actionLoading === booking.id ? <Spinner /> : "Delete"}
+                  </button>
+                </div>
               </td>
             </tr>
           ))}
