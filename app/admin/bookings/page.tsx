@@ -12,6 +12,7 @@ import toast, { Toaster } from "react-hot-toast";
 import { useQuery } from "@tanstack/react-query";
 import BookingsTable from "@/components/tables/all-bookings-table";
 import DeleteBookingConfirmationModal from "@/components/modals/delete-booking-confirmation-modal";
+import EditBookingModal from "@/components/modals/edit-booking-modal";
 
 function Page() {
   const [filteredBookings, setFilteredBookings] = useState<any[]>([]);
@@ -20,6 +21,10 @@ function Page() {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectedBookingId, setSelectedBookingId] = useState<string>("");
   const [confirmationInput, setConfirmationInput] = useState<string>("");
+
+  // State for Edit Modal
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [selectedBooking, setSelectedBooking] = useState<any | null>(null);
 
   const {
     data: bookings = { regularBookings: [], instantBookings: [] },
@@ -52,9 +57,16 @@ function Page() {
   }, [isError]);
 
   const handleAction = async (
-    action: "accept" | "reject" | "delete",
+    action: "accept" | "reject" | "delete" | "edit",
     bookingId: string,
   ) => {
+    if (action === "edit") {
+      const booking = filteredBookings.find((b) => b.id === bookingId);
+      setSelectedBooking(booking);
+      setIsEditModalOpen(true);
+      return;
+    }
+
     setActionLoading(bookingId);
     try {
       if (action === "accept") {
@@ -77,6 +89,24 @@ function Page() {
     } finally {
       setActionLoading(null);
       refetch();
+    }
+  };
+
+  const handleSaveEdit = async (checkInDate: string, checkOutDate?: string) => {
+    setActionLoading(selectedBooking.id);
+    try {
+      // await updateBookingDates(selectedBooking.id, {
+      //   checkInDate,
+      //   checkOutDate,
+      // });
+      toast.success("Booking updated successfully.");
+      setIsEditModalOpen(false);
+      refetch(); // Refresh bookings after update
+    } catch (error) {
+      console.error("Failed to update booking:", error);
+      toast.error("Failed to update booking.");
+    } finally {
+      setActionLoading(null);
     }
   };
 
@@ -128,7 +158,6 @@ function Page() {
   return (
     <div className="w-full flex flex-col px-8">
       <Toaster />
-
       <div className="w-full flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold text-primary-dark">All Bookings</h1>
         <div className="flex items-center space-x-4">
@@ -163,6 +192,16 @@ function Page() {
         confirmationInput={confirmationInput}
         setConfirmationInput={setConfirmationInput}
       />
+
+      {selectedBooking && (
+        <EditBookingModal
+          isOpen={isEditModalOpen}
+          onClose={() => setIsEditModalOpen(false)}
+          onSave={handleSaveEdit}
+          booking={selectedBooking}
+          loading={!!actionLoading}
+        />
+      )}
     </div>
   );
 }

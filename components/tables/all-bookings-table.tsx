@@ -3,7 +3,10 @@ import Spinner from "@/components/common/spinner";
 
 interface BookingsTableProps {
   bookings: any[];
-  onAction: (action: "accept" | "reject" | "delete", id: string) => void;
+  onAction: (
+    action: "accept" | "reject" | "delete" | "edit",
+    id: string,
+  ) => void;
   actionLoading: string | null;
   onDeleteClick: (id: string) => void;
 }
@@ -81,7 +84,7 @@ const BookingsTable: React.FC<BookingsTableProps> = ({
                   {booking.status || "Pending"}
                 </span>
               </td>
-              <td className="p-10 flex items-center justify-center">
+              <td className="p-10">
                 <div className="flex gap-4 items-center">
                   {booking.status === "pending" && (
                     <>
@@ -101,6 +104,12 @@ const BookingsTable: React.FC<BookingsTableProps> = ({
                       </button>
                     </>
                   )}
+                  <button
+                    onClick={() => onAction("edit", booking.id)}
+                    className="text-blue-600 hover:underline"
+                  >
+                    Edit
+                  </button>
                   <button
                     onClick={() => onDeleteClick(booking.id)}
                     disabled={actionLoading === booking.id}
