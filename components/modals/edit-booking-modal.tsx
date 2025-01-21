@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 interface EditBookingModalProps {
   isOpen: boolean;
@@ -22,12 +22,24 @@ const EditBookingModal: React.FC<EditBookingModalProps> = ({
   booking,
   loading,
 }) => {
-  const [checkInDate, setCheckInDate] = useState<string>(
-    booking.check_in_date || "",
-  );
-  const [checkOutDate, setCheckOutDate] = useState<string>(
-    booking.check_out_date || "",
-  );
+  const [checkInDate, setCheckInDate] = useState<string>("");
+  const [checkOutDate, setCheckOutDate] = useState<string>("");
+  const [minDate, setMinDate] = useState<string>("");
+
+  useEffect(() => {
+    if (isOpen && booking) {
+      setCheckInDate(
+        booking.check_in_date ? booking.check_in_date.split("T")[0] : "",
+      );
+      setCheckOutDate(
+        booking.check_out_date ? booking.check_out_date.split("T")[0] : "",
+      );
+
+      const today = new Date();
+      today.setDate(today.getDate() + 1);
+      setMinDate(today.toISOString().split("T")[0]);
+    }
+  }, [isOpen, booking]);
 
   if (!isOpen) return null;
 
@@ -45,6 +57,7 @@ const EditBookingModal: React.FC<EditBookingModalProps> = ({
           <input
             type="date"
             value={checkOutDate}
+            min={minDate}
             onChange={(e) => setCheckOutDate(e.target.value)}
             className="w-full px-3 py-2 border border-gray-300 rounded-md"
             required
@@ -92,6 +105,7 @@ const EditBookingModal: React.FC<EditBookingModalProps> = ({
           <input
             type="date"
             value={checkInDate}
+            min={minDate} // Prevent selecting past dates or today
             onChange={(e) => setCheckInDate(e.target.value)}
             className="w-full px-3 py-2 border border-gray-300 rounded-md"
             required

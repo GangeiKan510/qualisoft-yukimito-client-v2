@@ -4,7 +4,7 @@ import Spinner from "@/components/common/spinner";
 interface BookingsTableProps {
   bookings: any[];
   onAction: (
-    action: "accept" | "reject" | "delete" | "edit",
+    action: "accept" | "reject" | "delete" | "edit" | "checkIn",
     id: string,
   ) => void;
   actionLoading: string | null;
@@ -50,6 +50,9 @@ const BookingsTable: React.FC<BookingsTableProps> = ({
               Total Bill
             </th>
             <th className="text-center p-4 font-semibold text-gray-600">
+              Checked In
+            </th>
+            <th className="text-center p-4 font-semibold text-gray-600">
               Status
             </th>
             <th className="text-center p-4 font-semibold text-gray-600">
@@ -75,6 +78,17 @@ const BookingsTable: React.FC<BookingsTableProps> = ({
                 {new Date(booking.check_out_date).toLocaleDateString()}
               </td>
               <td className="p-4">₱{booking.total_bill}</td>
+              <td className="p-4 text-center">
+                {booking.pets_checked_in ? (
+                  <span className="inline-block px-3 py-1 rounded-full text-sm font-medium text-green-600 bg-green-100">
+                    Yes
+                  </span>
+                ) : (
+                  <span className="inline-block px-3 py-1 rounded-full text-sm font-medium text-red bg-[#FFD2D2]">
+                    No
+                  </span>
+                )}
+              </td>
               <td className="p-4">
                 <span
                   className={`inline-block px-3 py-1 rounded-full text-sm font-medium ${getStatusStyles(
@@ -117,6 +131,20 @@ const BookingsTable: React.FC<BookingsTableProps> = ({
                   >
                     {actionLoading === booking.id ? <Spinner /> : "Delete"}
                   </button>
+                  {booking.status === "accepted" &&
+                    !booking.pets_checked_in && (
+                      <button
+                        onClick={() => onAction("checkIn", booking.id)}
+                        disabled={actionLoading === booking.id}
+                        className="text-purple-600 hover:underline disabled:opacity-50"
+                      >
+                        {actionLoading === booking.id ? (
+                          <Spinner />
+                        ) : (
+                          "Check In"
+                        )}
+                      </button>
+                    )}
                 </div>
               </td>
             </tr>

@@ -6,6 +6,8 @@ import {
   rejectBooking,
   deleteBooking,
   getAllBookings,
+  updateBookingDates,
+  checkInPets,
 } from "@/network/network/admin/booking";
 import Spinner from "@/components/common/spinner";
 import toast, { Toaster } from "react-hot-toast";
@@ -57,7 +59,7 @@ function Page() {
   }, [isError]);
 
   const handleAction = async (
-    action: "accept" | "reject" | "delete" | "edit",
+    action: "accept" | "reject" | "delete" | "edit" | "checkIn",
     bookingId: string,
   ) => {
     if (action === "edit") {
@@ -78,33 +80,34 @@ function Page() {
       } else if (action === "delete") {
         await deleteBooking(bookingId);
         toast.success("Booking deleted successfully.");
+      } else if (action === "checkIn") {
+        await checkInPets(bookingId);
+        toast.success("Pets checked in successfully.");
       }
 
-      setFilteredBookings((prevBookings) =>
-        prevBookings.filter((b) => b.id !== bookingId),
-      );
+      refetch();
     } catch (error) {
       console.error(`Failed to ${action} booking:`, error);
       toast.error(`Failed to ${action} booking.`);
     } finally {
       setActionLoading(null);
-      refetch();
     }
   };
 
   const handleSaveEdit = async (checkInDate: string, checkOutDate?: string) => {
     setActionLoading(selectedBooking.id);
+
     try {
-      // await updateBookingDates(selectedBooking.id, {
-      //   checkInDate,
-      //   checkOutDate,
-      // });
+      await updateBookingDates(selectedBooking.id, {
+        checkInDate,
+        checkOutDate,
+      });
       toast.success("Booking updated successfully.");
       setIsEditModalOpen(false);
       refetch(); // Refresh bookings after update
-    } catch (error) {
+    } catch (error: any) {
       console.error("Failed to update booking:", error);
-      toast.error("Failed to update booking.");
+      toast.error(error.message || "Failed to update booking.");
     } finally {
       setActionLoading(null);
     }
