@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Spinner from "@/components/common/spinner";
 
 interface BookingsTableProps {
@@ -17,6 +17,10 @@ const BookingsTable: React.FC<BookingsTableProps> = ({
   onAction,
   actionLoading,
 }) => {
+  const [selectedActions, setSelectedActions] = useState<{
+    [key: string]: string;
+  }>({});
+
   const getStatusStyles = (status: string) => {
     switch (status) {
       case "accepted":
@@ -29,8 +33,14 @@ const BookingsTable: React.FC<BookingsTableProps> = ({
   };
 
   const handleActionChange = (action: string, bookingId: string) => {
-    if (action === "") return; // If no action is selected, do nothing
+    if (action === "") return; // Do nothing if no action is selected
     onAction(action as any, bookingId);
+
+    // Reset the selected action for the booking
+    setSelectedActions((prev) => ({
+      ...prev,
+      [bookingId]: "",
+    }));
   };
 
   return (
@@ -106,10 +116,10 @@ const BookingsTable: React.FC<BookingsTableProps> = ({
               <td className="p-4 text-center">
                 <select
                   className="px-3 py-2 border rounded-md focus:ring focus:outline-none"
+                  value={selectedActions[booking.id] || ""}
                   onChange={(e) =>
                     handleActionChange(e.target.value, booking.id)
                   }
-                  defaultValue=""
                   disabled={actionLoading === booking.id}
                 >
                   <option value="" disabled>
