@@ -142,7 +142,7 @@ const BookingsTable: React.FC<BookingsTableProps> = ({
                   )}
                   <option value="delete">Delete</option>
                 </select>
-                {actionLoading === booking.id && <Spinner type="primary" />}
+                {actionLoading === booking.id && null}
               </td>
             </tr>
           ))}
