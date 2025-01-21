@@ -4,20 +4,18 @@ import Spinner from "@/components/common/spinner";
 interface BookingsTableProps {
   bookings: any[];
   onAction: (
-    action: "accept" | "reject" | "delete" | "edit" | "checkIn",
+    action: "accept" | "reject" | "delete" | "edit" | "checkIn" | "editPrice",
     id: string,
   ) => void;
   actionLoading: string | null;
   onDeleteClick: (id: string) => void;
-  onEditPriceClick: (booking: any) => void; // New prop for edit price
+  onEditPriceClick: (booking: any) => void;
 }
 
 const BookingsTable: React.FC<BookingsTableProps> = ({
   bookings,
   onAction,
   actionLoading,
-  onDeleteClick,
-  onEditPriceClick, // Destructure the new prop
 }) => {
   const getStatusStyles = (status: string) => {
     switch (status) {
@@ -28,6 +26,11 @@ const BookingsTable: React.FC<BookingsTableProps> = ({
       default:
         return "text-yellow-600 bg-yellow-100";
     }
+  };
+
+  const handleActionChange = (action: string, bookingId: string) => {
+    if (action === "") return; // If no action is selected, do nothing
+    onAction(action as any, bookingId);
   };
 
   return (
@@ -100,60 +103,36 @@ const BookingsTable: React.FC<BookingsTableProps> = ({
                   {booking.status || "Pending"}
                 </span>
               </td>
-              <td className="p-10">
-                <div className="flex gap-4 items-center">
+              <td className="p-4 text-center">
+                <select
+                  className="px-3 py-2 border rounded-md focus:ring focus:outline-none"
+                  onChange={(e) =>
+                    handleActionChange(e.target.value, booking.id)
+                  }
+                  defaultValue=""
+                  disabled={actionLoading === booking.id}
+                >
+                  <option value="" disabled>
+                    Select Action
+                  </option>
                   {booking.status === "pending" && (
                     <>
-                      <button
-                        onClick={() => onAction("accept", booking.id)}
-                        disabled={actionLoading === booking.id}
-                        className="text-green-600 hover:underline disabled:opacity-50"
-                      >
-                        {actionLoading === booking.id ? <Spinner /> : "Accept"}
-                      </button>
-                      <button
-                        onClick={() => onAction("reject", booking.id)}
-                        disabled={actionLoading === booking.id}
-                        className="text-yellow-600 hover:underline disabled:opacity-50"
-                      >
-                        {actionLoading === booking.id ? <Spinner /> : "Reject"}
-                      </button>
+                      <option value="accept">Accept</option>
+                      <option value="reject">Reject</option>
                     </>
                   )}
-                  <button
-                    onClick={() => onAction("edit", booking.id)}
-                    className="text-blue-600 hover:underline"
-                  >
-                    Edit
-                  </button>
-                  <button
-                    onClick={() => onEditPriceClick(booking)} // Handle edit price click
-                    className="text-blue-600 hover:underline"
-                  >
-                    Edit Price
-                  </button>
-                  <button
-                    onClick={() => onDeleteClick(booking.id)}
-                    disabled={actionLoading === booking.id}
-                    className="text-red hover:underline disabled:opacity-50"
-                  >
-                    {actionLoading === booking.id ? <Spinner /> : "Delete"}
-                  </button>
-                  {booking.status === "accepted" &&
-                    !booking.pets_checked_in && (
-                      <button
-                        onClick={() => onAction("checkIn", booking.id)}
-                        disabled={actionLoading === booking.id}
-                        className="text-purple-600 hover:underline disabled:opacity-50"
-                      >
-                        {actionLoading === booking.id ? (
-                          <Spinner />
-                        ) : (
-                          "Check In"
-                        )}
-                      </button>
-                    )}
-                </div>
+                  <option value="edit">Edit Schedule</option>
+                  {booking.status === "accepted" && (
+                    <>
+                      <option value="editPrice">Edit Price</option>
+                      {!booking.pets_checked_in && (
+                        <option value="checkIn">Check In</option>
+                      )}
+                    </>
+                  )}
+                  <option value="delete">Delete</option>
+                </select>
+                {actionLoading === booking.id && <Spinner type="primary" />}
               </td>
             </tr>
           ))}

@@ -70,13 +70,20 @@ function Page() {
   }, [isError]);
 
   const handleAction = async (
-    action: "accept" | "reject" | "delete" | "edit" | "checkIn",
+    action: "accept" | "reject" | "delete" | "edit" | "checkIn" | "editPrice",
     bookingId: string,
   ) => {
     if (action === "edit") {
       const booking = filteredBookings.find((b) => b.id === bookingId);
       setSelectedBooking(booking);
       setIsEditModalOpen(true);
+      return;
+    }
+
+    if (action === "editPrice") {
+      const booking = filteredBookings.find((b) => b.id === bookingId);
+      setSelectedBooking(booking);
+      setIsEditPriceModalOpen(true);
       return;
     }
 
