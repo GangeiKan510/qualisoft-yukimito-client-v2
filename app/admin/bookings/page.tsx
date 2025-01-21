@@ -12,6 +12,7 @@ import toast, { Toaster } from "react-hot-toast";
 import { useQuery } from "@tanstack/react-query";
 import BookingsTable from "@/components/tables/all-bookings-table";
 import DeleteBookingConfirmationModal from "@/components/modals/delete-booking-confirmation-modal";
+import EditPriceModal from "@/components/modals/edit-price-modal";
 
 function Page() {
   const [filteredBookings, setFilteredBookings] = useState<any[]>([]);
@@ -20,6 +21,18 @@ function Page() {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectedBookingId, setSelectedBookingId] = useState<string>("");
   const [confirmationInput, setConfirmationInput] = useState<string>("");
+  const [isEditPriceModalOpen, setIsEditPriceModalOpen] = useState(false);
+  const [selectedBooking, setSelectedBooking] = useState<any>(null);
+  
+  const handleEditPriceClick = (booking: any) => {
+    setSelectedBooking(booking);
+    setIsEditPriceModalOpen(true);
+  };
+
+  const handleSaveNewPrice = (bookingId: string, newPrice: number) => {
+    toast.success(`Updated price for booking ${bookingId} to ₱${newPrice}`);
+    setIsEditPriceModalOpen(false);
+  };
 
   const {
     data: bookings = { regularBookings: [], instantBookings: [] },
@@ -125,6 +138,10 @@ function Page() {
     );
   }
 
+  function handleSave(updatedBooking: any): void {
+    throw new Error("Function not implemented.");
+  }
+
   return (
     <div className="w-full flex flex-col px-8">
       <Toaster />
@@ -147,8 +164,8 @@ function Page() {
             bookings={filteredBookings}
             onAction={handleAction}
             actionLoading={actionLoading}
-            onDeleteClick={handleDeleteClick}
-          />
+            onDeleteClick={handleDeleteClick} 
+            onEditPriceClick={handleEditPriceClick}/>
         ) : (
           <div className="text-center text-gray-500">No results found.</div>
         )}
@@ -163,6 +180,15 @@ function Page() {
         confirmationInput={confirmationInput}
         setConfirmationInput={setConfirmationInput}
       />
+       {selectedBooking && (
+        <EditPriceModal
+          isOpen={isEditPriceModalOpen}
+          onClose={() => setIsEditPriceModalOpen(false)}
+          bookingId={selectedBooking.id}
+          currentPrice={selectedBooking.total_bill}
+          onSave={handleSaveNewPrice}
+        />
+      )}
     </div>
   );
 }
