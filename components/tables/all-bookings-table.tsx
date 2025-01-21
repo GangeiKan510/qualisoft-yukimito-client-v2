@@ -9,6 +9,7 @@ interface BookingsTableProps {
   ) => void;
   actionLoading: string | null;
   onDeleteClick: (id: string) => void;
+  onEditPriceClick: (booking: any) => void; // New prop for edit price
 }
 
 const BookingsTable: React.FC<BookingsTableProps> = ({
@@ -16,6 +17,7 @@ const BookingsTable: React.FC<BookingsTableProps> = ({
   onAction,
   actionLoading,
   onDeleteClick,
+  onEditPriceClick, // Destructure the new prop
 }) => {
   const getStatusStyles = (status: string) => {
     switch (status) {
@@ -123,6 +125,12 @@ const BookingsTable: React.FC<BookingsTableProps> = ({
                     className="text-blue-600 hover:underline"
                   >
                     Edit
+                  </button>
+                  <button
+                    onClick={() => onEditPriceClick(booking)} // Handle edit price click
+                    className="text-blue-600 hover:underline"
+                  >
+                    Edit Price
                   </button>
                   <button
                     onClick={() => onDeleteClick(booking.id)}
