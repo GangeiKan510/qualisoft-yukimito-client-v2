@@ -1,19 +1,26 @@
-import React from "react";
+import React, { useState } from "react";
 import Spinner from "@/components/common/spinner";
 
 interface BookingsTableProps {
   bookings: any[];
-  onAction: (action: "accept" | "reject" | "delete", id: string) => void;
+  onAction: (
+    action: "accept" | "reject" | "delete" | "edit" | "checkIn" | "editPrice",
+    id: string,
+  ) => void;
   actionLoading: string | null;
   onDeleteClick: (id: string) => void;
+  onEditPriceClick: (booking: any) => void;
 }
 
 const BookingsTable: React.FC<BookingsTableProps> = ({
   bookings,
   onAction,
   actionLoading,
-  onDeleteClick,
 }) => {
+  const [selectedActions, setSelectedActions] = useState<{
+    [key: string]: string;
+  }>({});
+
   const getStatusStyles = (status: string) => {
     switch (status) {
       case "accepted":
@@ -23,6 +30,17 @@ const BookingsTable: React.FC<BookingsTableProps> = ({
       default:
         return "text-yellow-600 bg-yellow-100";
     }
+  };
+
+  const handleActionChange = (action: string, bookingId: string) => {
+    if (action === "") return; // Do nothing if no action is selected
+    onAction(action as any, bookingId);
+
+    // Reset the selected action for the booking
+    setSelectedActions((prev) => ({
+      ...prev,
+      [bookingId]: "",
+    }));
   };
 
   return (
@@ -45,6 +63,9 @@ const BookingsTable: React.FC<BookingsTableProps> = ({
             </th>
             <th className="text-center p-4 font-semibold text-gray-600">
               Total Bill
+            </th>
+            <th className="text-center p-4 font-semibold text-gray-600">
+              Checked In
             </th>
             <th className="text-center p-4 font-semibold text-gray-600">
               Status
@@ -72,6 +93,17 @@ const BookingsTable: React.FC<BookingsTableProps> = ({
                 {new Date(booking.check_out_date).toLocaleDateString()}
               </td>
               <td className="p-4">₱{booking.total_bill}</td>
+              <td className="p-4 text-center">
+                {booking.pets_checked_in ? (
+                  <span className="inline-block px-3 py-1 rounded-full text-sm font-medium text-green-600 bg-green-100">
+                    Yes
+                  </span>
+                ) : (
+                  <span className="inline-block px-3 py-1 rounded-full text-sm font-medium text-red bg-[#FFD2D2]">
+                    No
+                  </span>
+                )}
+              </td>
               <td className="p-4">
                 <span
                   className={`inline-block px-3 py-1 rounded-full text-sm font-medium ${getStatusStyles(
@@ -81,34 +113,36 @@ const BookingsTable: React.FC<BookingsTableProps> = ({
                   {booking.status || "Pending"}
                 </span>
               </td>
-              <td className="p-10 flex items-center justify-center">
-                <div className="flex gap-4 items-center">
+              <td className="p-4 text-center">
+                <select
+                  className="px-3 py-2 border rounded-md focus:ring focus:outline-none"
+                  value={selectedActions[booking.id] || ""}
+                  onChange={(e) =>
+                    handleActionChange(e.target.value, booking.id)
+                  }
+                  disabled={actionLoading === booking.id}
+                >
+                  <option value="" disabled>
+                    Select Action
+                  </option>
                   {booking.status === "pending" && (
                     <>
-                      <button
-                        onClick={() => onAction("accept", booking.id)}
-                        disabled={actionLoading === booking.id}
-                        className="text-green-600 hover:underline disabled:opacity-50"
-                      >
-                        {actionLoading === booking.id ? <Spinner /> : "Accept"}
-                      </button>
-                      <button
-                        onClick={() => onAction("reject", booking.id)}
-                        disabled={actionLoading === booking.id}
-                        className="text-yellow-600 hover:underline disabled:opacity-50"
-                      >
-                        {actionLoading === booking.id ? <Spinner /> : "Reject"}
-                      </button>
+                      <option value="accept">Accept</option>
+                      <option value="reject">Reject</option>
                     </>
                   )}
-                  <button
-                    onClick={() => onDeleteClick(booking.id)}
-                    disabled={actionLoading === booking.id}
-                    className="text-red hover:underline disabled:opacity-50"
-                  >
-                    {actionLoading === booking.id ? <Spinner /> : "Delete"}
-                  </button>
-                </div>
+                  <option value="edit">Edit Schedule</option>
+                  {booking.status === "accepted" && (
+                    <>
+                      <option value="editPrice">Edit Price</option>
+                      {!booking.pets_checked_in && (
+                        <option value="checkIn">Check In</option>
+                      )}
+                    </>
+                  )}
+                  <option value="delete">Delete</option>
+                </select>
+                {actionLoading === booking.id && null}
               </td>
             </tr>
           ))}

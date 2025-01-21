@@ -51,6 +51,28 @@ export const rejectBooking = async (bookingId: string) => {
   }
 };
 
+export const updateBookingDates = async (
+  bookingId: string,
+  data: { checkInDate?: string; checkOutDate?: string },
+) => {
+  try {
+    const response = await postWithFirebaseJwt(
+      "/web/admin/booking/update-booking-dates",
+      {
+        body: { bookingId, ...data },
+        headers: {
+          "Content-Type": "application/json",
+        },
+      },
+    );
+
+    return response;
+  } catch (error) {
+    console.error("Error updating booking dates:", error);
+    throw error;
+  }
+};
+
 export const deleteBooking = async (bookingId: string) => {
   try {
     const response = await deleteWithFirebaseJwt(
@@ -66,6 +88,25 @@ export const deleteBooking = async (bookingId: string) => {
     return response;
   } catch (error) {
     console.error("Error deleting booking:", error);
+    throw error;
+  }
+};
+
+export const checkInPets = async (bookingId: string) => {
+  try {
+    const response = await postWithFirebaseJwt(
+      "/web/admin/booking/check-in-pets",
+      {
+        body: { bookingId },
+        headers: {
+          "Content-Type": "application/json",
+        },
+      },
+    );
+
+    return response;
+  } catch (error) {
+    console.error("Error checking in pets:", error);
     throw error;
   }
 };

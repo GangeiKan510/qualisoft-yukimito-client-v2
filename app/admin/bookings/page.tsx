@@ -6,12 +6,16 @@ import {
   rejectBooking,
   deleteBooking,
   getAllBookings,
+  updateBookingDates,
+  checkInPets,
 } from "@/network/network/admin/booking";
 import Spinner from "@/components/common/spinner";
 import toast, { Toaster } from "react-hot-toast";
 import { useQuery } from "@tanstack/react-query";
 import BookingsTable from "@/components/tables/all-bookings-table";
 import DeleteBookingConfirmationModal from "@/components/modals/delete-booking-confirmation-modal";
+import EditBookingModal from "@/components/modals/edit-booking-modal";
+import EditPriceModal from "@/components/modals/edit-price-modal";
 
 function Page() {
   const [filteredBookings, setFilteredBookings] = useState<any[]>([]);
@@ -20,6 +24,20 @@ function Page() {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectedBookingId, setSelectedBookingId] = useState<string>("");
   const [confirmationInput, setConfirmationInput] = useState<string>("");
+
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [selectedBooking, setSelectedBooking] = useState<any | null>(null);
+  const [isEditPriceModalOpen, setIsEditPriceModalOpen] = useState(false);
+
+  const handleEditPriceClick = (booking: any) => {
+    setSelectedBooking(booking);
+    setIsEditPriceModalOpen(true);
+  };
+
+  const handleSaveNewPrice = (bookingId: string, newPrice: number) => {
+    toast.success(`Updated price for booking ${bookingId} to ₱${newPrice}`);
+    setIsEditPriceModalOpen(false);
+  };
 
   const {
     data: bookings = { regularBookings: [], instantBookings: [] },
@@ -52,9 +70,23 @@ function Page() {
   }, [isError]);
 
   const handleAction = async (
-    action: "accept" | "reject" | "delete",
+    action: "accept" | "reject" | "delete" | "edit" | "checkIn" | "editPrice",
     bookingId: string,
   ) => {
+    if (action === "edit") {
+      const booking = filteredBookings.find((b) => b.id === bookingId);
+      setSelectedBooking(booking);
+      setIsEditModalOpen(true);
+      return;
+    }
+
+    if (action === "editPrice") {
+      const booking = filteredBookings.find((b) => b.id === bookingId);
+      setSelectedBooking(booking);
+      setIsEditPriceModalOpen(true);
+      return;
+    }
+
     setActionLoading(bookingId);
     try {
       if (action === "accept") {
@@ -66,17 +98,36 @@ function Page() {
       } else if (action === "delete") {
         await deleteBooking(bookingId);
         toast.success("Booking deleted successfully.");
+      } else if (action === "checkIn") {
+        await checkInPets(bookingId);
+        toast.success("Pets checked in successfully.");
       }
 
-      setFilteredBookings((prevBookings) =>
-        prevBookings.filter((b) => b.id !== bookingId),
-      );
+      refetch();
     } catch (error) {
       console.error(`Failed to ${action} booking:`, error);
       toast.error(`Failed to ${action} booking.`);
     } finally {
       setActionLoading(null);
-      refetch();
+    }
+  };
+
+  const handleSaveEdit = async (checkInDate: string, checkOutDate?: string) => {
+    setActionLoading(selectedBooking.id);
+
+    try {
+      await updateBookingDates(selectedBooking.id, {
+        checkInDate,
+        checkOutDate,
+      });
+      toast.success("Booking updated successfully.");
+      setIsEditModalOpen(false);
+      refetch(); // Refresh bookings after update
+    } catch (error: any) {
+      console.error("Failed to update booking:", error);
+      toast.error(error.message || "Failed to update booking.");
+    } finally {
+      setActionLoading(null);
     }
   };
 
@@ -125,10 +176,13 @@ function Page() {
     );
   }
 
+  function handleSave(updatedBooking: any): void {
+    throw new Error("Function not implemented.");
+  }
+
   return (
     <div className="w-full flex flex-col px-8">
       <Toaster />
-
       <div className="w-full flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold text-primary-dark">All Bookings</h1>
         <div className="flex items-center space-x-4">
@@ -148,6 +202,7 @@ function Page() {
             onAction={handleAction}
             actionLoading={actionLoading}
             onDeleteClick={handleDeleteClick}
+            onEditPriceClick={handleEditPriceClick}
           />
         ) : (
           <div className="text-center text-gray-500">No results found.</div>
@@ -163,6 +218,25 @@ function Page() {
         confirmationInput={confirmationInput}
         setConfirmationInput={setConfirmationInput}
       />
+
+      {selectedBooking && (
+        <EditBookingModal
+          isOpen={isEditModalOpen}
+          onClose={() => setIsEditModalOpen(false)}
+          onSave={handleSaveEdit}
+          booking={selectedBooking}
+          loading={!!actionLoading}
+        />
+      )}
+      {selectedBooking && (
+        <EditPriceModal
+          isOpen={isEditPriceModalOpen}
+          onClose={() => setIsEditPriceModalOpen(false)}
+          bookingId={selectedBooking.id}
+          currentPrice={selectedBooking.total_bill}
+          onSave={handleSaveNewPrice}
+        />
+      )}
     </div>
   );
 }
