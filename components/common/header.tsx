@@ -89,8 +89,10 @@ function Header() {
     }
   };
 
+  const isAdminRoute = pathname.startsWith("/admin");
+
   return (
-    <div className="h-[75px] fixed top-0 left-0 right-0 z-50 flex justify-between px-4 sm:px-6 lg:px-10 items-center text-white bg-white border-b border-gray border-opacity-25">
+    <div className="h-[75px] fixed top-0 left-0 right-0 z-50 flex justify-between items-center px-4 sm:px-6 lg:px-10 text-white bg-white border-b border-gray border-opacity-25">
       <div className="flex gap-3 items-center">
         {pathname !== routes.home && routesWithHeaderNav.includes(pathname) && (
           <Image
@@ -102,126 +104,136 @@ function Header() {
             onClick={toggleSidebar}
           />
         )}
-        <Image
-          onClick={() => {
-            router.replace(routes.home);
-          }}
-          width={40}
-          height={40}
-          src="/svg/logo-theme.svg"
-          alt="logo-img"
-        />
-        <span
-          className="hidden sm:block lg:text-xl text-lg font-bold text-primary-dark cursor-pointer"
-          onClick={() => {
-            router.replace(routes.home);
-          }}
-        >
-          YUKIMITO: Pet Hotel and Boarding Services
-        </span>
-      </div>
-      {user?.userInfo.role !== 1 &&
-        pathname !== routes.home &&
-        !pathname.includes("client") && (
-          <div
-            className="ml-6 text-primary-dark underline underline-offset-4 font-semibold cursor-pointer hover:text-primary"
-            onClick={() => router.replace(routes.userPersonalDetails)}
-          >
-            Back to Dashboard
-          </div>
+        {isAdminRoute ? (
+          <span className="text-xl font-bold text-primary-dark">
+            Yukimito Admin Panel
+          </span>
+        ) : (
+          <Image
+            onClick={() => {
+              router.replace(routes.home);
+            }}
+            width={40}
+            height={40}
+            src="/svg/logo-theme.svg"
+            alt="logo-img"
+          />
         )}
-      {routesWithHeaderNav.includes(pathname) && (
-        <div className="flex items-center gap-2 sm:gap-3 lg:gap-3 text-sm sm:text-base lg:text-lg font-semibold">
-          {loadingUser ? (
-            <Spinner type="secondary" />
-          ) : jwtToken ? (
-            <div className="relative" ref={dropdownRef}>
-              <div
-                className="flex gap-1 text-primary-dark underline underline-offset-4 font-semibold cursor-pointer"
-                onClick={() => setDropdownOpen(!dropdownOpen)}
-              >
-                <div className="flex items-center justify-center text-white w-[30px] h-[30px] bg-primary-dark rounded-full leading-none">
-                  {auth.currentUser?.email?.charAt(0).toUpperCase()}
-                </div>
-                <Image
-                  width={16}
-                  height={16}
-                  src="/svg/dropdown-icon.svg"
-                  alt="dropdown-icon"
-                />
-              </div>
-              {dropdownOpen && (
-                <div className="absolute right-0 mt-2 w-[150px] bg-white border border-gray-300 rounded-lg shadow-lg z-50">
-                  <div
-                    className="flex gap-1 justify-end px-4 py-2 text-primary-dark cursor-pointer hover:bg-gray-100 rounded-t-lg"
-                    onClick={() => {
-                      router.replace(routes.userPersonalDetails);
-                    }}
-                  >
-                    Dashboard
-                    <Image
-                      width={16}
-                      height={16}
-                      src="/svg/profile-icon.svg"
-                      alt="logo-img"
-                    />
+        {!isAdminRoute && (
+          <span
+            className="hidden sm:block lg:text-xl text-lg font-bold text-primary-dark cursor-pointer"
+            onClick={() => {
+              router.replace(routes.home);
+            }}
+          >
+            YUKIMITO: Pet Hotel and Boarding Services
+          </span>
+        )}
+      </div>
+      <div className="flex items-center gap-6">
+        {user?.userInfo.role !== 1 &&
+          pathname !== routes.home &&
+          !pathname.includes("client") && (
+            <div
+              className="text-primary-dark underline underline-offset-4 font-semibold cursor-pointer hover:text-primary"
+              onClick={() => router.replace(routes.userPersonalDetails)}
+            >
+              Back to Dashboard
+            </div>
+          )}
+        {routesWithHeaderNav.includes(pathname) && (
+          <div className="flex items-center gap-2 sm:gap-3 lg:gap-3 text-sm sm:text-base lg:text-lg font-semibold">
+            {loadingUser ? (
+              <Spinner type="secondary" />
+            ) : jwtToken ? (
+              <div className="relative" ref={dropdownRef}>
+                <div
+                  className="flex gap-1 text-primary-dark underline underline-offset-4 font-semibold cursor-pointer"
+                  onClick={() => setDropdownOpen(!dropdownOpen)}
+                >
+                  <div className="flex items-center justify-center text-white w-[30px] h-[30px] bg-primary-dark rounded-full leading-none">
+                    {auth.currentUser?.email?.charAt(0).toUpperCase()}
                   </div>
-                  {user?.userInfo.role !== 1 && (
+                  <Image
+                    width={16}
+                    height={16}
+                    src="/svg/dropdown-icon.svg"
+                    alt="dropdown-icon"
+                  />
+                </div>
+                {dropdownOpen && (
+                  <div className="absolute right-0 mt-2 w-[150px] bg-white border border-gray-300 rounded-lg shadow-lg z-50">
                     <div
                       className="flex gap-1 justify-end px-4 py-2 text-primary-dark cursor-pointer hover:bg-gray-100 rounded-t-lg"
                       onClick={() => {
-                        router.replace(routes.admin);
+                        router.replace(routes.userPersonalDetails);
                       }}
                     >
-                      Admin
+                      Dashboard
                       <Image
                         width={16}
                         height={16}
-                        src="/svg/admin-lock.svg"
+                        src="/svg/profile-icon.svg"
                         alt="logo-img"
                       />
                     </div>
-                  )}
-                  <div
-                    className="flex gap-1 justify-end px-4 py-2 text-primary cursor-pointer hover:bg-gray-100 border-t border-gray border-opacity-25"
-                    onClick={() => setModalOpen(true)}
-                  >
-                    Sign Out
-                    <Image
-                      width={16}
-                      height={16}
-                      src="/svg/sign-out-icon.svg"
-                      alt="signout-icon"
-                    />
+                    {user?.userInfo.role !== 1 && (
+                      <div
+                        className="flex gap-1 justify-end px-4 py-2 text-primary-dark cursor-pointer hover:bg-gray-100 rounded-t-lg"
+                        onClick={() => {
+                          router.replace(routes.admin);
+                        }}
+                      >
+                        Admin
+                        <Image
+                          width={16}
+                          height={16}
+                          src="/svg/admin-lock.svg"
+                          alt="logo-img"
+                        />
+                      </div>
+                    )}
+                    <div
+                      className="flex gap-1 justify-end px-4 py-2 text-primary cursor-pointer hover:bg-gray-100 border-t border-gray border-opacity-25"
+                      onClick={() => setModalOpen(true)}
+                    >
+                      Sign Out
+                      <Image
+                        width={16}
+                        height={16}
+                        src="/svg/sign-out-icon.svg"
+                        alt="signout-icon"
+                      />
+                    </div>
                   </div>
-                </div>
-              )}
-            </div>
-          ) : (
-            <div className="h-[40px] flex items-center px-4 py-2 border-2 border-primary-dark text-primary-dark rounded-full bg-white">
-              <div>
-                <span
-                  className="cursor-pointer"
-                  onClick={() => {
-                    router.replace(routes.register);
-                  }}
-                >
-                  Sign Up{" "}
-                </span>
-                |{" "}
-                <span
-                  className="cursor-pointer"
-                  onClick={() => {
-                    router.replace(routes.login);
-                  }}
-                >
-                  Sign In
-                </span>
+                )}
               </div>
-            </div>
-          )}
-        </div>
-      )}
+            ) : (
+              <div className="h-[40px] flex items-center px-4 py-2 border-2 border-primary-dark text-primary-dark rounded-full bg-white">
+                <div>
+                  <span
+                    className="cursor-pointer"
+                    onClick={() => {
+                      router.replace(routes.register);
+                    }}
+                  >
+                    Sign Up{" "}
+                  </span>
+                  |{" "}
+                  <span
+                    className="cursor-pointer"
+                    onClick={() => {
+                      router.replace(routes.login);
+                    }}
+                  >
+                    Sign In
+                  </span>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
       <ConfirmationModal
         type="danger"
         isOpen={modalOpen}
