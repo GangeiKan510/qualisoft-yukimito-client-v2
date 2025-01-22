@@ -4,7 +4,15 @@ import Spinner from "@/components/common/spinner";
 interface BookingsTableProps {
   bookings: any[];
   onAction: (
-    action: "accept" | "reject" | "delete" | "edit" | "checkIn" | "editPrice",
+    action:
+      | "accept"
+      | "reject"
+      | "delete"
+      | "edit"
+      | "checkIn"
+      | "editPrice"
+      | "addService"
+      | "removeService",
     id: string,
   ) => void;
   actionLoading: string | null;
@@ -138,6 +146,12 @@ const BookingsTable: React.FC<BookingsTableProps> = ({
                       {!booking.pets_checked_in && (
                         <option value="checkIn">Check In</option>
                       )}
+                    </>
+                  )}
+                  {booking.pets_checked_in && (
+                    <>
+                      <option value="addService">Add Service</option>
+                      <option value="removeService">Remove Service</option>
                     </>
                   )}
                   <option value="delete">Delete</option>
