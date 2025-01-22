@@ -22,12 +22,14 @@ export const SidebarProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
   const [isExpanded, setIsExpanded] = useState(!isMobile);
+  const [isToggleButtonClicked, setIsToggleButtonClicked] = useState(false);
 
   useEffect(() => {
     const mediaQuery = window.matchMedia("(min-width: 1024px)");
 
     const handleMediaQueryChange = (event: MediaQueryListEvent) => {
       setIsExpanded(event.matches);
+      setIsToggleButtonClicked(event.matches ? false : true);
     };
 
     setIsExpanded(mediaQuery.matches);
