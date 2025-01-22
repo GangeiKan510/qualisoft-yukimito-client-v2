@@ -22,6 +22,13 @@ function Header() {
     routes.userPersonalDetails,
     routes.userPets,
     routes.userCreateBooking,
+    routes.admin,
+    routes.adminBookings,
+    routes.adminCustomers,
+    routes.adminInventory,
+    routes.adminPendingVaccines,
+    routes.adminUsers,
+    routes.adminVaccineInventory,
   ];
   const [jwtToken, setJwtToken] = useState<string | null>(null);
   const [loadingUser, setLoadingUser] = useState(true);
