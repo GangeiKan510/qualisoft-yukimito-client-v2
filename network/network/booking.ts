@@ -63,6 +63,39 @@ export const createBooking = async (bookingData: RegularBookingData) => {
   }
 };
 
+export const updateBookingDates = async (
+  bookingId: string,
+  {
+    checkInDate,
+    checkOutDate,
+  }: { checkInDate?: string; checkOutDate?: string },
+) => {
+  try {
+    const response = await postWithFirebaseJwt(
+      "/web/booking/update-booking-date",
+      {
+        body: {
+          bookingId,
+          check_in_date: checkInDate,
+          check_out_date: checkOutDate,
+        },
+        headers: {
+          "Content-Type": "application/json",
+        },
+      },
+    );
+
+    if (!response) {
+      throw new Error("Failed to update booking dates");
+    }
+
+    return response;
+  } catch (error) {
+    console.error("Failed to update booking dates:", error);
+    throw error;
+  }
+};
+
 export const deleteBooking = async (bookingId: string) => {
   try {
     const response = await deleteWithFirebaseJwt(
