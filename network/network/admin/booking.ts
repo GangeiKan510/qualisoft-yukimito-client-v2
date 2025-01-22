@@ -95,6 +95,28 @@ export const addAdditionalService = async (
   }
 };
 
+export const removeAdditionalService = async (
+  bookingId: string,
+  serviceId: string,
+) => {
+  try {
+    const response = await postWithFirebaseJwt(
+      "/web/admin/booking/remove-additional-service",
+      {
+        body: { bookingId, serviceId },
+        headers: {
+          "Content-Type": "application/json",
+        },
+      },
+    );
+
+    return response;
+  } catch (error) {
+    console.error("Error removing additional service:", error);
+    throw error;
+  }
+};
+
 export const deleteBooking = async (bookingId: string) => {
   try {
     const response = await deleteWithFirebaseJwt(
