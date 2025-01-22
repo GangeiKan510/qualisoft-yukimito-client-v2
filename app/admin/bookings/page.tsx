@@ -16,6 +16,7 @@ import BookingsTable from "@/components/tables/all-bookings-table";
 import DeleteBookingConfirmationModal from "@/components/modals/delete-booking-confirmation-modal";
 import EditBookingModal from "@/components/modals/edit-booking-modal";
 import EditPriceModal from "@/components/modals/edit-price-modal";
+import AddServiceModal from "@/components/modals/add-service-modal";
 
 function Page() {
   const [filteredBookings, setFilteredBookings] = useState<any[]>([]);
@@ -28,6 +29,7 @@ function Page() {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [selectedBooking, setSelectedBooking] = useState<any | null>(null);
   const [isEditPriceModalOpen, setIsEditPriceModalOpen] = useState(false);
+  const [isAddServiceModalOpen, setIsAddServiceModalOpen] = useState(false);
 
   const handleEditPriceClick = (booking: any) => {
     setSelectedBooking(booking);
@@ -37,6 +39,21 @@ function Page() {
   const handleSaveNewPrice = (bookingId: string, newPrice: number) => {
     toast.success(`Updated price for booking ${bookingId} to ₱${newPrice}`);
     setIsEditPriceModalOpen(false);
+  };
+
+  const handleAddServiceClick = (bookingId: string) => {
+    setSelectedBookingId(bookingId);
+    setIsAddServiceModalOpen(true);
+  };
+
+  const handleAddService = (service: string) => {
+    setActionLoading(selectedBookingId);
+
+    setTimeout(() => {
+      toast.success(`Added ${service} to booking ${selectedBookingId}`);
+      setActionLoading(null);
+      setIsAddServiceModalOpen(false);
+    }, 1000);
   };
 
   const {
@@ -70,7 +87,15 @@ function Page() {
   }, [isError]);
 
   const handleAction = async (
-    action: "accept" | "reject" | "delete" | "edit" | "checkIn" | "editPrice",
+    action:
+      | "accept"
+      | "reject"
+      | "delete"
+      | "edit"
+      | "checkIn"
+      | "editPrice"
+      | "addService"
+      | "removeService",
     bookingId: string,
   ) => {
     if (action === "edit") {
@@ -84,6 +109,11 @@ function Page() {
       const booking = filteredBookings.find((b) => b.id === bookingId);
       setSelectedBooking(booking);
       setIsEditPriceModalOpen(true);
+      return;
+    }
+
+    if (action === "addService") {
+      handleAddServiceClick(bookingId);
       return;
     }
 
@@ -122,7 +152,7 @@ function Page() {
       });
       toast.success("Booking updated successfully.");
       setIsEditModalOpen(false);
-      refetch(); // Refresh bookings after update
+      refetch();
     } catch (error: any) {
       console.error("Failed to update booking:", error);
       toast.error(error.message || "Failed to update booking.");
@@ -237,6 +267,13 @@ function Page() {
           onSave={handleSaveNewPrice}
         />
       )}
+
+      <AddServiceModal
+        isOpen={isAddServiceModalOpen}
+        onClose={() => setIsAddServiceModalOpen(false)}
+        onAdd={handleAddService}
+        loading={!!actionLoading}
+      />
     </div>
   );
 }
