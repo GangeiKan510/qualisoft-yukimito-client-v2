@@ -9,6 +9,7 @@ import {
   updateBookingDates,
   checkInPets,
   addAdditionalService,
+  removeAdditionalService,
 } from "@/network/network/admin/booking";
 import Spinner from "@/components/common/spinner";
 import toast, { Toaster } from "react-hot-toast";
@@ -18,6 +19,7 @@ import DeleteBookingConfirmationModal from "@/components/modals/delete-booking-c
 import EditBookingModal from "@/components/modals/edit-booking-modal";
 import EditPriceModal from "@/components/modals/edit-price-modal";
 import AddServiceModal from "@/components/modals/add-service-modal";
+import RemoveServiceModal from "@/components/modals/remove-service-modal";
 
 function Page() {
   const [filteredBookings, setFilteredBookings] = useState<any[]>([]);
@@ -31,6 +33,8 @@ function Page() {
   const [selectedBooking, setSelectedBooking] = useState<any | null>(null);
   const [isEditPriceModalOpen, setIsEditPriceModalOpen] = useState(false);
   const [isAddServiceModalOpen, setIsAddServiceModalOpen] = useState(false);
+  const [isRemoveServiceModalOpen, setIsRemoveServiceModalOpen] =
+    useState(false);
 
   const handleEditPriceClick = (booking: any) => {
     setSelectedBooking(booking);
@@ -58,6 +62,28 @@ function Page() {
     } catch (error) {
       console.error("Failed to add additional service:", error);
       toast.error("Failed to add additional service. Please try again.");
+    } finally {
+      setActionLoading(null);
+    }
+  };
+
+  const handleRemoveServiceClick = (booking: any) => {
+    setSelectedBooking(booking);
+    setIsRemoveServiceModalOpen(true);
+  };
+
+  const handleRemoveService = async (serviceId: string) => {
+    if (!selectedBooking) return;
+    setActionLoading(serviceId);
+
+    try {
+      await removeAdditionalService(selectedBooking.id, serviceId);
+      toast.success("Service removed successfully.");
+      setIsRemoveServiceModalOpen(false);
+      refetch();
+    } catch (error) {
+      console.error("Failed to remove additional service:", error);
+      toast.error("Failed to remove service. Please try again.");
     } finally {
       setActionLoading(null);
     }
@@ -217,6 +243,8 @@ function Page() {
     throw new Error("Function not implemented.");
   }
 
+  console.log(filteredBookings);
+
   return (
     <div className="w-full flex flex-col px-8">
       <Toaster />
@@ -236,7 +264,16 @@ function Page() {
         {filteredBookings.length ? (
           <BookingsTable
             bookings={filteredBookings}
-            onAction={handleAction}
+            onAction={(action, bookingId) => {
+              if (action === "removeService") {
+                const booking = filteredBookings.find(
+                  (b) => b.id === bookingId,
+                );
+                handleRemoveServiceClick(booking);
+              } else {
+                handleAction(action, bookingId);
+              }
+            }}
             actionLoading={actionLoading}
             onDeleteClick={handleDeleteClick}
             onEditPriceClick={handleEditPriceClick}
@@ -279,6 +316,13 @@ function Page() {
         isOpen={isAddServiceModalOpen}
         onClose={() => setIsAddServiceModalOpen(false)}
         onAdd={handleAddService}
+        loading={!!actionLoading}
+      />
+      <RemoveServiceModal
+        isOpen={isRemoveServiceModalOpen}
+        onClose={() => setIsRemoveServiceModalOpen(false)}
+        additionalServices={selectedBooking?.additionalServices || []}
+        onRemove={handleRemoveService}
         loading={!!actionLoading}
       />
     </div>
