@@ -8,6 +8,7 @@ import {
   getAllBookings,
   updateBookingDates,
   checkInPets,
+  addAdditionalService,
 } from "@/network/network/admin/booking";
 import Spinner from "@/components/common/spinner";
 import toast, { Toaster } from "react-hot-toast";
@@ -46,14 +47,20 @@ function Page() {
     setIsAddServiceModalOpen(true);
   };
 
-  const handleAddService = (service: string) => {
+  const handleAddService = async (service: string) => {
     setActionLoading(selectedBookingId);
 
-    setTimeout(() => {
+    try {
+      await addAdditionalService(selectedBookingId, service);
       toast.success(`Added ${service} to booking ${selectedBookingId}`);
-      setActionLoading(null);
       setIsAddServiceModalOpen(false);
-    }, 1000);
+      refetch();
+    } catch (error) {
+      console.error("Failed to add additional service:", error);
+      toast.error("Failed to add additional service. Please try again.");
+    } finally {
+      setActionLoading(null);
+    }
   };
 
   const {
