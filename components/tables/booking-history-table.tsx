@@ -5,7 +5,7 @@ import Spinner from "../common/spinner";
 import { toast } from "react-hot-toast";
 import { useUser } from "../config/user-context";
 
-const BookingHistoryTable = ({ bookings }: any) => {
+const BookingHistoryTable = ({ bookings, onEditClick }: any) => {
   const { refetchMe } = useUser();
   const [expandedRows, setExpandedRows] = useState(new Set());
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -180,15 +180,20 @@ const BookingHistoryTable = ({ bookings }: any) => {
             </div>
             <div className="hidden md:flex flex-1 px-1 justify-center">
               <button
+                onClick={() => onEditClick(booking)}
+                className="border px-3 py-1 bg-blue-500 text-white rounded-full"
+                disabled={loading}
+              >
+                Edit
+              </button>
+            </div>
+            <div className="hidden md:flex flex-1 px-1 justify-center">
+              <button
                 onClick={() => handleCancelClick(booking.id)}
                 className="border px-3 py-1 bg-red-500 text-red rounded-full"
                 disabled={loading}
               >
-                {loading && selectedBookingId === booking.id ? (
-                  <Spinner type="primary" />
-                ) : (
-                  "Cancel"
-                )}
+                Cancel
               </button>
             </div>
           </div>
