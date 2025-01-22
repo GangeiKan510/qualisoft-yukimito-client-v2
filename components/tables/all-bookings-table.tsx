@@ -142,7 +142,6 @@ const BookingsTable: React.FC<BookingsTableProps> = ({
                   <option value="edit">Edit Schedule</option>
                   {booking.status === "accepted" && (
                     <>
-                      <option value="editPrice">Edit Price</option>
                       {!booking.pets_checked_in && (
                         <option value="checkIn">Check In</option>
                       )}

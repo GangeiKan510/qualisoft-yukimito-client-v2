@@ -5,7 +5,7 @@ import Spinner from "../common/spinner";
 import { toast } from "react-hot-toast";
 import { useUser } from "../config/user-context";
 
-const BookingHistoryTable = ({ bookings }: any) => {
+const BookingHistoryTable = ({ bookings, onEditClick }: any) => {
   const { refetchMe } = useUser();
   const [expandedRows, setExpandedRows] = useState(new Set());
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -67,16 +67,16 @@ const BookingHistoryTable = ({ bookings }: any) => {
         loading={loading}
       />
 
-      {/* Table Header for larger screens */}
-      <div className="hidden md:flex font-semibold bg-[#D2EAE7] text-primary-dark p-4 border-y border-gray-200">
-        <div className="flex-1 px-1">ID</div>
-        <div className="flex-1 px-1">Service</div>
-        <div className="flex-1 px-1">Check-In</div>
-        <div className="flex-1 px-1">Check-Out</div>
-        <div className="flex-1 px-1">Pets</div>
-        <div className="flex-1 px-1">Status</div>
-        <div className="flex-1 px-1">Total</div>
-        <div className="flex-1 px-1"></div>
+      {/* Table Header */}
+      <div className="hidden md:grid grid-cols-9 font-semibold bg-[#D2EAE7] text-primary-dark p-4 border-y border-gray-200">
+        <div className="col-span-1 text-center">ID</div>
+        <div className="col-span-1 text-center">Service</div>
+        <div className="col-span-1 text-center">Check-In</div>
+        <div className="col-span-1 text-center">Check-Out</div>
+        <div className="col-span-2 text-center">Pets</div>
+        <div className="col-span-1 text-center">Status</div>
+        <div className="col-span-1 text-center">Total</div>
+        <div className="col-span-1 text-center">Actions</div>
       </div>
 
       {/* Table Rows */}
@@ -87,82 +87,44 @@ const BookingHistoryTable = ({ bookings }: any) => {
         return (
           <div
             key={booking.id}
-            className={`md:flex items-center text-gray-700 p-4 ${
+            className={`md:grid grid-cols-9 items-center text-gray-700 p-4 ${
               index === bookings.length - 1 ? "" : "border-b"
             } border-gray-200`}
           >
-            {/* Desktop View as Table Layout */}
-            <div className="hidden md:flex flex-1 px-1">
+            <div className="col-span-1 text-center truncate">
               <span
-                className={`cursor-pointer ${
-                  expandedRows.has(booking.id)
-                    ? "whitespace-normal"
-                    : "truncate"
-                }`}
+                className="cursor-pointer"
                 onClick={() => toggleExpandRow(booking.id)}
-                style={{
-                  display: expandedRows.has(booking.id)
-                    ? "block"
-                    : "-webkit-box",
-                  WebkitLineClamp: expandedRows.has(booking.id) ? "none" : 1,
-                  WebkitBoxOrient: "vertical",
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                }}
               >
                 {expandedRows.has(booking.id)
                   ? booking.id
                   : `${booking.id.slice(0, 10)}...`}
               </span>
             </div>
-            <div className="hidden md:flex flex-1 px-1">
-              <span
-                className={`cursor-pointer ${
-                  expandedRows.has(booking.id)
-                    ? "whitespace-normal"
-                    : "truncate"
-                }`}
-                onClick={() => toggleExpandRow(booking.id)}
-                style={{
-                  display: expandedRows.has(booking.id)
-                    ? "block"
-                    : "-webkit-box",
-                  WebkitLineClamp: expandedRows.has(booking.id) ? "none" : 1,
-                  WebkitBoxOrient: "vertical",
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                }}
-              >
-                {expandedRows.has(booking.id)
-                  ? booking.service
-                  : `${booking.service.slice(0, 10)}...`}
-              </span>
-            </div>
-            <div className="hidden md:flex flex-1 px-1 flex-col">
+            <div className="col-span-1 text-center">{booking.service}</div>
+            <div className="col-span-1 text-center">
               <div>{checkIn.date}</div>
               {booking.service !== "Home Care" && (
                 <div className="text-sm text-gray-500">{checkIn.time}</div>
               )}
             </div>
-            <div className="hidden md:flex flex-1 px-1 flex-col">
+            <div className="col-span-1 text-center">
               <div>{checkOut.date}</div>
               {booking.service !== "Home Care" && (
                 <div className="text-sm text-gray-500">{checkOut.time}</div>
               )}
             </div>
-            <div className="hidden md:flex flex-1 px-1">
-              <div className="flex flex-wrap gap-1 max-h-16 overflow-hidden">
-                {booking.raw_pet_data.map((pet: any, petIndex: number) => (
-                  <div
-                    key={petIndex}
-                    className="px-2 py-1 border bg-primary text-white border-primary rounded-full text-sm"
-                  >
-                    {pet.name}
-                  </div>
-                ))}
-              </div>
+            <div className="col-span-2 flex flex-wrap gap-1 justify-center">
+              {booking.raw_pet_data.map((pet: any, petIndex: number) => (
+                <div
+                  key={petIndex}
+                  className="px-2 py-1 border bg-primary text-white border-primary rounded-full text-sm"
+                >
+                  {pet.name}
+                </div>
+              ))}
             </div>
-            <div className="hidden md:flex flex-1 px-1">
+            <div className="col-span-1 text-center">
               <div
                 className={`inline-block px-3 py-1 border rounded-full text-sm font-medium ${
                   booking.status === "accepted"
@@ -175,20 +137,26 @@ const BookingHistoryTable = ({ bookings }: any) => {
                 {booking.status || "pending"}
               </div>
             </div>
-            <div className="hidden md:flex flex-1 px-1 font-bold">
+            <div className="col-span-1 text-center font-bold">
               ₱{booking.total_bill}
             </div>
-            <div className="hidden md:flex flex-1 px-1 justify-center">
+            <div className="col-span-1 flex justify-center gap-2">
+              {booking.status !== "accepted" &&
+                booking.status !== "rejected" && (
+                  <button
+                    onClick={() => onEditClick(booking)}
+                    className="border px-3 py-1 bg-blue-500 text-white rounded-full"
+                    disabled={loading}
+                  >
+                    Edit
+                  </button>
+                )}
               <button
                 onClick={() => handleCancelClick(booking.id)}
                 className="border px-3 py-1 bg-red-500 text-red rounded-full"
                 disabled={loading}
               >
-                {loading && selectedBookingId === booking.id ? (
-                  <Spinner type="primary" />
-                ) : (
-                  "Cancel"
-                )}
+                Cancel
               </button>
             </div>
           </div>
