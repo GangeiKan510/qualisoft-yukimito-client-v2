@@ -179,13 +179,16 @@ const BookingHistoryTable = ({ bookings, onEditClick }: any) => {
               ₱{booking.total_bill}
             </div>
             <div className="hidden md:flex flex-1 px-1 justify-center">
-              <button
-                onClick={() => onEditClick(booking)}
-                className="border px-3 py-1 bg-blue-500 text-white rounded-full"
-                disabled={loading}
-              >
-                Edit
-              </button>
+              {booking.status !== "accepted" &&
+                booking.status !== "rejected" && (
+                  <button
+                    onClick={() => onEditClick(booking)}
+                    className="border px-3 py-1 bg-blue-500 text-white rounded-full"
+                    disabled={loading}
+                  >
+                    Edit
+                  </button>
+                )}
             </div>
             <div className="hidden md:flex flex-1 px-1 justify-center">
               <button
