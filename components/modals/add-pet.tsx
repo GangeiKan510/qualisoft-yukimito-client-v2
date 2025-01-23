@@ -115,7 +115,7 @@ function AddPetModal({ isVisible, onClose }: AddPetModalProps) {
           </select>
           <div>
             <label htmlFor="vaccine-photo" className="block text-sm font-medium text-gray-700">
-              Add Vaccine Photo
+              Add Your Vaccine Photo Here!
             </label>
             <input
               id="vaccine-photo"
