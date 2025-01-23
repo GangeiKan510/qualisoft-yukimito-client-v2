@@ -43,13 +43,13 @@ function AddPetModal({ isVisible, onClose }: AddPetModalProps) {
 
     try {
       await addPet(petData);
+      toast.success("Pet added successfully!");
       onClose();
     } catch (error) {
-      toast.success("Pet added successfully!");
       console.error("Error adding pet:", error);
+      toast.error("Failed to add pet.");
     } finally {
       setSaveLabel("Add");
-      onClose();
       refetchMe();
     }
   };
@@ -103,12 +103,18 @@ function AddPetModal({ isVisible, onClose }: AddPetModalProps) {
             <option value="Medium">Medium</option>
             <option value="Large">Large</option>
           </select>
-          <input
-            type="file"
-            accept="image/*"
-            onChange={handleFileChange}
-            className="w-full"
-          />
+          <div>
+            <label htmlFor="vaccine-photo" className="block text-sm font-medium text-gray-700">
+              Add Your Vaccine Photo Here!
+            </label>
+            <input
+              id="vaccine-photo"
+              type="file"
+              accept="image/*"
+              onChange={handleFileChange}
+              className="w-full"
+            />
+          </div>
           <div className="flex justify-end gap-2 mt-4">
             <button
               onClick={onClose}
