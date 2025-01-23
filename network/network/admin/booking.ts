@@ -73,6 +73,50 @@ export const updateBookingDates = async (
   }
 };
 
+export const addAdditionalService = async (
+  bookingId: string,
+  title: string,
+) => {
+  try {
+    const response = await postWithFirebaseJwt(
+      "/web/admin/booking/add-additional-service",
+      {
+        body: { bookingId, title },
+        headers: {
+          "Content-Type": "application/json",
+        },
+      },
+    );
+
+    return response;
+  } catch (error) {
+    console.error("Error adding additional service:", error);
+    throw error;
+  }
+};
+
+export const removeAdditionalService = async (
+  bookingId: string,
+  serviceId: string,
+) => {
+  try {
+    const response = await postWithFirebaseJwt(
+      "/web/admin/booking/remove-additional-service",
+      {
+        body: { bookingId, serviceId },
+        headers: {
+          "Content-Type": "application/json",
+        },
+      },
+    );
+
+    return response;
+  } catch (error) {
+    console.error("Error removing additional service:", error);
+    throw error;
+  }
+};
+
 export const deleteBooking = async (bookingId: string) => {
   try {
     const response = await deleteWithFirebaseJwt(
