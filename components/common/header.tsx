@@ -95,16 +95,16 @@ function Header() {
   return (
     <div className="h-[75px] fixed top-0 left-0 right-0 z-50 flex justify-between items-center px-4 sm:px-6 lg:px-10 text-white bg-white border-b border-gray border-opacity-25">
       <div className="flex gap-3 items-center">
-        {pathname !== routes.home && routesWithHeaderNav.includes(pathname) && (
+        {/* {pathname !== routes.home && routesWithHeaderNav.includes(pathname) && !isExpanded &&(
           <Image
-            className="block sm:hidden cursor-pointer"
+            className="block cursor-pointer"
             width={30}
             height={30}
             src="/svg/hamburger-menu.svg"
             alt="hamburger-menu"
             onClick={toggleSidebar}
           />
-        )}
+        )} */}
         <Image
           onClick={() => {
             router.replace(routes.home);
