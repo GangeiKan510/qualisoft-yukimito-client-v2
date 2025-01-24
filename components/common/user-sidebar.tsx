@@ -28,34 +28,30 @@ const Sidebar = () => {
   ];
 
   return (
-    <aside
-      className={`z-30 fixed top-[64px] bottom-0 left-0 flex flex-col justify-between ${
-        isExpanded ? "w-[290px] lg:w-[300px]" : "w-[80px]"
-      } bg-white shadow-lg transition-all duration-300`}
+    <><aside
+      className={`z-30 fixed top-[64px] bottom-0 left-0 flex flex-col justify-between ${isExpanded ? "w-[290px] lg:w-[300px]" : "w-[80px]"} bg-white shadow-lg transition-all duration-300`}
+      style={{ padding: 0, margin: 0 }}
     >
       {/* Navigation Items */}
       <div className="flex flex-col mt-10 space-y-2">
         {navItems.map((item) => (
           <button
             key={item.route}
-            className={`flex items-center ${
-              isExpanded ? "pl-6" : "justify-center"
-            } h-[50px] text-primary-dark hover:bg-gray-100 ${
-              isActiveRoute(item.route) ? "bg-[#FFF9F2]" : ""
-            }`}
+            className={`flex items-center ${isExpanded ? "pl-6" : "justify-center"} h-[50px] text-primary-dark hover:bg-gray-100 ${isActiveRoute(item.route) ? "bg-[#FFF9F2]" : ""}`}
             onClick={() => navigateTo(item.route)}
           >
             <Image
               src={getIconSrc(item.icon, isActiveRoute(item.route))}
               alt={`${item.label}-icon`}
               width={20}
-              height={20}
-            />
+              height={20} />
             {isExpanded && <span className="ml-4">{item.label}</span>}
           </button>
         ))}
       </div>
     </aside>
+    <div className={`flex flex-col px-8 transition-all duration-300 ${isExpanded ? "ml- 0" : "ml-0"}`} style={{ paddingLeft: 20, marginLeft: 0 }}>
+    </div></>
   );
 };
 
