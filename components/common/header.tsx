@@ -14,6 +14,7 @@ import { useUser } from "../config/user-context";
 function Header() {
   const { user } = useUser();
   const pathname = usePathname();
+  const { isExpanded } = useSidebar();
   const router = useRouter();
   const { toggleSidebar } = useSidebar();
   const routesWithHeaderNav = [
@@ -94,41 +95,33 @@ function Header() {
   return (
     <div className="h-[75px] fixed top-0 left-0 right-0 z-50 flex justify-between items-center px-4 sm:px-6 lg:px-10 text-white bg-white border-b border-gray border-opacity-25">
       <div className="flex gap-3 items-center">
-        {pathname !== routes.home && routesWithHeaderNav.includes(pathname) && (
+        {/* {pathname !== routes.home && routesWithHeaderNav.includes(pathname) && !isExpanded &&(
           <Image
-            className="block sm:hidden cursor-pointer"
+            className="block cursor-pointer"
             width={30}
             height={30}
             src="/svg/hamburger-menu.svg"
             alt="hamburger-menu"
             onClick={toggleSidebar}
           />
-        )}
-        {isAdminRoute ? (
-          <span className="text-xl font-bold text-primary-dark">
-            Yukimito Admin Panel
-          </span>
-        ) : (
-          <Image
-            onClick={() => {
-              router.replace(routes.home);
-            }}
-            width={40}
-            height={40}
-            src="/svg/logo-theme.svg"
-            alt="logo-img"
-          />
-        )}
-        {!isAdminRoute && (
-          <span
-            className="hidden sm:block lg:text-xl text-lg font-bold text-primary-dark cursor-pointer"
-            onClick={() => {
-              router.replace(routes.home);
-            }}
-          >
-            YUKIMITO: Pet Hotel and Boarding Services
-          </span>
-        )}
+        )} */}
+        <Image
+          onClick={() => {
+            router.replace(routes.home);
+          }}
+          width={40}
+          height={40}
+          src="/svg/logo-theme.svg"
+          alt="logo-img"
+        />
+        <span
+          className="hidden sm:block lg:text-xl text-lg font-bold text-primary-dark cursor-pointer"
+          onClick={() => {
+            router.replace(routes.home);
+          }}
+        >
+          YUKIMITO: Pet Hotel and Boarding Services
+        </span>
       </div>
       <div className="flex items-center gap-6">
         {user?.userInfo.role !== 1 &&

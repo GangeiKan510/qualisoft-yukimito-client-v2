@@ -24,10 +24,20 @@ function AddPetModal({ isVisible, onClose }: AddPetModalProps) {
   const [vaccinePhoto, setVaccinePhoto] = useState<File | null>(null);
   const [saveLabel, setSaveLabel] = useState<any>("Add");
 
+  const isFormComplete = (): boolean => {
+    return petName.trim() !== "" && breed.trim() !== "" && birthDate !== null && size !== "" && vaccinePhoto !== null;
+  };
+
   const handleAddPet = async () => {
     setSaveLabel(<Spinner />);
-    if (!birthDate || !userId) {
+    if (!isFormComplete() || !userId) {
       toast.error("Please fill all fields correctly.");
+      setSaveLabel("Add");
+      return;
+    }
+
+    if (!birthDate) {
+      toast.error("Please select a birth date.");
       setSaveLabel("Add");
       return;
     }
@@ -43,13 +53,13 @@ function AddPetModal({ isVisible, onClose }: AddPetModalProps) {
 
     try {
       await addPet(petData);
+      toast.success("Pet added successfully!");
       onClose();
     } catch (error) {
-      toast.success("Pet added successfully!");
       console.error("Error adding pet:", error);
+      toast.error("Failed to add pet.");
     } finally {
       setSaveLabel("Add");
-      onClose();
       refetchMe();
     }
   };
@@ -91,7 +101,7 @@ function AddPetModal({ isVisible, onClose }: AddPetModalProps) {
             onChange={(date: Date | null) => setBirthDate(date)}
             dateFormat="yyyy-MM-dd"
             placeholderText="Select Birth Date"
-            maxDate={maxDate} // Set the maximum date to today
+            maxDate={maxDate}
             className="w-full h-[50px] border border-gray rounded-[8px] px-5"
           />
           <select
@@ -103,12 +113,18 @@ function AddPetModal({ isVisible, onClose }: AddPetModalProps) {
             <option value="Medium">Medium</option>
             <option value="Large">Large</option>
           </select>
-          <input
-            type="file"
-            accept="image/*"
-            onChange={handleFileChange}
-            className="w-full"
-          />
+          <div>
+            <label htmlFor="vaccine-photo" className="block text-sm font-medium text-gray-700">
+              Add Your Vaccine Photo Here!
+            </label>
+            <input
+              id="vaccine-photo"
+              type="file"
+              accept="image/*"
+              onChange={handleFileChange}
+              className="w-full"
+            />
+          </div>
           <div className="flex justify-end gap-2 mt-4">
             <button
               onClick={onClose}
@@ -120,9 +136,12 @@ function AddPetModal({ isVisible, onClose }: AddPetModalProps) {
             <button
               onClick={handleAddPet}
               type="button"
-              className="w-full max-w-[120px] h-[40px] bg-primary-dark flex items-center justify-center rounded-full cursor-pointer mt-6 lg:mt-0"
+              disabled={!isFormComplete()}
+              className={`w-full max-w-[120px] h-[40px] flex items-center justify-center rounded-full mt-6 lg:mt-0 ${
+                isFormComplete() ? "bg-primary-dark text-white" : "bg-zinc-400 text-white cursor-not-allowed"
+              }`}
             >
-              <span className="text-white">{saveLabel}</span>
+              <span>{saveLabel}</span>
             </button>
           </div>
         </div>
