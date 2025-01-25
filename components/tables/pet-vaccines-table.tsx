@@ -89,11 +89,11 @@ const PetVaccinesTable: React.FC<PetVaccinesTableProps> = ({
               <td className="p-4">
                 {pet.is_vaccinated ? (
                   <span className="px-2 py-1 text-sm text-green-600 bg-green-100 rounded-full">
-                    Vaccinated
+                    Verified
                   </span>
                 ) : (
                   <span className="px-2 py-1 text-sm text-red-600 bg-red-100 rounded-full">
-                    Not Vaccinated
+                    Not Verified
                   </span>
                 )}
               </td>
