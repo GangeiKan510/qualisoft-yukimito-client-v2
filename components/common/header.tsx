@@ -92,6 +92,14 @@ function Header() {
 
   const isAdminRoute = pathname.startsWith("/admin");
 
+  // Function to scroll to a specific section
+  const scrollToSection = (id: string) => {
+    const section = document.getElementById(id);
+    if (section) {
+      section.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  };
+
   return (
     <div className="h-[75px] fixed top-0 left-0 right-0 z-50 flex justify-between items-center px-4 sm:px-6 lg:px-10 text-white bg-white border-b border-gray border-opacity-25">
       <div className="flex gap-3 items-center">
@@ -123,7 +131,48 @@ function Header() {
           YUKIMITO: Pet Hotel and Boarding Services
         </span>
       </div>
+
       <div className="flex items-center gap-6">
+        <nav className="flex items-center gap-4 text-primary-dark font-semibold">
+
+          <span
+            className="cursor-pointer hover:text-primary"
+            onClick={() => scrollToSection("contact")}
+          >
+            Contact Us
+          </span>
+          <span
+            className="cursor-pointer hover:text-primary"
+            onClick={() => scrollToSection("about")}
+          >
+            About Us
+          </span>
+          <span
+            className="cursor-pointer hover:text-primary"
+            onClick={() => scrollToSection("rates")}
+          >
+            Rates & Services
+          </span>
+          <span
+            className="cursor-pointer hover:text-primary"
+            onClick={() => scrollToSection("requirements")}
+          >
+            Pre-Boarding Requirements 
+          </span>
+          <span
+            className="cursor-pointer hover:text-primary"
+            onClick={() => scrollToSection("photos")}
+          >
+            Photos
+          </span>
+          <span
+            className="cursor-pointer hover:text-primary"
+            onClick={() => scrollToSection("reviews")}
+          >
+            Reviews
+          </span>
+        </nav>
+
         {user?.userInfo.role !== 1 &&
           pathname !== routes.home &&
           !pathname.includes("client") && (
@@ -241,3 +290,4 @@ function Header() {
 }
 
 export default Header;
+

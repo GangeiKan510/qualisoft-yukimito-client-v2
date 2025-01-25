@@ -2,7 +2,9 @@ import React from "react";
 
 function PricingTable() {
   return (
-    <div className="px-4 lg:mx-[10%] border-t border-dashed border-gray">
+    <div 
+    id="rates"
+    className="px-4 lg:mx-[10%] border-t border-dashed border-gray">
       <div className="overflow-x-auto py-10">
         <div className="flex flex-col text-center">
           <div className="font-semibold mb-2">Our Rates and Services</div>
