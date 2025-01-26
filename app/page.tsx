@@ -11,6 +11,9 @@ import { routes } from "../utils/routes/routes";
 import About from "@/components/sections/about";
 import BoardingRequirements from "@/components/sections/boarding-requirements";
 import PricingTable from "@/components/sections/pricing-table";
+import Contacts from "@/components/sections/contacts";
+import Photos from "@/components/sections/photos";
+import Reviews from "@/components/sections/reviews";
 
 export default function Home() {
   const router = useRouter();
@@ -109,6 +112,17 @@ export default function Home() {
       </div>
       <div>
         <PricingTable />
+      </div>
+      
+      <div>
+        <Photos />
+      </div>
+      
+      <div>
+        <Reviews />
+      </div>
+      <div>
+        <Contacts />
       </div>
     </div>
   );
