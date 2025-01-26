@@ -127,7 +127,6 @@ function Page() {
           </button>
         </div>
       </div>
-
       <div className="w-full bg-white rounded-xl shadow-md p-6">
         {filteredUsers.length ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -156,7 +155,12 @@ function Page() {
                     <strong>Address:</strong> {user.address || "N/A"}
                   </p>
                   <p className="text-sm text-gray-600">
-                    <strong>Role:</strong> {user.role}
+                    <strong>Role:</strong>{" "}
+                    {user.role === 3
+                      ? "Super Admin"
+                      : user.role === 2
+                      ? "Admin"
+                      : "Pet Owner"}
                   </p>
                   <p className="text-sm text-gray-600">
                     <strong>Created At:</strong>{" "}
