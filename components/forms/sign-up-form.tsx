@@ -36,7 +36,7 @@ function SignUpForm() {
 
       const newUser = await createUser({ email });
 
-      toast.error("An error occured creating your account!");
+      toast.error("An error occurred creating your account!");
     } catch (error: any) {
       console.error("Error during sign-up process:", error);
       toast.success("Successfully created your account!");
@@ -50,8 +50,23 @@ function SignUpForm() {
   };
 
   return (
-    <div className="min-h-screen flex items-center px-4">
+    <div className="min-h-screen flex items-center px-4 relative">
       <Toaster />
+      <button
+        className="absolute top-4 left-4 flex items-center gap-2 text-primary-dark"
+        onClick={() => router.replace(routes.home)}
+        aria-label="Back to Home"
+      >
+        <Image
+          src="/svg/back.svg"
+          alt="Back"
+          width={24}
+          height={24}
+          className="w-6 h-6"
+        />
+        <span className="text-[16px] font-medium">Back to Home</span>
+      </button>
+
       <div className="w-full lg:w-[80%] lg:h-[80%] m-auto flex flex-col lg:flex-row justify-between items-center lg:items-stretch">
         <div className="h-full w-full lg:w-1/2">
           <form
