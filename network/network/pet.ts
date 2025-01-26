@@ -27,7 +27,11 @@ export const addPet = async (petData: {
       body: formData,
     });
 
-    if (!response.ok) {
+    console.log("Response:", response.status, response.statusText);
+
+    if (response.status < 200 || response.status >= 300) {
+      const errorText = await response.text();
+      console.error("Backend error:", errorText);
       throw new Error("Failed to add pet");
     }
 

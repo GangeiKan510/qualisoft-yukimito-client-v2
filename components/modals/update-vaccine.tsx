@@ -69,6 +69,9 @@ const UpdateVaccineModal: React.FC<UpdateVaccineModalProps> = ({
         <div className="flex flex-col text-center mt-3">
           <div className="text-lg font-semibold text-black">Update Vaccine</div>
           <div className="mt-4 space-y-4">
+            <label className="block text-left font-semibold mb-1px w-30">
+              Vaccine Name:
+            </label>
             <input
               type="text"
               name="name"
@@ -78,6 +81,9 @@ const UpdateVaccineModal: React.FC<UpdateVaccineModalProps> = ({
               className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring"
               disabled={loading}
             />
+            <label className="block text-left font-semibold mb-1px w-30">
+              Manufacturer:
+            </label>
             <input
               type="text"
               name="manufacturer"
@@ -87,27 +93,25 @@ const UpdateVaccineModal: React.FC<UpdateVaccineModalProps> = ({
               className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring"
               disabled={loading}
             />
+            <label className="block text-left font-semibold mb-1px w-30">
+              Description/Purpose:
+            </label>
             <input
               type="text"
               name="batch_number"
               value={vaccineData.batch_number}
               onChange={handleChange}
-              placeholder="Batch Number"
+              placeholder="Description/Purpose"
               className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring"
               disabled={loading}
             />
+            <label className="block text-left font-semibold mb-1px w-30">
+              Expiry Date:
+            </label>
             <input
               type="date"
               name="expiry_date"
               value={vaccineData.expiry_date.split("T")[0]}
-              onChange={handleChange}
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring"
-              disabled={loading}
-            />
-            <input
-              type="date"
-              name="date_administered"
-              value={vaccineData.date_administered.split("T")[0]}
               onChange={handleChange}
               className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring"
               disabled={loading}

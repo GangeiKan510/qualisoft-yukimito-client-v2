@@ -21,11 +21,8 @@ const VaccinesTable: React.FC<VaccinesTableProps> = ({
           <tr className="bg-gray-50 text-left">
             <th className="p-4 font-semibold text-gray-600">Vaccine Name</th>
             <th className="p-4 font-semibold text-gray-600">Manufacturer</th>
-            <th className="p-4 font-semibold text-gray-600">Batch Number</th>
+            <th className="p-4 font-semibold text-gray-600">Description</th>
             <th className="p-4 font-semibold text-gray-600">Expiry Date</th>
-            <th className="p-4 font-semibold text-gray-600">
-              Date Administered
-            </th>
             <th className="p-4 font-semibold text-gray-600">Actions</th>
           </tr>
         </thead>
@@ -42,9 +39,6 @@ const VaccinesTable: React.FC<VaccinesTableProps> = ({
               <td className="p-4">{vaccine.batch_number}</td>
               <td className="p-4">
                 {new Date(vaccine.expiry_date).toLocaleDateString()}
-              </td>
-              <td className="p-4">
-                {new Date(vaccine.date_administered).toLocaleDateString()}
               </td>
               <td className="p-4 flex gap-4">
                 <button

@@ -25,7 +25,7 @@ function AddPetModal({ isVisible, onClose }: AddPetModalProps) {
   const [saveLabel, setSaveLabel] = useState<any>("Add");
 
   const isFormComplete = (): boolean => {
-    return petName.trim() !== "" && breed.trim() !== "" && birthDate !== null && size !== "" && vaccinePhoto !== null;
+    return petName.trim() !== "" && breed.trim() !== "" && birthDate !== null && size !== null && vaccinePhoto !== null;
   };
 
   const handleAddPet = async () => {
@@ -57,6 +57,7 @@ function AddPetModal({ isVisible, onClose }: AddPetModalProps) {
       onClose();
     } catch (error) {
       console.error("Error adding pet:", error);
+      // onClose();
       toast.error("Failed to add pet.");
     } finally {
       setSaveLabel("Add");
