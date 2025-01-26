@@ -85,20 +85,21 @@ const BookingsTable: React.FC<BookingsTableProps> = ({
         </thead>
         <tbody>
           {bookings.map((booking, index) => (
-            <tr
-              key={booking.id}
-              className={`border-t ${
-                index % 2 === 0 ? "bg-gray-50" : "bg-white"
-              } hover:bg-blue-50 transition`}
-            >
+            <tr>
               <td className="p-4">{booking.id}</td>
               <td className="p-4">{booking.pet_owner_name}</td>
               <td className="p-4">{booking.service}</td>
               <td className="p-4">
-                {new Date(booking.check_in_date).toLocaleDateString()}
+                {new Date(booking.check_in_date).toLocaleString(undefined, {
+                  dateStyle: "medium",
+                  timeStyle: "short",
+                })}
               </td>
               <td className="p-4">
-                {new Date(booking.check_out_date).toLocaleDateString()}
+                {new Date(booking.check_out_date).toLocaleString(undefined, {
+                  dateStyle: "medium",
+                  timeStyle: "short",
+                })}
               </td>
               <td className="p-4">₱{booking.total_bill}</td>
               <td className="p-4 text-center">
